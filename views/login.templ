@@ -1,0 +1,16 @@
+package views
+
+templ Login() {
+	<div class="is-flex">
+		<input class="column is-four-fifths input is-primary" type="text" name="username" placeholder="Username"/>
+		<button
+			class="column button is-link is-flex is-vcentered"
+			hx-post="/login"
+			hx-trigger="click"
+			hx-target="#content"
+			hx-include="[name = 'username']"
+		>
+			Login
+		</button>
+	</div>
+}

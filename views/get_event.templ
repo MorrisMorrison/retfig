@@ -1,0 +1,9 @@
+package views
+
+import "github.com/MorrisMorrison/retfig/models"
+
+templ GetEvent(event models.Event) {
+	<div>{ event.Name }</div>
+	<div>{ event.Owner }</div>
+	<div>{ event.Recipient }</div>
+}
