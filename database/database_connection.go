@@ -7,27 +7,26 @@ import (
 	"log"
 	"time"
 
+	"github.com/MorrisMorrison/retfig/config"
 	"github.com/go-sql-driver/mysql"
 )
 
-type Database struct {
-	Config     mysql.Config
-	Connection *sql.DB
+type Connection struct {
+	Config   mysql.Config
+	Database *sql.DB
 }
-
-var db *Database
 
 type TxFunc func(context.Context, *sql.Tx) error
 
-func InitializeDbConnection() {
+func NewConnection() *Connection {
 	fmt.Println("Initialize database connection...")
 
 	cfg := mysql.Config{
-		User:   "user",
-		Passwd: "password",
+		User:   config.GetEnv("RETROFIG_MYSQL_USER", "user"),
+		Passwd: config.GetEnv("RETROFIG_MYSQL_PASSWORD", "password"),
 		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
-		DBName: "echopost",
+		Addr:   config.GetEnv("RETROFIG_MYSQL_HOST", "127.0.0.1:3306"),
+		DBName: config.GetEnv("RETROFIG_MYSQL_DATABASE_NAME", "echopost"),
 	}
 
 	var err error
@@ -42,22 +41,20 @@ func InitializeDbConnection() {
 	}
 	fmt.Println("Successfully connected to database!")
 
-	db = &Database{
-		Config:     cfg,
-		Connection: conn,
+	return &Connection{
+		Config:   cfg,
+		Database: conn,
 	}
-
-	defer conn.Close()
 }
 
-func NewContext() context.Context {
+func (connection *Connection) CreateContext() context.Context {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	return ctx
 }
 
-func ExecuteInTransaction(ctx context.Context, fn TxFunc) error {
-	tx, txErr := db.Connection.BeginTx(ctx, nil)
+func (connection *Connection) ExecuteInTransaction(ctx context.Context, fn TxFunc) error {
+	tx, txErr := connection.Database.BeginTx(ctx, nil)
 	if txErr != nil {
 		return txErr
 	}

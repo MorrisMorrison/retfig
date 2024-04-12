@@ -6,3 +6,7 @@ type GetEventResponse struct {
 	Recipient string   `json:"recipient"`
 	Users     []string `json:"users"`
 }
+
+type CreateEventResponse struct {
+	Name string `json:"name"`
+}

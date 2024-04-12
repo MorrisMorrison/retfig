@@ -9,8 +9,18 @@ import (
 	"github.com/MorrisMorrison/retfig/models"
 )
 
-func CreateEvent(event models.Event) error {
-	err := database.ExecuteInTransaction(func(ctx context.Context, tx *sql.Tx) error {
+type EventRepository struct {
+	dbConn *database.Connection
+}
+
+func NewEventRepository(dbConn *database.Connection) *EventRepository {
+	return &EventRepository{dbConn: dbConn}
+}
+
+func (repository *EventRepository) CreateEvent(event models.Event) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	err := repository.dbConn.ExecuteInTransaction(ctx, func(ctx context.Context, tx *sql.Tx) error {
 		_, execError := tx.ExecContext(ctx, "INSERT INTO events VALUES (?, ?, ?)", event.Name, event.Owner.Id, event.Recipient.Id)
 		if execError != nil {
 			return execError
@@ -25,13 +35,11 @@ func CreateEvent(event models.Event) error {
 	return nil
 }
 
-func GetEventById(id string) (*models.Event, error) {
-	db := database.GetDbConnection()
-
+func (repository *EventRepository) GetEventById(id string) (*models.Event, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	tx, txErr := db.BeginTx(ctx, nil)
+	tx, txErr := repository.dbConn.Database.BeginTx(ctx, nil)
 	if txErr != nil {
 		return nil, txErr
 	}
@@ -51,13 +59,11 @@ func GetEventById(id string) (*models.Event, error) {
 	return &e, tx.Commit()
 }
 
-func GetEventsByIds(ids []string) ([]models.Event, error) {
-	db := database.GetDbConnection()
-
+func (repository *EventRepository) GetEventsByIds(ids []string) ([]models.Event, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	tx, txErr := db.BeginTx(ctx, nil)
+	tx, txErr := repository.dbConn.Database.BeginTx(ctx, nil)
 	if txErr != nil {
 		return nil, txErr
 	}
