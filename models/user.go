@@ -1,7 +1,12 @@
 package models
 
+import uuid "github.com/satori/go.uuid"
+
 type User struct {
-	Id    string
-	Name  string
-	Email string
+	Id               uuid.UUID
+	Name             string
+	Email            string
+	IsActivated      bool
+	IsEmailConfirmed bool
+	Timestamps
 }

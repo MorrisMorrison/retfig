@@ -10,9 +10,9 @@ import "context"
 import "io"
 import "bytes"
 
-import "github.com/MorrisMorrison/retfig/models"
+import "github.com/MorrisMorrison/retfig/viewmodels"
 
-func GetEvent(event models.Event) templ.Component {
+func GetEvent(vm *viewmodels.GetEventViewModel) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -30,9 +30,9 @@ func GetEvent(event models.Event) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(event.Name)
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(vm.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/get_event.templ`, Line: 5, Col: 18}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/get_event.templ`, Line: 5, Col: 15}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {

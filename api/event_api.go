@@ -27,7 +27,7 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 		return
 	}
 
-	createEventResponse, err := eventAPI.eventService.CreateEvent(createEventRequest)
+	eventId, err := eventAPI.eventService.CreateEvent(createEventRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -35,11 +35,14 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 		return
 	}
 
-	contentType := c.GetHeader("Content-Type")
-	if contentType == "text/html" {
-		c.HTML(http.StatusOK, "", views.GetEvent(createEventResponse))
+	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 		return
+
 	}
 
-	c.JSON(http.StatusCreated, createEventResponse)
+	c.HTML(http.StatusOK, "", views.GetEvent(viewModel))
 }

@@ -11,7 +11,7 @@ func ReadFile(path string) (*os.File, error) {
 		return nil, err
 	}
 
-	defer file.Close()
+	//defer file.Close()
 
 	return file, err
 }

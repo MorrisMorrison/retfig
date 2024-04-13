@@ -10,7 +10,7 @@ import (
 )
 
 func InitializeDatabase(connection *database.Connection) {
-	statements, err := utils.ReadSqlFile("initialize-database.sql")
+	statements, err := utils.ReadSqlFile("database/sql/initialize-database.sql")
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -19,8 +19,7 @@ func InitializeDatabase(connection *database.Connection) {
 	for _, statement := range statements {
 		statement = strings.TrimSpace(statement)
 		if statement == "" {
-			log.Fatal("Could not find any sql statement in initialize-database.sql")
-			break
+			continue
 		}
 
 		_, err = connection.Database.Exec(statement)
