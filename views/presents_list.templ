@@ -1,5 +1,12 @@
 package views
 
-templ PresentsList(){
-    <div class="box">PresentsList</div>
+import "github.com/MorrisMorrison/retfig/viewmodels"
+
+templ PresentsList(vm viewmodels.PresentListViewModel) {
+	<div class="box">
+		PresentsList
+		for _, present := range vm.Presents {
+            @PresentListItem(present)
+		}
+	</div>
 }

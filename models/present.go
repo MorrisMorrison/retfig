@@ -9,6 +9,7 @@ import (
 type Present struct {
 	Id        uuid.UUID
 	EventId   uuid.UUID
+	Creator   string
 	Name      string
 	Link      string
 	CreatedAt time.Time

@@ -1,5 +1,11 @@
 package views
 
-templ PresentListItem(){
-    <div>PresentListItem</div>
+import "github.com/MorrisMorrison/retfig/viewmodels"
+
+templ PresentListItem(vm viewmodels.PresentListItemViewModel) {
+	<div class="is-flex is-flex-direction-column">
+		<h1 class="title"></h1>
+        { vm.Name }
+        { vm.Link }
+	</div>
 }
