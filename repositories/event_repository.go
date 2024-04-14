@@ -11,9 +11,11 @@ import (
 )
 
 const (
-	QUERY_CREATE_EVENT      string = "INSERT INTO event (id, name, creatorEmail, recipient, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)"
-	QUERY_GET_EVENT_BY_ID   string = "SELECT * FROM event WHERE id = ?"
-	QUERY_GET_EVENTS_BY_IDS string = "SELECT * FROM event WHERE id in (?)"
+	QUERY_CREATE_EVENT                 string = "INSERT INTO event (id, name, creatorEmail, recipient, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)"
+	QUERY_GET_EVENT_BY_ID              string = "SELECT * FROM event WHERE id = ?"
+	QUERY_GET_EVENTS_BY_IDS            string = "SELECT * FROM event WHERE id in (?)"
+	QUERY_GET_PARTICIPANTS_BY_EVENT_ID string = "SELECT * FROM event_participant WHERE event_id = ?"
+	QUERY_CREATE_PARTICIPANT           string = "INSERT INTO event_participant (event_id, participant, createdAt, updatedAt) VALUES (?, ?, ?, ?)"
 )
 
 type EventRepository struct {
@@ -101,4 +103,58 @@ func (repository *EventRepository) GetEventsByIds(ids []string) ([]models.Event,
 	defer rows.Close()
 
 	return events, tx.Commit()
+}
+
+func (repository *EventRepository) CreateParticipant(eventId string, username string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	now := time.Now()
+
+	err := repository.dbConn.ExecuteInTransaction(ctx, func(ctx context.Context, tx *sql.Tx) error {
+		_, execError := tx.ExecContext(ctx, QUERY_CREATE_PARTICIPANT, eventId, username, now, now)
+		if execError != nil {
+			return execError
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repository *EventRepository) GetParticipantsByEventId(id uuid.UUID) ([]models.EventParticipant, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	tx, txErr := repository.dbConn.Database.BeginTx(ctx, nil)
+	if txErr != nil {
+		return nil, txErr
+	}
+
+	defer tx.Rollback()
+
+	var participants []models.EventParticipant
+	rows, queryErr := tx.QueryContext(ctx, QUERY_GET_PARTICIPANTS_BY_EVENT_ID, id)
+	if queryErr != nil {
+		return nil, queryErr
+	}
+
+	for rows.Next() {
+		var e models.EventParticipant
+		err := rows.Scan(&e.EventId, &e.Participant, &e.CreatedAt, &e.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		participants = append(participants, e)
+	}
+
+	defer rows.Close()
+
+	return participants, tx.Commit()
 }

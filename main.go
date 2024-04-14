@@ -29,8 +29,17 @@ func main() {
 
 	//r.GET("/events/:id", eventAPI.CreateEvent)
 	r.POST("/events", eventAPI.CreateEvent)
+	r.GET("/events/:id", eventAPI.GetEvent)
+	r.DELETE("/events/:id", eventAPI.DeleteEvent)
+	r.PATCH("/events/:id", eventAPI.UpdateEvent)
+
+	r.POST("/events/:id/participants", eventAPI.CreateParticipant)
+	r.GET("/events/:id/invitation", eventAPI.GetInvitationView)
 
 	r.GET("/", api.Index)
+
+	r.Static("/public", "./public")
+	//r.StaticFile("/favicon.ico", "./public/favicon.ico")
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

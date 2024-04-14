@@ -13,7 +13,7 @@ func HtmxHandler() gin.HandlerFunc {
 
 		fmt.Println(isHxRequest)
 		if isHxRequest == "" || isHxRequest == "false" {
-			c.HTML(204, "", views.Index())
+			c.HTML(204, "", views.Index(views.CreateEvent()))
 			c.Abort()
 			return
 		}

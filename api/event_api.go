@@ -7,6 +7,7 @@ import (
 	"github.com/MorrisMorrison/retfig/services"
 	"github.com/MorrisMorrison/retfig/views"
 	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
 )
 
 type EventAPI struct {
@@ -45,4 +46,70 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "", views.GetEvent(viewModel))
+}
+
+func (eventAPI *EventAPI) GetEvent(c *gin.Context) {
+	eventId := c.Param("id")
+	viewModel, err := eventAPI.eventService.GetEventViewModel(uuid.FromStringOrNil(eventId))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.HTML(http.StatusOK, "", views.Index(views.GetEvent(viewModel)))
+}
+
+func (eventAPI *EventAPI) DeleteEvent(c *gin.Context) {
+
+}
+
+func (eventAPI *EventAPI) UpdateEvent(c *gin.Context) {
+	var updateEventRequest request.UpdateEventRequest
+
+	if err := c.ShouldBindJSON(&updateEventRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+}
+
+func (eventAPI *EventAPI) CreateParticipant(c *gin.Context) {
+	eventId := c.Param("id")
+	var createParticipantRequest request.CreateParticipantRequest
+
+	if err := c.ShouldBindJSON(&createParticipantRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	err := eventAPI.eventService.CreateParticipant(eventId, createParticipantRequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	viewModel, err := eventAPI.eventService.GetEventViewModel(uuid.FromStringOrNil(eventId))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+
+	}
+
+	c.HTML(http.StatusOK, "", views.GetEvent(viewModel))
+}
+
+func (eventAPI *EventAPI) GetInvitationView(c *gin.Context) {
+	eventId := c.Param("id")
+
+	c.HTML(http.StatusOK, "", views.Index(views.GetInvitation(eventId)))
 }

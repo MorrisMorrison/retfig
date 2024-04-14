@@ -10,7 +10,9 @@ import "context"
 import "io"
 import "bytes"
 
-func CreateEvent() templ.Component {
+import "fmt"
+
+func GetInvitation(eventId string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -27,7 +29,7 @@ func CreateEvent() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var2 := `Create Event`
+		templ_7745c5c3_Var2 := `Event Invitation`
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -36,16 +38,32 @@ func CreateEvent() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var3 := `Create an event and share your generated link with your friends and family to find the perfect present together!`
+		templ_7745c5c3_Var3 := `Someone invited you to join an event to help find a present!`
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><div id=\"create-event\" name=\"create-event\" class=\"is-flex is-flex-direction-column box\"><form hx-post=\"/events\" hx-target=\"#content\" hx-ext=\"json-enc\"><div class=\"field\"><div class=\"control\"><input class=\"input is-primary\" id=\"username\" name=\"username\" type=\"text\" placeholder=\"What is your name?\"></div></div><div class=\"field\"><div class=\"control\"><input class=\"input is-primary\" id=\"event-name\" name=\"event-name\" type=\"text\" placeholder=\"What is the name of the event?\"></div></div><div class=\"field\"><div class=\"control\"><input class=\"input is-primary\" id=\"recipient\" name=\"recipient\" type=\"text\" placeholder=\"Who will receive the gift?\"></div></div><div class=\"field\"><div class=\"control\"><button type=\"submit\" class=\"button is-link is-vcentered\" id=\"create-event\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><div id=\"invitation\" name=\"invitation\" class=\"is-flex is-flex-direction-column box\"><form hx-post=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var4 := `Create Event`
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ.URL(fmt.Sprintf("/events/%s/participants", eventId)))))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#content\" hx-replace-url=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(fmt.Sprintf("/events/%s", eventId)))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-ext=\"json-enc\"><div class=\"field\"><div class=\"control\"><input class=\"input is-primary\" id=\"username\" name=\"username\" type=\"text\" placeholder=\"What is your name?\"></div></div><div class=\"field\"><div class=\"control\"><button type=\"submit\" class=\"button is-link is-vcentered\" id=\"create-event\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var4 := `Join Event`
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

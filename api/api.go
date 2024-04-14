@@ -8,5 +8,5 @@ import (
 )
 
 func Index(c *gin.Context) {
-	c.HTML(http.StatusOK, "", views.Index())
+	c.HTML(http.StatusOK, "", views.Index(views.CreateEvent()))
 }

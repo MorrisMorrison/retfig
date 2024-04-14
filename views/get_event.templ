@@ -3,5 +3,11 @@ package views
 import "github.com/MorrisMorrison/retfig/viewmodels"
 
 templ GetEvent(vm *viewmodels.GetEventViewModel) {
-	<div>{ vm.Name }</div>
+	<section class="section">
+		<div class="is-flex is-flex-direction-column">
+			@EventDetails(vm)
+			@PresentsList()
+			@InvitationLink(vm.InvitationLink)
+		</div>
+	</section>
 }
