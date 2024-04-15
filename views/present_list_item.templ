@@ -3,9 +3,13 @@ package views
 import "github.com/MorrisMorrison/retfig/viewmodels"
 
 templ PresentListItem(vm viewmodels.PresentListItemViewModel) {
-	<div class="is-flex is-flex-direction-column">
-		<h1 class="title"></h1>
-        { vm.Name }
-        { vm.Link }
+	<div class="is-flex is-flex-direction-column has-background-primary has-text-light box">
+		<div class="is-flex is-justify-content-space-between">
+			<span class="has-text-weight-semibold">{ vm.Name }</span>
+			<span>{ vm.Creator } - { vm.CreatedAt }</span>
+		</div>
+		<div class="is-flex is-justify-content-space-between">
+			<span>{ vm.Link }</span>
+		</div>
 	</div>
 }

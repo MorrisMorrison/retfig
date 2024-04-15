@@ -5,13 +5,13 @@ import "github.com/MorrisMorrison/retfig/viewmodels"
 templ EventDetails(vm *viewmodels.GetEventViewModel) {
 	<div class="is-flex is-flex-direction-column box">
 		<div class="is-flex is-justify-content-space-between">
-			<h1 class="title"><i class="fa-solid fa-gift"></i> { vm.Name }</h1>
-			<span class="icon has-text-link"><i class="fa-solid fa-pen"></i></span>
+			<h1 class="title"><i class="fa-solid fa-calendar"></i> { vm.Name }</h1>
+			<span class="icon has-text-primary"><i class="fa-solid fa-pen"></i></span>
 		</div>
 		<div class="field">
 			<label class="label">Who created this event?</label>
 			<div class="control">
-				{ vm.CreatorEmail }
+				{ vm.Creator }
 			</div>
 		</div>
 		<div class="field">
@@ -23,11 +23,15 @@ templ EventDetails(vm *viewmodels.GetEventViewModel) {
 		<div class="field">
 			<label class="label">Who is participating?</label>
 			<div class="control">
-				<ul>
-					for _, participant := range vm.Participants {
-						<li><i class="fa-solid fa-user"></i> { participant }</li>
-					}
-				</ul>
+				if len(vm.Participants) == 0 {
+					<span class="has-text-weight-light">No participants yet.</span>
+				} else {
+					<ul>
+						for _, participant := range vm.Participants {
+							<li><i class="fa-solid fa-user"></i> { participant }</li>
+						}
+					</ul>
+				}
 			</div>
 		</div>
 	</div>

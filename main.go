@@ -17,7 +17,14 @@ func main() {
 	dbConn := database.NewConnection()
 	migrations.InitializeDatabase(dbConn)
 
-	eventAPI := setupEventAPI(dbConn)
+	presentRepository := repositories.NewPresentRepository(dbConn)
+	presentService := services.NewPresentService(presentRepository)
+	presentAPI := api.NewPresentAPI(presentService)
+
+	eventRepository := repositories.NewEventRepository(dbConn)
+	eventService := services.NewEventService(eventRepository, presentService)
+
+	eventAPI := api.NewEventAPI(eventService)
 
 	r := gin.Default()
 	r.HTMLRender = &templrender.TemplRender{}
@@ -36,17 +43,13 @@ func main() {
 	r.POST("/events/:id/participants", eventAPI.CreateParticipant)
 	r.GET("/events/:id/invitation", eventAPI.GetInvitationView)
 
+	r.GET("/events/:id/presents", presentAPI.GetPresents)
+	r.POST("/events/:id/presents", presentAPI.CreatePresent)
+
 	r.GET("/", api.Index)
 
 	r.Static("/public", "./public")
 	//r.StaticFile("/favicon.ico", "./public/favicon.ico")
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-}
-
-func setupEventAPI(dbConn *database.Connection) *api.EventAPI {
-	eventrepository := repositories.NewEventRepository(dbConn)
-	eventService := services.NewEventService(eventrepository)
-	return api.NewEventAPI(eventService)
-
 }

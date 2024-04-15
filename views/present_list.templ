@@ -1,0 +1,22 @@
+package views
+
+import "github.com/MorrisMorrison/retfig/viewmodels"
+
+templ PresentList(vm viewmodels.PresentListViewModel) {
+	<div id="presentList" class="is-flex is-flex-direction-column mb-5">
+		<div class="is-flex is-flex-direction-column box">
+			<h1 class="title"><i class="fa-solid fa-gift"></i> Presents</h1>
+			<h2 class="subtitle">View and rate present recommendations!</h2>
+			if len(vm.Presents) == 0 {
+				<span class="has-text-weight-light">No presents recommended yet!</span>
+			} else {
+				<div class="is-flex is-flex-direction-column">
+					for _, present := range vm.Presents {
+						@PresentListItem(present)
+					}
+				</div>
+			}
+		</div>
+		@AddPresent(vm.EventId)
+	</div>
+}

@@ -7,7 +7,6 @@ import (
 	"github.com/MorrisMorrison/retfig/services"
 	"github.com/MorrisMorrison/retfig/views"
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
 )
 
 type EventAPI struct {
@@ -36,7 +35,7 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 		return
 	}
 
-	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId)
+	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId.String())
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -50,7 +49,7 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 
 func (eventAPI *EventAPI) GetEvent(c *gin.Context) {
 	eventId := c.Param("id")
-	viewModel, err := eventAPI.eventService.GetEventViewModel(uuid.FromStringOrNil(eventId))
+	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -96,7 +95,7 @@ func (eventAPI *EventAPI) CreateParticipant(c *gin.Context) {
 		return
 	}
 
-	viewModel, err := eventAPI.eventService.GetEventViewModel(uuid.FromStringOrNil(eventId))
+	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

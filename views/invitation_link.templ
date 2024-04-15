@@ -8,7 +8,7 @@ templ InvitationLink(invitationLink string) {
 		<div class="field">
 			<div x-data={fmt.Sprintf("{ invitationLink: '%s'}", invitationLink)} class="control is-flex is-align-items-center is-justify-content-space-between">
 				<input x-model="invitationLink" class="input is-primary mr-2" type="text" readonly />
-				<button @click="$clipboard(invitationLink)" class="button is-link" type="button"><i class="fa-solid fa-clipboard"></i></button>
+				<button @click="$clipboard(invitationLink)" class="button is-primary has-text-light" type="button"><i class="fa-solid fa-clipboard"></i></button>
 			</div>
 		</div>
 	</div>

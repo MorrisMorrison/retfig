@@ -1,7 +1,8 @@
 package request
 
-type CreatePresent struct {
-	EventId string
-	Name    string
-	Link    string
+type CreatePresentRequest struct {
+	EventId  string `json:"eventId"`
+	Name     string `json:"name"`
+	Link     string `json:"link"`
+	Username string `json:"username"`
 }
