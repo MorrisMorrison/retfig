@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	QUERY_CREATE_PRESENT           string = "INSERT INTO present (id, event_id, creator, name, link, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)"
-	QUERY_GET_PRESENTS_BY_EVENT_ID string = "SELECT * FROM present WHERE event_id = ?"
+	QUERY_CREATE_PRESENT           string = "INSERT INTO present (id, eventId, name, link, createdBy, updatedBy, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+	QUERY_GET_PRESENTS_BY_EVENT_ID string = "SELECT * FROM present WHERE eventId = ?"
 )
 
 type PresentRepository struct {
@@ -42,7 +42,7 @@ func (repository *PresentRepository) GetPresentsByEventId(eventId uuid.UUID) ([]
 
 	for rows.Next() {
 		var e models.Present
-		err := rows.Scan(&e.Id, &e.EventId, &e.Creator, &e.Name, &e.Link, &e.CreatedAt, &e.UpdatedAt)
+		err := rows.Scan(&e.Id, &e.EventId, &e.Name, &e.Link, &e.CreatedBy, &e.UpdatedBy, &e.CreatedAt, &e.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
@@ -63,7 +63,7 @@ func (repository *PresentRepository) CreatePresent(present models.Present) (uuid
 	now := time.Now()
 
 	err := repository.dbConn.ExecuteInTransaction(ctx, func(ctx context.Context, tx *sql.Tx) error {
-		_, execError := tx.ExecContext(ctx, QUERY_CREATE_PRESENT, newUUID.String(), present.EventId, present.Creator, present.Name, present.Link, now, now)
+		_, execError := tx.ExecContext(ctx, QUERY_CREATE_PRESENT, newUUID.String(), present.EventId, present.Name, present.Link, present.CreatedBy, present.UpdatedBy, now, now)
 		if execError != nil {
 			return execError
 		}

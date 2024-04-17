@@ -48,7 +48,7 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 }
 
 func (eventAPI *EventAPI) GetEvent(c *gin.Context) {
-	eventId := c.Param("id")
+	eventId := c.Param("eventId")
 	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -77,7 +77,7 @@ func (eventAPI *EventAPI) UpdateEvent(c *gin.Context) {
 }
 
 func (eventAPI *EventAPI) CreateParticipant(c *gin.Context) {
-	eventId := c.Param("id")
+	eventId := c.Param("eventId")
 	var createParticipantRequest request.CreateParticipantRequest
 
 	if err := c.ShouldBindJSON(&createParticipantRequest); err != nil {
@@ -108,7 +108,7 @@ func (eventAPI *EventAPI) CreateParticipant(c *gin.Context) {
 }
 
 func (eventAPI *EventAPI) GetInvitationView(c *gin.Context) {
-	eventId := c.Param("id")
+	eventId := c.Param("eventId")
 
 	c.HTML(http.StatusOK, "", views.Index(views.GetInvitation(eventId)))
 }

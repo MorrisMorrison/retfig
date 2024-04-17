@@ -45,15 +45,16 @@ func mapPresentToPresentListItemViewModel(present models.Present) *viewmodels.Pr
 	dateLayout := "January 02, 2006"
 
 	return &viewmodels.PresentListItemViewModel{
+		Id:        present.Id.String(),
 		Name:      present.Name,
 		Link:      present.Link,
-		Creator:   present.Creator,
+		CreatedBy: present.CreatedBy,
 		CreatedAt: present.CreatedAt.Format(dateLayout),
 	}
 }
 
 func (service *PresentService) CreatePresent(eventId string, createPresentRequest request.CreatePresentRequest) (uuid.UUID, error) {
-	present := mapCreatePresentRequestToPresent(eventId, createPresentRequest)
+	present := service.mapCreatePresentRequestToPresent(eventId, createPresentRequest)
 	presentId, err := service.presentRepository.CreatePresent(present)
 	if err != nil {
 		logger.Log.Error(err, "Could not create present")
@@ -63,11 +64,16 @@ func (service *PresentService) CreatePresent(eventId string, createPresentReques
 	return presentId, err
 }
 
-func mapCreatePresentRequestToPresent(eventId string, createPresentRequest request.CreatePresentRequest) models.Present {
+func (service *PresentService) mapCreatePresentRequestToPresent(eventId string, createPresentRequest request.CreatePresentRequest) models.Present {
+	createdUpdated := models.CreatedUpdated{
+		CreatedBy: createPresentRequest.Username,
+		UpdatedBy: createPresentRequest.Username,
+	}
+
 	return models.Present{
-		EventId: uuid.FromStringOrNil(eventId),
-		Name:    createPresentRequest.Name,
-		Link:    createPresentRequest.Link,
-		Creator: createPresentRequest.Username,
+		EventId:        uuid.FromStringOrNil(eventId),
+		Name:           createPresentRequest.Name,
+		Link:           createPresentRequest.Link,
+		CreatedUpdated: createdUpdated,
 	}
 }

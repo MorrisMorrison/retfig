@@ -1,9 +1,10 @@
 package viewmodels
 
 type PresentListItemViewModel struct {
+	Id        string
 	Name      string
 	Link      string
-	Creator   string
+	CreatedBy string
 	CreatedAt string
 }
 

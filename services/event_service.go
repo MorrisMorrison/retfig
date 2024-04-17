@@ -21,7 +21,7 @@ func NewEventService(eventRepository *repositories.EventRepository, presentServi
 }
 
 func (service *EventService) CreateEvent(createEventRequest request.CreateEventRequest) (uuid.UUID, error) {
-	event := mapCreateEventRequestToEvent(createEventRequest)
+	event := service.mapCreateEventRequestToEvent(createEventRequest)
 	eventId, err := service.eventRepository.CreateEvent(event)
 	if err != nil {
 		logger.Log.Error(err, "Could not create event")
@@ -50,7 +50,7 @@ func (service *EventService) GetEventViewModel(id string) (*viewmodels.GetEventV
 		return nil, err
 	}
 
-	return mapToGetEventViewModel(event, participants, *presents), nil
+	return service.mapToGetEventViewModel(event, participants, *presents), nil
 }
 
 func (service *EventService) CreateParticipant(eventId string, createParticipantRequest request.CreateParticipantRequest) error {
@@ -68,7 +68,7 @@ func (service *EventService) CreateParticipant(eventId string, createParticipant
 		return err
 	}
 
-	if event.Creator == createParticipantRequest.Username {
+	if event.CreatedBy == createParticipantRequest.Username {
 		return nil
 	}
 
@@ -77,30 +77,35 @@ func (service *EventService) CreateParticipant(eventId string, createParticipant
 	return service.eventRepository.CreateParticipant(eventId, createParticipantRequest.Username)
 }
 
-func mapCreateEventRequestToEvent(createEventRequest request.CreateEventRequest) models.Event {
+func (service *EventService) mapCreateEventRequestToEvent(createEventRequest request.CreateEventRequest) models.Event {
+	createdUpdated := models.CreatedUpdated{
+		CreatedBy: createEventRequest.Username,
+		UpdatedBy: createEventRequest.Username,
+	}
+
 	event := models.Event{
-		Name:      createEventRequest.Name,
-		Creator:   createEventRequest.Username,
-		Recipient: createEventRequest.Recipient,
+		Name:           createEventRequest.Name,
+		Recipient:      createEventRequest.Recipient,
+		CreatedUpdated: createdUpdated,
 	}
 
 	return event
 }
 
-func mapToGetEventViewModel(event *models.Event, participants []models.EventParticipant, presents viewmodels.PresentListViewModel) *viewmodels.GetEventViewModel {
+func (service *EventService) mapToGetEventViewModel(event *models.Event, participants []models.EventParticipant, presents viewmodels.PresentListViewModel) *viewmodels.GetEventViewModel {
 	viewModel := &viewmodels.GetEventViewModel{
 		Name:           event.Name,
 		Recipient:      event.Recipient,
-		Creator:        event.Creator,
-		InvitationLink: getInvitationLink(event.Id),
-		Participants:   extractUsernames(participants),
+		CreatedBy:      event.CreatedBy,
+		InvitationLink: service.getInvitationLink(event.Id),
+		Participants:   service.extractUsernames(participants),
 		Presents:       presents,
 	}
 
 	return viewModel
 }
 
-func extractUsernames(participants []models.EventParticipant) []string {
+func (service *EventService) extractUsernames(participants []models.EventParticipant) []string {
 	var usernames []string
 	for _, participant := range participants {
 		usernames = append(usernames, participant.Participant)
@@ -109,7 +114,7 @@ func extractUsernames(participants []models.EventParticipant) []string {
 	return usernames
 }
 
-func getInvitationLink(eventId uuid.UUID) string {
+func (service *EventService) getInvitationLink(eventId uuid.UUID) string {
 	return "http://localhost:8080/events/" + eventId.String() + "/invitation"
 
 }

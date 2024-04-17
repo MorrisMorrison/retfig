@@ -1,30 +1,45 @@
 CREATE TABLE IF NOT EXISTS event (
     id CHAR(36) NOT NULL, 
     name CHAR(255) NOT NULL,
-    creator CHAR(255) NOT NULL,
     recipient CHAR(255) NOT NULL,
+    createdBy CHAR(255) NOT NULL,
+    updatedBy CHAR(255) NOT NULL,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS event_participant (
-    event_id CHAR(36) NOT NULL,
+    eventId CHAR(36) NOT NULL,
     participant CHAR(255) NOT NULL,
+    createdBy CHAR(255) NOT NULL,
+    updatedBy CHAR(255) NOT NULL,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME NOT NULL,
-    PRIMARY KEY (event_id, participant),
-    FOREIGN KEY (event_id) REFERENCES event(id)
+    PRIMARY KEY (eventId, participant),
+    FOREIGN KEY (eventId) REFERENCES event(id)
 );
 
 CREATE TABLE IF NOT EXISTS present ( 
     id CHAR(36) NOT NULL, 
-    event_id CHAR(36) NOT NULL,
-    creator CHAR(255) NOT NULL,
+    eventId CHAR(36) NOT NULL,
     name CHAR(255) NOT NULL,
     link CHAR(255) NOT NULL,
+    createdBy CHAR(255) NOT NULL,
+    updatedBy CHAR(255) NOT NULL,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (event_id) REFERENCES event(id)
+    FOREIGN KEY (eventId) REFERENCES event(id)
 );
+
+CREATE TABLE IF NOT EXISTS present_vote (
+    presentId CHAR(36) NOT NULL,
+    type CHAR(36) NOT NULL, 
+    createdBy CHAR(255) NOT NULL,
+    updatedBy CHAR(255) NOT NULL,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME NOT NULL,
+    PRIMARY KEY (presentId, createdBy),
+    FOREIGN KEY (presentId) REFERENCES present(id)
+)

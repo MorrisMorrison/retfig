@@ -18,7 +18,7 @@ func NewPresentAPI(presentService *services.PresentService) *PresentAPI {
 }
 
 func (presentAPI *PresentAPI) GetPresents(c *gin.Context) {
-	eventId := c.Param("id")
+	eventId := c.Param("eventId")
 	presentListViewModel, err := presentAPI.presentService.GetPresentListViewModel(eventId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -30,7 +30,30 @@ func (presentAPI *PresentAPI) GetPresents(c *gin.Context) {
 }
 
 func (presentAPI *PresentAPI) CreatePresent(c *gin.Context) {
-	eventId := c.Param("id")
+	eventId := c.Param("eventId")
+	var createPresentRequest request.CreatePresentRequest
+
+	if err := c.ShouldBindJSON(&createPresentRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	presentAPI.presentService.CreatePresent(eventId, createPresentRequest)
+
+	presentListViewModel, err := presentAPI.presentService.GetPresentListViewModel(eventId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	c.HTML(http.StatusOK, "", views.PresentList(*presentListViewModel))
+}
+
+func (presentAPI *PresentAPI) CreateComment(c *gin.Context) {
+	eventId := c.Param("eventId")
 	var createPresentRequest request.CreatePresentRequest
 
 	if err := c.ShouldBindJSON(&createPresentRequest); err != nil {

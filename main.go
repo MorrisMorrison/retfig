@@ -23,8 +23,11 @@ func main() {
 
 	eventRepository := repositories.NewEventRepository(dbConn)
 	eventService := services.NewEventService(eventRepository, presentService)
-
 	eventAPI := api.NewEventAPI(eventService)
+
+	voteRepository := repositories.NewVoteRepository(dbConn)
+	voteService := services.NewVoteService(voteRepository)
+	voteAPI := api.NewVoteAPI(voteService, presentService)
 
 	r := gin.Default()
 	r.HTMLRender = &templrender.TemplRender{}
@@ -36,15 +39,18 @@ func main() {
 
 	//r.GET("/events/:id", eventAPI.CreateEvent)
 	r.POST("/events", eventAPI.CreateEvent)
-	r.GET("/events/:id", eventAPI.GetEvent)
-	r.DELETE("/events/:id", eventAPI.DeleteEvent)
-	r.PATCH("/events/:id", eventAPI.UpdateEvent)
+	r.GET("/events/:eventId", eventAPI.GetEvent)
+	r.DELETE("/events/:eventId", eventAPI.DeleteEvent)
+	r.PATCH("/events/:eventId", eventAPI.UpdateEvent)
 
-	r.POST("/events/:id/participants", eventAPI.CreateParticipant)
-	r.GET("/events/:id/invitation", eventAPI.GetInvitationView)
+	r.POST("/events/:eventId/participants", eventAPI.CreateParticipant)
+	r.GET("/events/:eventId/invitation", eventAPI.GetInvitationView)
 
-	r.GET("/events/:id/presents", presentAPI.GetPresents)
-	r.POST("/events/:id/presents", presentAPI.CreatePresent)
+	r.GET("/events/:eventId/presents", presentAPI.GetPresents)
+	r.POST("/events/:eventId/presents", presentAPI.CreatePresent)
+
+	r.POST("/events/:eventId/presents/:presentId/vote", voteAPI.CreateVote)
+	r.POST("/events/:eventId/presents/:presentId/comment", presentAPI.CreatePresent)
 
 	r.GET("/", api.Index)
 
