@@ -2,8 +2,8 @@ package models
 
 import uuid "github.com/satori/go.uuid"
 
-type EventParticipant struct {
-	EventId     uuid.UUID
-	Participant string
+type Participant struct {
+	EventId uuid.UUID
+	Name    string
 	CreatedUpdated
 }

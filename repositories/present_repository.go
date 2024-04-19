@@ -13,6 +13,7 @@ import (
 const (
 	QUERY_CREATE_PRESENT           string = "INSERT INTO present (id, eventId, name, link, createdBy, updatedBy, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 	QUERY_GET_PRESENTS_BY_EVENT_ID string = "SELECT * FROM present WHERE eventId = ?"
+	QUERY_GET_PRESENT_BY_ID        string = "SELECT * FROM present WHERE id = ?"
 )
 
 type PresentRepository struct {
@@ -76,4 +77,28 @@ func (repository *PresentRepository) CreatePresent(present models.Present) (uuid
 	}
 
 	return newUUID, nil
+}
+
+func (repository *PresentRepository) GetPresentById(id uuid.UUID) (*models.Present, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	tx, txErr := repository.dbConn.Database.BeginTx(ctx, nil)
+	if txErr != nil {
+		return nil, txErr
+	}
+
+	defer tx.Rollback()
+
+	var p models.Present
+	queryErr := tx.QueryRowContext(ctx, QUERY_GET_PRESENT_BY_ID, id).Scan(&p.Id, &p.EventId, &p.Name, &p.Link, &p.CreatedBy, &p.UpdatedBy, &p.CreatedAt, &p.UpdatedAt)
+	if queryErr != nil {
+		if queryErr == sql.ErrNoRows {
+			return nil, nil
+		} else {
+			return nil, queryErr
+		}
+	}
+
+	return &p, tx.Commit()
 }

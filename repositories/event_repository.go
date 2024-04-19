@@ -15,8 +15,8 @@ const (
 	QUERY_GET_EVENT_BY_ID                      string = "SELECT * FROM event WHERE id = ?"
 	QUERY_GET_EVENTS_BY_IDS                    string = "SELECT * FROM event WHERE id in (?)"
 	QUERY_GET_PARTICIPANTS_BY_EVENT_ID         string = "SELECT * FROM event_participant WHERE eventId = ?"
-	QUERY_GET_PARTICIPANT_BY_NAME_AND_EVENT_ID string = "SELECT * FROM event_participant WHERE participant=? AND eventId=?"
-	QUERY_CREATE_PARTICIPANT                   string = "INSERT INTO event_participant (event_id, participant, createdBy, updatedBy, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)"
+	QUERY_GET_PARTICIPANT_BY_NAME_AND_EVENT_ID string = "SELECT * FROM event_participant WHERE name=? AND eventId=?"
+	QUERY_CREATE_PARTICIPANT                   string = "INSERT INTO event_participant (eventId, name, createdBy, updatedBy, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)"
 )
 
 type EventRepository struct {
@@ -128,7 +128,7 @@ func (repository *EventRepository) CreateParticipant(eventId string, username st
 	return nil
 }
 
-func (repository *EventRepository) GetParticipantsByEventId(id uuid.UUID) ([]models.EventParticipant, error) {
+func (repository *EventRepository) GetParticipantsByEventId(eventId uuid.UUID) ([]models.Participant, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -139,15 +139,15 @@ func (repository *EventRepository) GetParticipantsByEventId(id uuid.UUID) ([]mod
 
 	defer tx.Rollback()
 
-	var participants []models.EventParticipant
-	rows, queryErr := tx.QueryContext(ctx, QUERY_GET_PARTICIPANTS_BY_EVENT_ID, id)
+	var participants []models.Participant
+	rows, queryErr := tx.QueryContext(ctx, QUERY_GET_PARTICIPANTS_BY_EVENT_ID, eventId)
 	if queryErr != nil {
 		return nil, queryErr
 	}
 
 	for rows.Next() {
-		var e models.EventParticipant
-		err := rows.Scan(&e.EventId, &e.Participant, &e.CreatedBy, &e.UpdatedBy, &e.CreatedAt, &e.UpdatedAt)
+		var e models.Participant
+		err := rows.Scan(&e.EventId, &e.Name, &e.CreatedBy, &e.UpdatedBy, &e.CreatedAt, &e.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
@@ -160,7 +160,7 @@ func (repository *EventRepository) GetParticipantsByEventId(id uuid.UUID) ([]mod
 	return participants, tx.Commit()
 }
 
-func (repository *EventRepository) GetParticipantByNameAndEventId(name string, eventId uuid.UUID) (*models.EventParticipant, error) {
+func (repository *EventRepository) GetParticipantByNameAndEventId(name string, eventId uuid.UUID) (*models.Participant, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -171,8 +171,8 @@ func (repository *EventRepository) GetParticipantByNameAndEventId(name string, e
 
 	defer tx.Rollback()
 
-	var e models.EventParticipant
-	queryErr := tx.QueryRowContext(ctx, QUERY_GET_PARTICIPANT_BY_NAME_AND_EVENT_ID, name, eventId).Scan(&e.EventId, &e.Participant, &e.CreatedBy, &e.UpdatedBy, &e.CreatedAt, &e.UpdatedAt)
+	var e models.Participant
+	queryErr := tx.QueryRowContext(ctx, QUERY_GET_PARTICIPANT_BY_NAME_AND_EVENT_ID, name, eventId).Scan(&e.EventId, &e.Name, &e.CreatedBy, &e.UpdatedBy, &e.CreatedAt, &e.UpdatedAt)
 	if queryErr != nil {
 		if queryErr == sql.ErrNoRows {
 			return nil, nil

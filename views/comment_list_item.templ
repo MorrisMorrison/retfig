@@ -1,0 +1,9 @@
+package views
+
+import "github.com/MorrisMorrison/retfig/viewmodels"
+
+templ CommentListItem(eventId string, vm viewmodels.CommentListItemViewModel) {
+	<div class="is-flex is-flex-direction-row">
+	<span class="has-text-weight-bold">{vm.Username}</span>: {vm.Content}
+	</div>
+}

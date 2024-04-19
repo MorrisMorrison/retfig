@@ -11,10 +11,12 @@ import (
 
 type PresentService struct {
 	presentRepository repositories.PresentRepository
+	voteService       VoteService
+	commentService    CommentService
 }
 
-func NewPresentService(presentRepository *repositories.PresentRepository) *PresentService {
-	return &PresentService{presentRepository: *presentRepository}
+func NewPresentService(presentRepository *repositories.PresentRepository, voteService *VoteService, commentService *CommentService) *PresentService {
+	return &PresentService{presentRepository: *presentRepository, voteService: *voteService, commentService: *commentService}
 }
 
 func (service *PresentService) GetPresentListViewModel(eventId string) (*viewmodels.PresentListViewModel, error) {
@@ -24,14 +26,24 @@ func (service *PresentService) GetPresentListViewModel(eventId string) (*viewmod
 		return nil, err
 	}
 
-	return mapPresentsToPresentListViewModel(eventId, presents), nil
+	return service.mapPresentsToPresentListViewModel(eventId, presents), nil
 }
 
-func mapPresentsToPresentListViewModel(eventId string, presents []models.Present) *viewmodels.PresentListViewModel {
+func (service *PresentService) mapPresentsToPresentListViewModel(eventId string, presents []models.Present) *viewmodels.PresentListViewModel {
 	var presentListItems []viewmodels.PresentListItemViewModel
+	presentIds := service.extractIds(presents)
+
+	presentIdToUpvoteCount, err := service.voteService.GetVoteCountMapByPresentIdsAndVoteType(presentIds, models.UPVOTE)
+	if err != nil {
+		logger.Log.Debug("Could not get upvote counts")
+	}
+	presentIdToDownvoteCount, err := service.voteService.GetVoteCountMapByPresentIdsAndVoteType(presentIds, models.DOWNVOTE)
+	if err != nil {
+		logger.Log.Debug("Could not get downvote counts")
+	}
 
 	for _, present := range presents {
-		presentListItem := mapPresentToPresentListItemViewModel(present)
+		presentListItem := service.mapPresentToPresentListItemViewModel(&present, presentIdToUpvoteCount[present.Id.String()], presentIdToDownvoteCount[present.Id.String()])
 		presentListItems = append(presentListItems, *presentListItem)
 	}
 
@@ -41,15 +53,31 @@ func mapPresentsToPresentListViewModel(eventId string, presents []models.Present
 	}
 }
 
-func mapPresentToPresentListItemViewModel(present models.Present) *viewmodels.PresentListItemViewModel {
+func (service *PresentService) GetPresentListItemViewModel(presentId string) (*viewmodels.PresentListItemViewModel, error) {
+	present, err := service.presentRepository.GetPresentById(uuid.FromStringOrNil(presentId))
+	if err != nil {
+		logger.Log.Error(err, "Could not get present")
+		return nil, err
+	}
+
+	return service.mapPresentToPresentListItemViewModel(present, 0, 0), nil
+}
+
+func (service *PresentService) mapPresentToPresentListItemViewModel(present *models.Present, upvoteCount int32, downvoteCount int32) *viewmodels.PresentListItemViewModel {
 	dateLayout := "January 02, 2006"
 
 	return &viewmodels.PresentListItemViewModel{
-		Id:        present.Id.String(),
-		Name:      present.Name,
-		Link:      present.Link,
-		CreatedBy: present.CreatedBy,
-		CreatedAt: present.CreatedAt.Format(dateLayout),
+		Id:            present.Id.String(),
+		Name:          present.Name,
+		Link:          present.Link,
+		UpvoteCount:   upvoteCount,
+		DownvoteCount: downvoteCount,
+		ShowComments:  true,
+		CreatedBy:     present.CreatedBy,
+		CreatedAt:     present.CreatedAt.Format(dateLayout),
+		Comments: viewmodels.CommentListViewModel{
+			PresentId: present.Id.String(),
+		},
 	}
 }
 
@@ -76,4 +104,12 @@ func (service *PresentService) mapCreatePresentRequestToPresent(eventId string, 
 		Link:           createPresentRequest.Link,
 		CreatedUpdated: createdUpdated,
 	}
+}
+
+func (service *PresentService) extractIds(presents []models.Present) []string {
+	var ids []string
+	for _, present := range presents {
+		ids = append(ids, present.Id.String())
+	}
+	return ids
 }

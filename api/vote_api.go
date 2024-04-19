@@ -30,7 +30,13 @@ func (voteAPI *VoteAPI) CreateVote(c *gin.Context) {
 		return
 	}
 
-	voteAPI.voteService.CreateVote(createVoteRequest)
+	err := voteAPI.voteService.CreateVote(createVoteRequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
 
 	presentListViewModel, err := voteAPI.presentService.GetPresentListViewModel(eventId)
 	if err != nil {

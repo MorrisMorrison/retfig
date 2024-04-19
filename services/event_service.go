@@ -92,7 +92,7 @@ func (service *EventService) mapCreateEventRequestToEvent(createEventRequest req
 	return event
 }
 
-func (service *EventService) mapToGetEventViewModel(event *models.Event, participants []models.EventParticipant, presents viewmodels.PresentListViewModel) *viewmodels.GetEventViewModel {
+func (service *EventService) mapToGetEventViewModel(event *models.Event, participants []models.Participant, presents viewmodels.PresentListViewModel) *viewmodels.GetEventViewModel {
 	viewModel := &viewmodels.GetEventViewModel{
 		Name:           event.Name,
 		Recipient:      event.Recipient,
@@ -105,10 +105,10 @@ func (service *EventService) mapToGetEventViewModel(event *models.Event, partici
 	return viewModel
 }
 
-func (service *EventService) extractUsernames(participants []models.EventParticipant) []string {
+func (service *EventService) extractUsernames(participants []models.Participant) []string {
 	var usernames []string
 	for _, participant := range participants {
-		usernames = append(usernames, participant.Participant)
+		usernames = append(usernames, participant.Name)
 	}
 
 	return usernames

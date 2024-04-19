@@ -51,26 +51,3 @@ func (presentAPI *PresentAPI) CreatePresent(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "", views.PresentList(*presentListViewModel))
 }
-
-func (presentAPI *PresentAPI) CreateComment(c *gin.Context) {
-	eventId := c.Param("eventId")
-	var createPresentRequest request.CreatePresentRequest
-
-	if err := c.ShouldBindJSON(&createPresentRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-	presentAPI.presentService.CreatePresent(eventId, createPresentRequest)
-
-	presentListViewModel, err := presentAPI.presentService.GetPresentListViewModel(eventId)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-	}
-
-	c.HTML(http.StatusOK, "", views.PresentList(*presentListViewModel))
-}

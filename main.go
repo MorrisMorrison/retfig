@@ -17,16 +17,17 @@ func main() {
 	dbConn := database.NewConnection()
 	migrations.InitializeDatabase(dbConn)
 
+	voteRepository := repositories.NewVoteRepository(dbConn)
+	voteService := services.NewVoteService(voteRepository)
+	commentRepository := repositories.NewCommentRepository(dbConn)
+	commentService := services.NewCommentService(commentRepository)
 	presentRepository := repositories.NewPresentRepository(dbConn)
-	presentService := services.NewPresentService(presentRepository)
+	presentService := services.NewPresentService(presentRepository, voteService, commentService)
 	presentAPI := api.NewPresentAPI(presentService)
-
+	commentAPI := api.NewCommentAPI(commentService, presentService)
 	eventRepository := repositories.NewEventRepository(dbConn)
 	eventService := services.NewEventService(eventRepository, presentService)
 	eventAPI := api.NewEventAPI(eventService)
-
-	voteRepository := repositories.NewVoteRepository(dbConn)
-	voteService := services.NewVoteService(voteRepository)
 	voteAPI := api.NewVoteAPI(voteService, presentService)
 
 	r := gin.Default()
@@ -50,7 +51,9 @@ func main() {
 	r.POST("/events/:eventId/presents", presentAPI.CreatePresent)
 
 	r.POST("/events/:eventId/presents/:presentId/vote", voteAPI.CreateVote)
-	r.POST("/events/:eventId/presents/:presentId/comment", presentAPI.CreatePresent)
+	
+	r.POST("/events/:eventId/presents/:presentId/comments", commentAPI.CreateComment)
+	r.GET("/events/:eventId/presents/:presentId/comments", commentAPI.GetComments)
 
 	r.GET("/", api.Index)
 
