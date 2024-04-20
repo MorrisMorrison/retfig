@@ -2,7 +2,7 @@ package context
 
 import (
 	"github.com/MorrisMorrison/retfig/container"
-	"github.com/MorrisMorrison/retfig/database"
+	"github.com/MorrisMorrison/retfig/persistence/database"
 )
 
 type ApplicationContext struct {

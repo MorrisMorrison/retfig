@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/MorrisMorrison/retfig/database"
-	"github.com/MorrisMorrison/retfig/models"
+	"github.com/MorrisMorrison/retfig/persistence/database"
+	"github.com/MorrisMorrison/retfig/persistence/models"
 	uuid "github.com/satori/go.uuid"
 )
 

@@ -2,8 +2,8 @@ package container
 
 import (
 	"github.com/MorrisMorrison/retfig/api"
-	"github.com/MorrisMorrison/retfig/database"
-	"github.com/MorrisMorrison/retfig/repositories"
+	"github.com/MorrisMorrison/retfig/persistence/database"
+	"github.com/MorrisMorrison/retfig/persistence/repositories"
 	"github.com/MorrisMorrison/retfig/services"
 )
 

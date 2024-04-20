@@ -2,8 +2,8 @@ package services
 
 import (
 	"github.com/MorrisMorrison/retfig/api/request"
-	"github.com/MorrisMorrison/retfig/models"
-	"github.com/MorrisMorrison/retfig/repositories"
+	"github.com/MorrisMorrison/retfig/persistence/models"
+	"github.com/MorrisMorrison/retfig/persistence/repositories"
 	uuid "github.com/satori/go.uuid"
 )
 
