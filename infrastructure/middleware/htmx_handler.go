@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/MorrisMorrison/retfig/ui/views"
+	"github.com/MorrisMorrison/retfig/ui/views/events"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +15,7 @@ func HtmxHandler() gin.HandlerFunc {
 
 		fmt.Println(isHxRequest)
 		if isHxRequest == "" || isHxRequest == "false" {
-			c.HTML(204, "", views.Index(views.CreateEvent()))
+			c.HTML(204, "", views.Index(events.CreateEvent()))
 			c.Abort()
 			return
 		}

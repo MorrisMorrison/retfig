@@ -5,7 +5,7 @@ import (
 
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/services"
-	"github.com/MorrisMorrison/retfig/ui/views"
+	"github.com/MorrisMorrison/retfig/ui/views/presents"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,7 +26,7 @@ func (presentAPI *PresentAPI) GetPresents(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", views.PresentList(*presentListViewModel))
+	c.HTML(http.StatusOK, "", presents.PresentList(*presentListViewModel))
 }
 
 func (presentAPI *PresentAPI) CreatePresent(c *gin.Context) {
@@ -49,5 +49,5 @@ func (presentAPI *PresentAPI) CreatePresent(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", views.PresentList(*presentListViewModel))
+	c.HTML(http.StatusOK, "", presents.PresentList(*presentListViewModel))
 }

@@ -1,13 +1,16 @@
-package views
+package events
 
 import "github.com/MorrisMorrison/retfig/ui/viewmodels"
+import "github.com/MorrisMorrison/retfig/ui/views/presents"
+import "github.com/MorrisMorrison/retfig/ui/views/invitations"
+
 
 templ GetEvent(vm *viewmodels.GetEventViewModel) {
 	<section class="section">
 		<div class="is-flex is-flex-direction-column">
 			@EventDetails(vm)
-			@PresentList(vm.Presents)
-			@InvitationLink(vm.InvitationLink)
+			@presents.PresentList(vm.Presents)
+			@invitations.InvitationLink(vm.InvitationLink)
 		</div>
 	</section>
 }

@@ -1,6 +1,7 @@
-package views
+package presents
 
 import "github.com/MorrisMorrison/retfig/ui/viewmodels"
+import "github.com/MorrisMorrison/retfig/ui/views/comments"
 import "github.com/MorrisMorrison/retfig/ui/views/payload"
 
 import "fmt"
@@ -65,7 +66,7 @@ templ PresentListItem(eventId string, vm viewmodels.PresentListItemViewModel) {
 		</div>
 		<div id={ "comments_" + vm.Id }>
 			if vm.ShowComments {
-				@CommentList(eventId, vm.Comments)
+				@comments.CommentList(eventId, vm.Comments)
 			}
 		</div>
 	</div>

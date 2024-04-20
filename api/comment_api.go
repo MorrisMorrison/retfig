@@ -5,7 +5,8 @@ import (
 
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/services"
-	"github.com/MorrisMorrison/retfig/ui/views"
+	"github.com/MorrisMorrison/retfig/ui/views/comments"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,7 +30,7 @@ func (commentAPI *CommentAPI) GetComments(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", views.CommentList(eventId, commentListViewModel))
+	c.HTML(http.StatusOK, "", comments.CommentList(eventId, commentListViewModel))
 }
 
 func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
@@ -60,5 +61,5 @@ func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", views.CommentList(eventId, commentListViewModel))
+	c.HTML(http.StatusOK, "", comments.CommentList(eventId, commentListViewModel))
 }

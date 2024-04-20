@@ -7,6 +7,9 @@ import (
 	"github.com/MorrisMorrison/retfig/services"
 
 	"github.com/MorrisMorrison/retfig/ui/views"
+	"github.com/MorrisMorrison/retfig/ui/views/events"
+	"github.com/MorrisMorrison/retfig/ui/views/invitations"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -47,11 +50,11 @@ func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context) {
 
 	}
 
-	c.HTML(http.StatusOK, "", views.GetEvent(viewModel))
+	c.HTML(http.StatusOK, "", events.GetEvent(viewModel))
 }
 
 func (eventAPI *ParticipantAPI) GetInvitationView(c *gin.Context) {
 	eventId := c.Param("eventId")
 
-	c.HTML(http.StatusOK, "", views.Index(views.GetInvitation(eventId)))
+	c.HTML(http.StatusOK, "", views.Index(invitations.GetInvitation(eventId)))
 }

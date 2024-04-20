@@ -6,6 +6,8 @@ import (
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/services"
 	"github.com/MorrisMorrison/retfig/ui/views"
+	"github.com/MorrisMorrison/retfig/ui/views/events"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -44,7 +46,7 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 
 	}
 
-	c.HTML(http.StatusOK, "", views.GetEvent(viewModel))
+	c.HTML(http.StatusOK, "", events.GetEvent(viewModel))
 }
 
 func (eventAPI *EventAPI) GetEvent(c *gin.Context) {
@@ -57,7 +59,7 @@ func (eventAPI *EventAPI) GetEvent(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "", views.Index(views.GetEvent(viewModel)))
+	c.HTML(http.StatusOK, "", views.Index(events.GetEvent(viewModel)))
 }
 
 func (eventAPI *EventAPI) DeleteEvent(c *gin.Context) {
