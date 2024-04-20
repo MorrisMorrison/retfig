@@ -15,7 +15,7 @@ func NewParticipantService(participantRepository *repositories.ParticipantReposi
 	return &ParticipantService{participantRepository: *participantRepository}
 }
 
-func (service *ParticipantService) GetParticipantsByEventId(eventId string) ([]models.Participant, error) {
+func (service *ParticipantService) GetParticipantsByEventId(eventId string) ([]*models.Participant, error) {
 	return service.participantRepository.GetParticipantsByEventId(uuid.FromStringOrNil(eventId))
 }
 

@@ -42,7 +42,7 @@ func (repository *CommentRepository) CreateComment(comment models.Comment) error
 	})
 }
 
-func (repository *CommentRepository) GetCommentsByPresentId(presentId uuid.UUID) ([]models.Comment, error) {
+func (repository *CommentRepository) GetCommentsByPresentId(presentId uuid.UUID) ([]*models.Comment, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -59,7 +59,7 @@ func (repository *CommentRepository) GetCommentsByPresentId(presentId uuid.UUID)
 	}
 	defer rows.Close()
 
-	var comments []models.Comment
+	var comments []*models.Comment
 	for rows.Next() {
 		var c models.Comment
 		err := rows.Scan(&c.PresentId, &c.Content, &c.CreatedBy, &c.UpdatedBy, &c.CreatedAt, &c.UpdatedAt)
@@ -67,7 +67,7 @@ func (repository *CommentRepository) GetCommentsByPresentId(presentId uuid.UUID)
 			return nil, err
 		}
 
-		comments = append(comments, c)
+		comments = append(comments, &c)
 	}
 
 	return comments, tx.Commit()

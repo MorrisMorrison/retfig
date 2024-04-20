@@ -24,7 +24,7 @@ func NewPresentRepository(dbConn *database.Connection) *PresentRepository {
 	return &PresentRepository{dbConn: dbConn}
 }
 
-func (repository *PresentRepository) GetPresentsByEventId(eventId uuid.UUID) ([]models.Present, error) {
+func (repository *PresentRepository) GetPresentsByEventId(eventId uuid.UUID) ([]*models.Present, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -35,20 +35,20 @@ func (repository *PresentRepository) GetPresentsByEventId(eventId uuid.UUID) ([]
 
 	defer tx.Rollback()
 
-	var presents []models.Present
+	var presents []*models.Present
 	rows, queryErr := tx.QueryContext(ctx, QUERY_GET_PRESENTS_BY_EVENT_ID, eventId)
 	if queryErr != nil {
 		return nil, queryErr
 	}
 
 	for rows.Next() {
-		var e models.Present
-		err := rows.Scan(&e.Id, &e.EventId, &e.Name, &e.Link, &e.CreatedBy, &e.UpdatedBy, &e.CreatedAt, &e.UpdatedAt)
+		var p models.Present
+		err := rows.Scan(&p.Id, &p.EventId, &p.Name, &p.Link, &p.CreatedBy, &p.UpdatedBy, &p.CreatedAt, &p.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
 
-		presents = append(presents, e)
+		presents = append(presents, &p)
 	}
 
 	defer rows.Close()

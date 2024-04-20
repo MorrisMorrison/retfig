@@ -46,7 +46,7 @@ func (repository *ParticipantRepository) CreateParticipant(eventId string, usern
 	return nil
 }
 
-func (repository *ParticipantRepository) GetParticipantsByEventId(eventId uuid.UUID) ([]models.Participant, error) {
+func (repository *ParticipantRepository) GetParticipantsByEventId(eventId uuid.UUID) ([]*models.Participant, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -57,20 +57,20 @@ func (repository *ParticipantRepository) GetParticipantsByEventId(eventId uuid.U
 
 	defer tx.Rollback()
 
-	var participants []models.Participant
+	var participants []*models.Participant
 	rows, queryErr := tx.QueryContext(ctx, QUERY_GET_PARTICIPANTS_BY_EVENT_ID, eventId)
 	if queryErr != nil {
 		return nil, queryErr
 	}
 
 	for rows.Next() {
-		var e models.Participant
-		err := rows.Scan(&e.EventId, &e.Name, &e.CreatedBy, &e.UpdatedBy, &e.CreatedAt, &e.UpdatedAt)
+		var p models.Participant
+		err := rows.Scan(&p.EventId, &p.Name, &p.CreatedBy, &p.UpdatedBy, &p.CreatedAt, &p.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
 
-		participants = append(participants, e)
+		participants = append(participants, &p)
 	}
 
 	defer rows.Close()

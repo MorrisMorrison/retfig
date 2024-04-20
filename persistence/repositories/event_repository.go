@@ -71,7 +71,7 @@ func (repository *EventRepository) GetEventById(id uuid.UUID) (*models.Event, er
 	return &e, tx.Commit()
 }
 
-func (repository *EventRepository) GetEventsByIds(ids []string) ([]models.Event, error) {
+func (repository *EventRepository) GetEventsByIds(ids []string) ([]*models.Event, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -82,7 +82,7 @@ func (repository *EventRepository) GetEventsByIds(ids []string) ([]models.Event,
 
 	defer tx.Rollback()
 
-	var events []models.Event
+	var events []*models.Event
 	rows, queryErr := tx.QueryContext(ctx, QUERY_GET_EVENTS_BY_IDS, ids)
 	if queryErr != nil {
 		return nil, queryErr
@@ -95,7 +95,7 @@ func (repository *EventRepository) GetEventsByIds(ids []string) ([]models.Event,
 			return nil, err
 		}
 
-		events = append(events, e)
+		events = append(events, &e)
 	}
 
 	defer rows.Close()

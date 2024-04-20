@@ -29,7 +29,7 @@ func (service *PresentService) GetPresentListViewModel(eventId string) (*viewmod
 	return service.mapPresentsToPresentListViewModel(eventId, presents), nil
 }
 
-func (service *PresentService) mapPresentsToPresentListViewModel(eventId string, presents []models.Present) *viewmodels.PresentListViewModel {
+func (service *PresentService) mapPresentsToPresentListViewModel(eventId string, presents []*models.Present) *viewmodels.PresentListViewModel {
 	var presentListItems []viewmodels.PresentListItemViewModel
 	presentIds := service.extractIds(presents)
 
@@ -49,7 +49,7 @@ func (service *PresentService) mapPresentsToPresentListViewModel(eventId string,
 	}
 
 	for _, present := range presents {
-		presentListItem := service.mapPresentToPresentListItemViewModel(&present, presentIdToUpvoteCount[present.Id.String()], presentIdToDownvoteCount[present.Id.String()], presentIdToCommentCount[present.Id.String()])
+		presentListItem := service.mapPresentToPresentListItemViewModel(present, presentIdToUpvoteCount[present.Id.String()], presentIdToDownvoteCount[present.Id.String()], presentIdToCommentCount[present.Id.String()])
 		presentListItems = append(presentListItems, *presentListItem)
 	}
 
@@ -112,7 +112,7 @@ func (service *PresentService) mapCreatePresentRequestToPresent(eventId string, 
 	}
 }
 
-func (service *PresentService) extractIds(presents []models.Present) []string {
+func (service *PresentService) extractIds(presents []*models.Present) []string {
 	var ids []string
 	for _, present := range presents {
 		ids = append(ids, present.Id.String())

@@ -46,7 +46,7 @@ func (service *CommentService) GetCommentListViewModel(eventId string, presentId
 	}
 
 	for _, comment := range comments {
-		commentListItem := service.mapCommentToCommentListItemViewModel(&comment)
+		commentListItem := service.mapCommentToCommentListItemViewModel(comment)
 		commentListItems = append(commentListItems, *commentListItem)
 	}
 
