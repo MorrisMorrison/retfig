@@ -4,9 +4,9 @@ import "fmt"
 
 templ AddComment(eventId string, presentId string) {
 	<div id="add-comment" name="add-comment" class="is-flex is-flex-direction-column">
-		<form hx-post={ fmt.Sprintf("/events/%s/presents/%s/comments", eventId, presentId) } hx-target="#commentList" hx-swap="outerHTML" hx-ext="json-enc">
+		<form hx-post={ fmt.Sprintf("/events/%s/presents/%s/comments", eventId, presentId) } hx-target={ "#commentList_" + presentId } hx-swap="outerHTML" hx-ext="json-enc">
 			<div x-data="{ username: $persist('') }">
-				<input type="hidden" id="username" name="username" x-model="username" />
+				<input type="hidden" id="username" name="username" x-model="username"/>
 				<input type="hidden" id="eventId" name="eventId" value={ eventId }/>
 				<input type="hidden" id="presentId" name="presentId" value={ presentId }/>
 			</div>
