@@ -1,4 +1,4 @@
-package views
+package payload
 
 import "encoding/json"
 

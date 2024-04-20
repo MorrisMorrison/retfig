@@ -1,6 +1,8 @@
 package views
 
 import "github.com/MorrisMorrison/retfig/ui/viewmodels"
+import "github.com/MorrisMorrison/retfig/ui/views/payload"
+
 import "fmt"
 
 templ PresentListItem(eventId string, vm viewmodels.PresentListItemViewModel) {
@@ -21,7 +23,7 @@ templ PresentListItem(eventId string, vm viewmodels.PresentListItemViewModel) {
 							hx-trigger="click"
 							hx-target={ "#presentList" }
 							hx-swap="outerHTML"
-							hx-vals={ GetCreateVoteJsonPayload(eventId, vm.Id, "UPVOTE", vm.CreatedBy) }
+							hx-vals={ payload.GetCreateVoteJsonPayload(eventId, vm.Id, "UPVOTE", vm.CreatedBy) }
 							hx-ext="json-enc"
 						>
 							<span class="icon">
@@ -36,7 +38,7 @@ templ PresentListItem(eventId string, vm viewmodels.PresentListItemViewModel) {
 							hx-trigger="click"
 							hx-target={ "#presentList" }
 							hx-swap="outerHTML"
-							hx-vals={ GetCreateVoteJsonPayload(eventId, vm.Id, "DOWNVOTE", vm.CreatedBy) }
+							hx-vals={ payload.GetCreateVoteJsonPayload(eventId, vm.Id, "DOWNVOTE", vm.CreatedBy) }
 							hx-ext="json-enc"
 						>
 							<span class="icon">

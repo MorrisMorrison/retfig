@@ -1,5 +1,7 @@
 package views
 
+import "github.com/MorrisMorrison/retfig/ui/views/common"
+
 templ Index(component templ.Component) {
 	<html >
 		<head>
@@ -19,13 +21,13 @@ templ Index(component templ.Component) {
 		</head>
 		<body>
 			<div id="main" name="main" class="is-flex is-flex-direction-column" style="min-height:100vh">
-				@NavBar()
+				@common.NavBar()
 				<section class="section is-flex-grow-1">
 					<div id="content" name="content" class="container">
 						@component
 					</div>
 				</section>
-				@Footer()
+				@common.Footer()
 			</div>
 		</body>
 	</html>
