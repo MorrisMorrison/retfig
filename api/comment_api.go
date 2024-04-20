@@ -35,7 +35,7 @@ func (commentAPI *CommentAPI) GetComments(c *gin.Context) {
 
 func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
 	eventId := c.Param("eventId")
-	// presentId := c.Param("presentId")
+	presentId := c.Param("presentId")
 
 	var createCommentRequest request.CreateCommentRequest
 
@@ -61,5 +61,5 @@ func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", comments.CommentListItem(eventId, *commentListItemViewModel))
+	c.HTML(http.StatusOK, "", comments.CommentListItem(eventId, presentId, *commentListItemViewModel))
 }

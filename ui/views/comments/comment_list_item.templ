@@ -2,8 +2,10 @@ package comments
 
 import "github.com/MorrisMorrison/retfig/ui/viewmodels"
 
-templ CommentListItem(eventId string, vm viewmodels.CommentListItemViewModel) {
+templ CommentListItem(eventId string, presentId string, vm viewmodels.CommentListItemViewModel) {
 	<div class="is-flex is-flex-direction-row">
 	<span class="has-text-weight-bold">{vm.Username}</span>: {vm.Content}
 	</div>
+	<div id={"noCommentsMessage_" + presentId} hx-swap-oob="true"></div>
+
 }

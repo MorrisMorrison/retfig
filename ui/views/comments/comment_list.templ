@@ -8,10 +8,10 @@ templ CommentList(eventId string, vm viewmodels.CommentListViewModel) {
 			<span class="has-text-weight-semibold">Comments</span>
 			<div id={ "commentListItems_" + vm.PresentId} class="is-flex is-flex-direction-column">
 			if len(vm.Comments) == 0 {
-				<span class="has-text-weight-light">No Comments created yet!</span>
+				<span id={"noCommentsMessage_" + vm.PresentId} class="has-text-weight-light">No Comments created yet!</span>
 			} else {
 				for _, comment := range vm.Comments {
-					@CommentListItem(eventId, comment)
+					@CommentListItem(eventId, vm.PresentId, comment)
 				}
 			}
 			</div>
@@ -20,4 +20,5 @@ templ CommentList(eventId string, vm viewmodels.CommentListViewModel) {
 			</div>
 		</div>
 	</div>
+
 }

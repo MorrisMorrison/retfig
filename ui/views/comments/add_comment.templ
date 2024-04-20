@@ -3,8 +3,8 @@ package comments
 import "fmt"
 
 templ AddComment(eventId string, presentId string) {
-	<div id="add-comment" name="add-comment" class="is-flex is-flex-direction-column">
-		<form hx-post={ fmt.Sprintf("/events/%s/presents/%s/comments", eventId, presentId) } hx-target={ "#commentListItems_" + presentId } hx-swap="beforeend" hx-ext="json-enc">
+	<div id="add-comment" name="add-comment" class="is-flex is-flex-direction-column" x-data="{ content: ''}">
+		<form hx-post={ fmt.Sprintf("/events/%s/presents/%s/comments", eventId, presentId) } @htmx:after-request="content='';"  hx-target={ "#commentListItems_" + presentId } hx-swap="beforeend" hx-ext="json-enc">
 			<div x-data="{ username: $persist('') }">
 				<input type="hidden" id="username" name="username" x-model="username"/>
 				<input type="hidden" id="eventId" name="eventId" value={ eventId }/>
@@ -12,7 +12,7 @@ templ AddComment(eventId string, presentId string) {
 			</div>
 			<div class="field">
 				<div class="control is-flex">
-					<input class="input is-primary" id="content" name="content" type="text" placeholder="What is on your mind?" required/>
+					<input x-model="content" class="input is-primary" id="content" name="content" type="text" placeholder="What is on your mind?" required/>
 					<button type="submit" class="button is-primary is-vcentered has-text-light" id="add-comment-button"><i class="fa-solid fa-comment-medical"></i></button>
 				</div>
 			</div>
