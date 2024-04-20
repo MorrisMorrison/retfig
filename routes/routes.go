@@ -12,8 +12,8 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 	r.DELETE("/events/:eventId", apis.EventAPI.DeleteEvent)
 	r.PATCH("/events/:eventId", apis.EventAPI.UpdateEvent)
 
-	r.POST("/events/:eventId/participants", apis.EventAPI.CreateParticipant)
-	r.GET("/events/:eventId/invitation", apis.EventAPI.GetInvitationView)
+	r.POST("/events/:eventId/participants", apis.ParticipantAPI.CreateParticipant)
+	r.GET("/events/:eventId/invitation", apis.ParticipantAPI.GetInvitationView)
 
 	r.GET("/events/:eventId/presents", apis.PresentAPI.GetPresents)
 	r.POST("/events/:eventId/presents", apis.PresentAPI.CreatePresent)

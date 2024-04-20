@@ -1,8 +1,6 @@
 package services
 
 import (
-	"fmt"
-
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/logger"
 	"github.com/MorrisMorrison/retfig/models"
@@ -12,12 +10,13 @@ import (
 )
 
 type EventService struct {
-	eventRepository repositories.EventRepository
-	presentService  PresentService
+	eventRepository    repositories.EventRepository
+	presentService     PresentService
+	participantService ParticipantService
 }
 
-func NewEventService(eventRepository *repositories.EventRepository, presentService *PresentService) *EventService {
-	return &EventService{eventRepository: *eventRepository, presentService: *presentService}
+func NewEventService(eventRepository *repositories.EventRepository, presentService *PresentService, participantService *ParticipantService) *EventService {
+	return &EventService{eventRepository: *eventRepository, presentService: *presentService, participantService: *participantService}
 }
 
 func (service *EventService) CreateEvent(createEventRequest request.CreateEventRequest) (uuid.UUID, error) {
@@ -38,7 +37,7 @@ func (service *EventService) GetEventViewModel(id string) (*viewmodels.GetEventV
 		return nil, err
 	}
 
-	participants, err := service.eventRepository.GetParticipantsByEventId(uuid.FromStringOrNil(id))
+	participants, err := service.participantService.GetParticipantsByEventId(id)
 	if err != nil {
 		logger.Log.Error(err, "Could not get participants")
 		return nil, err
@@ -51,30 +50,6 @@ func (service *EventService) GetEventViewModel(id string) (*viewmodels.GetEventV
 	}
 
 	return service.mapToGetEventViewModel(event, participants, *presents), nil
-}
-
-func (service *EventService) CreateParticipant(eventId string, createParticipantRequest request.CreateParticipantRequest) error {
-	participant, err := service.eventRepository.GetParticipantByNameAndEventId(createParticipantRequest.Username, uuid.FromStringOrNil(eventId))
-	if err != nil {
-		return err
-	}
-
-	if participant != nil {
-		return nil
-	}
-
-	event, err := service.eventRepository.GetEventById(uuid.FromStringOrNil(eventId))
-	if err != nil {
-		return err
-	}
-
-	if event.CreatedBy == createParticipantRequest.Username {
-		return nil
-	}
-
-	fmt.Println("not found participant")
-
-	return service.eventRepository.CreateParticipant(eventId, createParticipantRequest.Username)
 }
 
 func (service *EventService) mapCreateEventRequestToEvent(createEventRequest request.CreateEventRequest) models.Event {
@@ -116,5 +91,4 @@ func (service *EventService) extractUsernames(participants []models.Participant)
 
 func (service *EventService) getInvitationLink(eventId uuid.UUID) string {
 	return "http://localhost:8080/events/" + eventId.String() + "/invitation"
-
 }
