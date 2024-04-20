@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/MorrisMorrison/retfig/config"
+	"github.com/MorrisMorrison/retfig/infrastructure/config"
 	"github.com/golang-jwt/jwt/v4"
 )
 
