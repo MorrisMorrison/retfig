@@ -40,14 +40,20 @@ func (presentAPI *PresentAPI) CreatePresent(c *gin.Context) {
 		return
 	}
 
-	presentAPI.presentService.CreatePresent(eventId, createPresentRequest)
+	presentId, err := presentAPI.presentService.CreatePresent(eventId, createPresentRequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
 
-	presentListViewModel, err := presentAPI.presentService.GetPresentListViewModel(eventId)
+	presentListItemViewModel, err := presentAPI.presentService.GetPresentListItemViewModel(presentId.String())
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 	}
 
-	c.HTML(http.StatusOK, "", presents.PresentList(*presentListViewModel))
+	c.HTML(http.StatusOK, "", presents.PresentListItem(eventId, *presentListItemViewModel))
 }

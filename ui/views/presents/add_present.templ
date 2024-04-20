@@ -3,21 +3,21 @@ package presents
 import "fmt"
 
 templ AddPresent(eventId string) {
-	<div id="add-present" name="add-present" class="is-flex is-flex-direction-column box">
+	<div id="add-present" name="add-present" class="is-flex is-flex-direction-column box" x-data="{ username: $persist(''), name: '', link: '' }">
 		<h2 class="subtitle">Add present recommendations to the list!</h2>
-		<form hx-post={ fmt.Sprintf("/events/%s/presents", eventId) } hx-target="#presentList" hx-swap="outerHTML" hx-ext="json-enc">
-			<div x-data="{ username: $persist('') }">
-				<input type="hidden" id="username" name="username" x-model="username" />
+		<form  hx-post={ fmt.Sprintf("/events/%s/presents", eventId) } @htmx:after-request="name=''; link = '';"  hx-target="#presentListItems" hx-swap="beforeend" hx-ext="json-enc">
+			<div>
+				<input type="hidden" id="username" name="username" x-model="username"/>
 				<input type="hidden" id="eventId" name="eventId" value={ eventId }/>
 			</div>
 			<div class="field">
 				<div class="control">
-					<input class="input is-primary" id="name" name="name" type="text" placeholder="Which present do you want to add?" required/>
+					<input x-model="name" class="input is-primary" id="name" name="name" type="text" placeholder="Which present do you want to add?" required/>
 				</div>
 			</div>
 			<div class="field">
 				<div class="control">
-					<input class="input is-primary" id="link" name="link" type="text" placeholder="Please provide a URL to the present." required/>
+					<input x-model="link" class="input is-primary" id="link" name="link" type="text" placeholder="Please provide a URL to the present." required/>
 				</div>
 			</div>
 			<div class="field">

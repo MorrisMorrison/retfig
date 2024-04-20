@@ -7,15 +7,15 @@ templ PresentList(vm viewmodels.PresentListViewModel) {
 		<div class="is-flex is-flex-direction-column box">
 			<h1 class="title"><i class="fa-solid fa-gift"></i> Presents</h1>
 			<h2 class="subtitle">View and rate present recommendations!</h2>
-			if len(vm.Presents) == 0 {
-				<span class="has-text-weight-light">No presents recommended yet!</span>
-			} else {
-				<div class="is-flex is-flex-direction-column">
+			<div id="presentListItems" class="is-flex is-flex-direction-column">
+				if len(vm.Presents) == 0 {
+					<span class="has-text-weight-light">No presents recommended yet!</span>
+				} else {
 					for _, present := range vm.Presents {
 						@PresentListItem(vm.EventId, present)
 					}
-				</div>
-			}
+				}
+			</div>
 		</div>
 		@AddPresent(vm.EventId)
 	</div>
