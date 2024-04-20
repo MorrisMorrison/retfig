@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/MorrisMorrison/retfig/database"
+	"github.com/MorrisMorrison/retfig/persistence/database"
 	"github.com/MorrisMorrison/retfig/utils"
 )
 
