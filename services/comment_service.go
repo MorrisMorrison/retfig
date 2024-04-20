@@ -4,7 +4,7 @@ import (
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/persistence/models"
 	"github.com/MorrisMorrison/retfig/persistence/repositories"
-	"github.com/MorrisMorrison/retfig/viewmodels"
+	"github.com/MorrisMorrison/retfig/ui/viewmodels"
 	uuid "github.com/satori/go.uuid"
 )
 

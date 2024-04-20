@@ -5,7 +5,7 @@ import (
 
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/services"
-	"github.com/MorrisMorrison/retfig/views"
+	"github.com/MorrisMorrison/retfig/ui/views"
 	"github.com/gin-gonic/gin"
 )
 

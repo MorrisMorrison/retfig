@@ -5,7 +5,7 @@ import (
 	"github.com/MorrisMorrison/retfig/persistence/database"
 	"github.com/MorrisMorrison/retfig/persistence/database/migrations"
 	"github.com/MorrisMorrison/retfig/routes"
-	"github.com/MorrisMorrison/retfig/templrender"
+	"github.com/MorrisMorrison/retfig/ui/templrender"
 	"github.com/gin-gonic/gin"
 )
 

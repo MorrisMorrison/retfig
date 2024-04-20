@@ -5,7 +5,7 @@ import (
 	"github.com/MorrisMorrison/retfig/logger"
 	"github.com/MorrisMorrison/retfig/persistence/models"
 	"github.com/MorrisMorrison/retfig/persistence/repositories"
-	"github.com/MorrisMorrison/retfig/viewmodels"
+	"github.com/MorrisMorrison/retfig/ui/viewmodels"
 	uuid "github.com/satori/go.uuid"
 )
 

@@ -3,7 +3,7 @@ package middleware
 import (
 	"fmt"
 
-	"github.com/MorrisMorrison/retfig/views"
+	"github.com/MorrisMorrison/retfig/ui/views"
 	"github.com/gin-gonic/gin"
 )
 
