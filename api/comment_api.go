@@ -30,7 +30,7 @@ func (commentAPI *CommentAPI) GetComments(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", comments.CommentList(eventId, *commentListViewModel))
+	c.HTML(http.StatusOK, "", comments.CommentList(eventId, commentListViewModel))
 }
 
 func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
@@ -61,5 +61,5 @@ func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", comments.CommentListItem(eventId, presentId, *commentListItemViewModel))
+	c.HTML(http.StatusOK, "", comments.CommentListItem(eventId, presentId, commentListItemViewModel))
 }

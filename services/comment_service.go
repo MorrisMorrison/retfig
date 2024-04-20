@@ -39,7 +39,7 @@ func (service *CommentService) mapCreateCommentRequestToComment(request request.
 }
 
 func (service *CommentService) GetCommentListViewModel(eventId string, presentId string) (*viewmodels.CommentListViewModel, error) {
-	var commentListItems []viewmodels.CommentListItemViewModel
+	var commentListItems []*viewmodels.CommentListItemViewModel
 	comments, err := service.commentRepository.GetCommentsByPresentId(uuid.FromStringOrNil(presentId))
 	if err != nil {
 		return nil, err
@@ -47,7 +47,7 @@ func (service *CommentService) GetCommentListViewModel(eventId string, presentId
 
 	for _, comment := range comments {
 		commentListItem := service.mapCommentToCommentListItemViewModel(comment)
-		commentListItems = append(commentListItems, *commentListItem)
+		commentListItems = append(commentListItems, commentListItem)
 	}
 
 	return &viewmodels.CommentListViewModel{

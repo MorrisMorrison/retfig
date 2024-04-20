@@ -49,7 +49,7 @@ func (service *EventService) GetEventViewModel(id string) (*viewmodels.GetEventV
 		return nil, err
 	}
 
-	return service.mapToGetEventViewModel(event, participants, *presents), nil
+	return service.mapToGetEventViewModel(event, participants, presents), nil
 }
 
 func (service *EventService) mapCreateEventRequestToEvent(createEventRequest request.CreateEventRequest) models.Event {
@@ -67,7 +67,7 @@ func (service *EventService) mapCreateEventRequestToEvent(createEventRequest req
 	return event
 }
 
-func (service *EventService) mapToGetEventViewModel(event *models.Event, participants []*models.Participant, presents viewmodels.PresentListViewModel) *viewmodels.GetEventViewModel {
+func (service *EventService) mapToGetEventViewModel(event *models.Event, participants []*models.Participant, presents *viewmodels.PresentListViewModel) *viewmodels.GetEventViewModel {
 	viewModel := &viewmodels.GetEventViewModel{
 		Name:           event.Name,
 		Recipient:      event.Recipient,

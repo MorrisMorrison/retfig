@@ -2,7 +2,7 @@ package comments
 
 import "github.com/MorrisMorrison/retfig/ui/viewmodels"
 
-templ CommentList(eventId string, vm viewmodels.CommentListViewModel) {
+templ CommentList(eventId string, vm *viewmodels.CommentListViewModel) {
 	<div id={"commentList_" + vm.PresentId} name="commentList" class="is-flex is-flex-direction-column">
 		<div class="is-flex is-flex-direction-column has-text-light box">
 			<span class="has-text-weight-semibold">Comments</span>

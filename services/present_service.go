@@ -30,7 +30,7 @@ func (service *PresentService) GetPresentListViewModel(eventId string) (*viewmod
 }
 
 func (service *PresentService) mapPresentsToPresentListViewModel(eventId string, presents []*models.Present) *viewmodels.PresentListViewModel {
-	var presentListItems []viewmodels.PresentListItemViewModel
+	var presentListItems []*viewmodels.PresentListItemViewModel
 	presentIds := service.extractIds(presents)
 
 	presentIdToUpvoteCount, err := service.voteService.GetVoteCountMapByPresentIdsAndVoteType(presentIds, models.UPVOTE)
@@ -50,7 +50,7 @@ func (service *PresentService) mapPresentsToPresentListViewModel(eventId string,
 
 	for _, present := range presents {
 		presentListItem := service.mapPresentToPresentListItemViewModel(present, presentIdToUpvoteCount[present.Id.String()], presentIdToDownvoteCount[present.Id.String()], presentIdToCommentCount[present.Id.String()])
-		presentListItems = append(presentListItems, *presentListItem)
+		presentListItems = append(presentListItems, presentListItem)
 	}
 
 	return &viewmodels.PresentListViewModel{
@@ -71,6 +71,7 @@ func (service *PresentService) GetPresentListItemViewModel(presentId string) (*v
 
 func (service *PresentService) mapPresentToPresentListItemViewModel(present *models.Present, upvoteCount int32, downvoteCount int32, commentCount int32) *viewmodels.PresentListItemViewModel {
 	dateLayout := "January 02, 2006"
+	comments := &viewmodels.CommentListViewModel{}
 
 	return &viewmodels.PresentListItemViewModel{
 		Id:            present.Id.String(),
@@ -81,9 +82,7 @@ func (service *PresentService) mapPresentToPresentListItemViewModel(present *mod
 		CommentCount:  commentCount,
 		CreatedBy:     present.CreatedBy,
 		CreatedAt:     present.CreatedAt.Format(dateLayout),
-		Comments: viewmodels.CommentListViewModel{
-			PresentId: present.Id.String(),
-		},
+		Comments:      comments,
 	}
 }
 

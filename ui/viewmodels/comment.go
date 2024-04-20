@@ -2,7 +2,7 @@ package viewmodels
 
 type CommentListViewModel struct {
 	PresentId string
-	Comments  []CommentListItemViewModel
+	Comments  []*CommentListItemViewModel
 }
 
 type CommentListItemViewModel struct {

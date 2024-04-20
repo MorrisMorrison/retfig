@@ -45,5 +45,5 @@ func (voteAPI *VoteAPI) CreateVote(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", presents.PresentList(*presentListViewModel))
+	c.HTML(http.StatusOK, "", presents.PresentList(presentListViewModel))
 }

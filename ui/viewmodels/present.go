@@ -9,10 +9,10 @@ type PresentListItemViewModel struct {
 	CommentCount  int32
 	CreatedBy     string
 	CreatedAt     string
-	Comments      CommentListViewModel
+	Comments      *CommentListViewModel
 }
 
 type PresentListViewModel struct {
 	EventId  string
-	Presents []PresentListItemViewModel
+	Presents []*PresentListItemViewModel
 }

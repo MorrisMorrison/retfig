@@ -7,5 +7,5 @@ type GetEventViewModel struct {
 	Recipient      string
 	InvitationLink string
 	Participants   []string
-	Presents       PresentListViewModel
+	Presents       *PresentListViewModel
 }

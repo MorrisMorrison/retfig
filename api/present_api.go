@@ -26,7 +26,7 @@ func (presentAPI *PresentAPI) GetPresents(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", presents.PresentList(*presentListViewModel))
+	c.HTML(http.StatusOK, "", presents.PresentList(presentListViewModel))
 }
 
 func (presentAPI *PresentAPI) CreatePresent(c *gin.Context) {
@@ -55,5 +55,5 @@ func (presentAPI *PresentAPI) CreatePresent(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", presents.PresentListItem(eventId, *presentListItemViewModel))
+	c.HTML(http.StatusOK, "", presents.PresentListItem(eventId, presentListItemViewModel))
 }
