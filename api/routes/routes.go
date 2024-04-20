@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/MorrisMorrison/retfig/api"
-	"github.com/MorrisMorrison/retfig/container"
+	"github.com/MorrisMorrison/retfig/infrastructure/container"
 	"github.com/gin-gonic/gin"
 )
 

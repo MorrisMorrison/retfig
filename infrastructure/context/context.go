@@ -1,7 +1,7 @@
 package context
 
 import (
-	"github.com/MorrisMorrison/retfig/container"
+	"github.com/MorrisMorrison/retfig/infrastructure/container"
 	"github.com/MorrisMorrison/retfig/persistence/database"
 )
 

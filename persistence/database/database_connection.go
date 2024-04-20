@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/MorrisMorrison/retfig/config"
+	"github.com/MorrisMorrison/retfig/infrastructure/config"
 	"github.com/go-sql-driver/mysql"
 )
 
