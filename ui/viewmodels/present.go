@@ -6,7 +6,6 @@ type PresentListItemViewModel struct {
 	Link          string
 	UpvoteCount   int32
 	DownvoteCount int32
-	ShowComments  bool
 	CreatedBy     string
 	CreatedAt     string
 	Comments      CommentListViewModel

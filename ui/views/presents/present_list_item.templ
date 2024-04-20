@@ -6,8 +6,9 @@ import "github.com/MorrisMorrison/retfig/ui/views/payload"
 
 import "fmt"
 
+
 templ PresentListItem(eventId string, vm viewmodels.PresentListItemViewModel) {
-	<div class="mb-4">
+	<div class="mb-4" x-data="{showComments: false}">
 		<div class="is-flex is-flex-direction-column has-background-primary has-text-light box mb-0">
 			<div class="is-flex is-justify-content-space-between">
 				<span class="has-text-weight-semibold">{ vm.Name }</span>
@@ -15,7 +16,7 @@ templ PresentListItem(eventId string, vm viewmodels.PresentListItemViewModel) {
 			</div>
 			<div class="is-flex is-justify-content-space-between mt-2">
 				<span>{ vm.Link }</span>
-				<div class="is-flex">
+				<div class="is-flex" >
 					<div class="is-flex">
 						<button
 							type="button"
@@ -49,10 +50,9 @@ templ PresentListItem(eventId string, vm viewmodels.PresentListItemViewModel) {
 						{ fmt.Sprint(vm.DownvoteCount) }
 					</div>
 					<button
-						type="button"
+						@click="showComments = !showComments"
 						class="button is-primary"
 						hx-get={ "/events/" + eventId + "/presents/" + vm.Id + "/comments" }
-						hx-trigger="click"
 						hx-target={ "#comments_" + vm.Id }
 						hx-swap="outerHTML"
 						hx-ext="json-enc"
@@ -64,10 +64,10 @@ templ PresentListItem(eventId string, vm viewmodels.PresentListItemViewModel) {
 				</div>
 			</div>
 		</div>
-		<div id={ "comments_" + vm.Id }>
-			if vm.ShowComments {
+		<div x-show="showComments" style="display: none;">
+			<div id={ "comments_" + vm.Id } >
 				@comments.CommentList(eventId, vm.Comments)
-			}
+			</div>
 		</div>
 	</div>
 }

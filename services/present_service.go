@@ -72,7 +72,6 @@ func (service *PresentService) mapPresentToPresentListItemViewModel(present *mod
 		Link:          present.Link,
 		UpvoteCount:   upvoteCount,
 		DownvoteCount: downvoteCount,
-		ShowComments:  true,
 		CreatedBy:     present.CreatedBy,
 		CreatedAt:     present.CreatedAt.Format(dateLayout),
 		Comments: viewmodels.CommentListViewModel{
