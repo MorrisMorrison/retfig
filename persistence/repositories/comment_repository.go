@@ -3,6 +3,8 @@ package repositories
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/MorrisMorrison/retfig/persistence/database"
@@ -11,8 +13,9 @@ import (
 )
 
 const (
-	QUERY_CREATE_COMMENT             string = "INSERT INTO present_comment (presentId, content, createdBy, updatedBy, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)"
-	QUERY_GET_COMMENTS_BY_PRESENT_ID string = "SELECT * FROM present_comment as c WHERE c.presentId = ?"
+	QUERY_CREATE_COMMENT                   string = "INSERT INTO present_comment (presentId, content, createdBy, updatedBy, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)"
+	QUERY_GET_COMMENTS_BY_PRESENT_ID       string = "SELECT * FROM present_comment as c WHERE c.presentId = ?"
+	QUERY_GET_COMMENT_COUNT_BY_PRESENT_IDS string = "SELECT DISTINCT v.presentId, COUNT(v.presentId) AS commentCount FROM present_comment AS v WHERE v.presentId IN (%s) GROUP BY v.presentId"
 )
 
 type CommentRepository struct {
@@ -68,4 +71,46 @@ func (repository *CommentRepository) GetCommentsByPresentId(presentId uuid.UUID)
 	}
 
 	return comments, tx.Commit()
+}
+
+func (repository *CommentRepository) GetCommentCountMapByPresentIds(presentIds []string) (map[string]int32, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	tx, txErr := repository.dbConn.Database.BeginTx(ctx, nil)
+	if txErr != nil {
+		return nil, txErr
+	}
+
+	defer tx.Rollback()
+
+	placeholders := strings.Join(strings.Split(strings.Repeat("?", len(presentIds)), ""), ",")
+	query := fmt.Sprintf(QUERY_GET_COMMENT_COUNT_BY_PRESENT_IDS, placeholders)
+
+	args := make([]interface{}, len(presentIds)+1)
+	for i, id := range presentIds {
+		args[i] = id
+	}
+
+	rows, queryErr := tx.QueryContext(ctx, query, args...)
+	if queryErr != nil {
+		return nil, queryErr
+	}
+	defer rows.Close()
+
+	presentIdsToCommentCount := make(map[string]int32)
+	for rows.Next() {
+		var v struct {
+			PresentId    string
+			CommentCount int32
+		}
+		err := rows.Scan(&v.PresentId, &v.CommentCount)
+		if err != nil {
+			return nil, err
+		}
+		presentIdsToCommentCount[v.PresentId] = v.CommentCount
+	}
+
+	return presentIdsToCommentCount, tx.Commit()
+
 }

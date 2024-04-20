@@ -37,13 +37,19 @@ func (service *PresentService) mapPresentsToPresentListViewModel(eventId string,
 	if err != nil {
 		logger.Log.Debug("Could not get upvote counts")
 	}
+
 	presentIdToDownvoteCount, err := service.voteService.GetVoteCountMapByPresentIdsAndVoteType(presentIds, models.DOWNVOTE)
 	if err != nil {
 		logger.Log.Debug("Could not get downvote counts")
 	}
 
+	presentIdToCommentCount, err := service.commentService.GetCommentCountMapByPresentIds(presentIds)
+	if err != nil {
+		logger.Log.Debug("Could not get comment counts")
+	}
+
 	for _, present := range presents {
-		presentListItem := service.mapPresentToPresentListItemViewModel(&present, presentIdToUpvoteCount[present.Id.String()], presentIdToDownvoteCount[present.Id.String()])
+		presentListItem := service.mapPresentToPresentListItemViewModel(&present, presentIdToUpvoteCount[present.Id.String()], presentIdToDownvoteCount[present.Id.String()], presentIdToCommentCount[present.Id.String()])
 		presentListItems = append(presentListItems, *presentListItem)
 	}
 
@@ -60,10 +66,10 @@ func (service *PresentService) GetPresentListItemViewModel(presentId string) (*v
 		return nil, err
 	}
 
-	return service.mapPresentToPresentListItemViewModel(present, 0, 0), nil
+	return service.mapPresentToPresentListItemViewModel(present, 0, 0, 0), nil
 }
 
-func (service *PresentService) mapPresentToPresentListItemViewModel(present *models.Present, upvoteCount int32, downvoteCount int32) *viewmodels.PresentListItemViewModel {
+func (service *PresentService) mapPresentToPresentListItemViewModel(present *models.Present, upvoteCount int32, downvoteCount int32, commentCount int32) *viewmodels.PresentListItemViewModel {
 	dateLayout := "January 02, 2006"
 
 	return &viewmodels.PresentListItemViewModel{
@@ -72,6 +78,7 @@ func (service *PresentService) mapPresentToPresentListItemViewModel(present *mod
 		Link:          present.Link,
 		UpvoteCount:   upvoteCount,
 		DownvoteCount: downvoteCount,
+		CommentCount:  commentCount,
 		CreatedBy:     present.CreatedBy,
 		CreatedAt:     present.CreatedAt.Format(dateLayout),
 		Comments: viewmodels.CommentListViewModel{

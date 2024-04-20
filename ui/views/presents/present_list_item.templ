@@ -61,6 +61,7 @@ templ PresentListItem(eventId string, vm viewmodels.PresentListItemViewModel) {
 							<i class="fa-solid fa-comments has-text-light"></i>
 						</span>
 					</button>
+						{ fmt.Sprint(vm.CommentCount) }
 				</div>
 			</div>
 		</div>
@@ -70,4 +71,7 @@ templ PresentListItem(eventId string, vm viewmodels.PresentListItemViewModel) {
 			</div>
 		</div>
 	</div>
+
+
+	<div id="noPresentsMessage" hx-swap-oob="true"></div>
 }

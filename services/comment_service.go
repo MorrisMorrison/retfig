@@ -16,6 +16,10 @@ func NewCommentService(commentRepository *repositories.CommentRepository) *Comme
 	return &CommentService{commentRepository: *commentRepository}
 }
 
+func (service *CommentService) GetCommentCountMapByPresentIds(presentIds []string) (map[string]int32, error) {
+	return service.commentRepository.GetCommentCountMapByPresentIds(presentIds)
+}
+
 func (service *CommentService) CreateComment(request request.CreateCommentRequest) error {
 	comment := service.mapCreateCommentRequestToComment(request)
 	return service.commentRepository.CreateComment(comment)
