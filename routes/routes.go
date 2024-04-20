@@ -21,6 +21,6 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 	r.POST("/events/:eventId/presents/:presentId/comments", apis.CommentAPI.CreateComment)
 	r.GET("/events/:eventId/presents/:presentId/comments", apis.CommentAPI.GetComments)
 
-	r.Static("/public", "./public")
+	r.Static("/public", "./ui/public")
 	r.GET("/", api.Index)
 }

@@ -10,7 +10,7 @@ import (
 )
 
 func InitializeDatabase(connection *database.Connection) {
-	statements, err := utils.ReadSqlFile("database/sql/initialize-database.sql")
+	statements, err := utils.ReadSqlFile("persistence/database/sql/initialize-database.sql")
 	if err != nil {
 		log.Fatal(err)
 		return
