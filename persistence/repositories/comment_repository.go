@@ -87,7 +87,7 @@ func (repository *CommentRepository) GetCommentCountMapByPresentIds(presentIds [
 	placeholders := strings.Join(strings.Split(strings.Repeat("?", len(presentIds)), ""), ",")
 	query := fmt.Sprintf(QUERY_GET_COMMENT_COUNT_BY_PRESENT_IDS, placeholders)
 
-	args := make([]interface{}, len(presentIds)+1)
+	args := make([]interface{}, len(presentIds))
 	for i, id := range presentIds {
 		args[i] = id
 	}
