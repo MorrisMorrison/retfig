@@ -1,11 +1,13 @@
-package utils
+package sql
 
 import (
 	"strings"
+
+	"github.com/MorrisMorrison/retfig/utils/file"
 )
 
 func ReadSqlFile(path string) ([]string, error) {
-	content, err := ReadFileContent(path)
+	content, err := file.ReadFileContent(path)
 	if err != nil {
 		return nil, err
 	}

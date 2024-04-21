@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/MorrisMorrison/retfig/persistence/database"
-	"github.com/MorrisMorrison/retfig/utils"
+	"github.com/MorrisMorrison/retfig/utils/sql"
 )
 
 func InitializeDatabase(connection *database.Connection) {
-	statements, err := utils.ReadSqlFile("persistence/database/sql/initialize-database.sql")
+	statements, err := sql.ReadSqlFile("persistence/database/sql/initialize-database.sql")
 	if err != nil {
 		log.Fatal(err)
 		return
