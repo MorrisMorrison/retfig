@@ -22,9 +22,18 @@ templ VoteButton(eventId string, vm *viewmodels.VoteButtonViewModel) {
 		>
 			<span class="icon">
 				if vm.VoteType == "UPVOTE" {
-					<i class="fa-solid fa-thumbs-up has-text-light"></i>
+					if vm.IsVotedByUser {
+						<i class="fa-solid fa-thumbs-up has-text-light"></i>
+					}else{
+						<i class="fa-regular fa-thumbs-up has-text-light"></i>
+					}
 				} else {
+					if vm.IsVotedByUser {
 					<i class="fa-solid fa-thumbs-down has-text-light"></i>
+					}else{
+					<i class="fa-regular fa-thumbs-down has-text-light"></i>
+						
+					}
 				}
 			</span>
 		</button>

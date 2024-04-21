@@ -35,7 +35,7 @@ func (voteService *VoteService) GetVoteButtonsViewModel(eventId string, createVo
 		logger.Log.Debug("Could not fetch vote count")
 	}
 
-	voteButtonsViewModel := viewmodels.NewVoteButtonsViewModel(eventId, vote.PresentId.String(), upvoteCount, downvoteCount, vote.CreatedBy)
+	voteButtonsViewModel := viewmodels.NewVoteButtonsViewModel(eventId, vote.PresentId.String(), upvoteCount, downvoteCount, vote.CreatedBy, vote.Type == models.UPVOTE, vote.Type == models.DOWNVOTE)
 	return voteButtonsViewModel, nil
 }
 
@@ -52,7 +52,7 @@ func (voteService *VoteService) GetVoteButtonViewModel(eventId string, createVot
 		logger.Log.Debug("Could not fetch vote count")
 	}
 
-	createVoteButtonViewModel := viewmodels.NewVoteButtonViewModel(eventId, vote.PresentId.String(), vote.Type, voteCount, vote.CreatedBy)
+	createVoteButtonViewModel := viewmodels.NewVoteButtonViewModel(eventId, vote.PresentId.String(), vote.Type, voteCount, vote.CreatedBy, true)
 	return createVoteButtonViewModel, nil
 }
 

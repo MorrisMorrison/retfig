@@ -11,6 +11,7 @@ templ VoteButtons(eventId string, vm *viewmodels.VoteButtonsViewModel) {
 						VoteType: models.UPVOTE,
 						VoteCount: vm.UpvoteCount,
 						CreatedBy: vm.CreatedBy,
+						IsVotedByUser: vm.IsUpvotedByUser,
 					})
 		@VoteButton(eventId, &viewmodels.VoteButtonViewModel{
 						EventId: eventId,
@@ -18,6 +19,7 @@ templ VoteButtons(eventId string, vm *viewmodels.VoteButtonsViewModel) {
 						VoteType: models.DOWNVOTE,
 						VoteCount: vm.DownvoteCount,
 						CreatedBy: vm.CreatedBy,
+						IsVotedByUser: vm.IsDownvotedByUser,
 					})
 	</div>
 }
