@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS event_participant (
     updatedBy CHAR(255) NOT NULL,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME NOT NULL,
-    PRIMARY KEY (eventId, participant),
+    PRIMARY KEY (eventId, name),
     FOREIGN KEY (eventId) REFERENCES event(id)
 );
 

@@ -31,7 +31,7 @@ func (repository *ParticipantRepository) CreateParticipant(eventId string, usern
 	now := time.Now()
 
 	err := repository.dbConn.ExecuteInTransaction(ctx, func(ctx context.Context, tx *sql.Tx) error {
-		_, execError := tx.ExecContext(ctx, QUERY_CREATE_PARTICIPANT, eventId, username, now, now)
+		_, execError := tx.ExecContext(ctx, QUERY_CREATE_PARTICIPANT, eventId, username, username, username, now, now)
 		if execError != nil {
 			return execError
 		}
