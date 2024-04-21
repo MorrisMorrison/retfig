@@ -34,7 +34,7 @@ templ PresentListItem(eventId string, vm *viewmodels.PresentListItemViewModel) {
 						hx-ext="json-enc"
 					>
 						<span class="icon">
-							<i class="fa-solid fa-comments has-text-light"></i>
+							<i :class="{ 'fa-solid': showComments, 'fa-regular': !showComments}" class="fa-comments has-text-light"></i>
 						</span>
 					</button>
 					</div>
