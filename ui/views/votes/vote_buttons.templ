@@ -1,0 +1,23 @@
+package votes
+
+import "github.com/MorrisMorrison/retfig/ui/viewmodels"
+import "github.com/MorrisMorrison/retfig/persistence/models"
+
+templ VoteButtons(eventId string, vm *viewmodels.VoteButtonsViewModel) {
+	<div id={ "voteButtons_" + vm.PresentId} class="is-flex">
+		@VoteButton(eventId, &viewmodels.VoteButtonViewModel{
+						EventId: eventId,
+						PresentId: vm.PresentId,
+						VoteType: models.UPVOTE,
+						VoteCount: vm.UpvoteCount,
+						CreatedBy: vm.CreatedBy,
+					})
+		@VoteButton(eventId, &viewmodels.VoteButtonViewModel{
+						EventId: eventId,
+						PresentId: vm.PresentId,
+						VoteType: models.DOWNVOTE,
+						VoteCount: vm.DownvoteCount,
+						CreatedBy: vm.CreatedBy,
+					})
+	</div>
+}

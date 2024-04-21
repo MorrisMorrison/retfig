@@ -5,6 +5,7 @@ import (
 	"github.com/MorrisMorrison/retfig/infrastructure/logger"
 	"github.com/MorrisMorrison/retfig/persistence/models"
 	"github.com/MorrisMorrison/retfig/persistence/repositories"
+	"github.com/MorrisMorrison/retfig/ui/viewmodels"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -14,6 +15,45 @@ type VoteService struct {
 
 func NewVoteService(voteRepository *repositories.VoteRepository) *VoteService {
 	return &VoteService{voteRepository: *voteRepository}
+}
+
+func (voteService *VoteService) GetVoteButtonsViewModel(eventId string, createVoteRequest request.CreateVoteRequest) (*viewmodels.VoteButtonsViewModel, error) {
+	presentId := uuid.FromStringOrNil(createVoteRequest.PresentId)
+
+	vote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(presentId, createVoteRequest.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	upvoteCount, err := voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(presentId, models.UPVOTE)
+	if err != nil {
+		logger.Log.Debug("Could not fetch vote count")
+	}
+
+	downvoteCount, err := voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(presentId, models.DOWNVOTE)
+	if err != nil {
+		logger.Log.Debug("Could not fetch vote count")
+	}
+
+	voteButtonsViewModel := viewmodels.NewVoteButtonsViewModel(eventId, vote.PresentId.String(), upvoteCount, downvoteCount, vote.CreatedBy)
+	return voteButtonsViewModel, nil
+}
+
+func (voteService *VoteService) GetVoteButtonViewModel(eventId string, createVoteRequest request.CreateVoteRequest) (*viewmodels.VoteButtonViewModel, error) {
+	presentId := uuid.FromStringOrNil(createVoteRequest.PresentId)
+
+	vote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(presentId, createVoteRequest.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	voteCount, err := voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(presentId, models.VoteType(createVoteRequest.VoteType))
+	if err != nil {
+		logger.Log.Debug("Could not fetch vote count")
+	}
+
+	createVoteButtonViewModel := viewmodels.NewVoteButtonViewModel(eventId, vote.PresentId.String(), vote.Type, voteCount, vote.CreatedBy)
+	return createVoteButtonViewModel, nil
 }
 
 func (voteService *VoteService) CreateVote(request request.CreateVoteRequest) error {

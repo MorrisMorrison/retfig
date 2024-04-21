@@ -1,0 +1,28 @@
+package votes
+
+import "github.com/MorrisMorrison/retfig/ui/views/payload"
+import "github.com/MorrisMorrison/retfig/ui/viewmodels"
+
+import "fmt"
+
+templ VoteButton(eventId string, vm *viewmodels.VoteButtonViewModel) {
+	<button
+		type="button"
+		class="button is-primary"
+		hx-post={ "/events/" + eventId + "/presents/" + vm.PresentId + "/vote" }
+		hx-trigger="click"
+		hx-target={ "#voteButtons_" + vm.PresentId }
+		hx-swap="outerHTML"
+		hx-vals={ payload.GetCreateVoteJsonPayload(eventId, vm.PresentId, string(vm.VoteType), vm.CreatedBy) }
+		hx-ext="json-enc"
+	>
+		<span class="icon">
+        if vm.VoteType == "UPVOTE" {
+			<i class="fa-solid fa-thumbs-up has-text-light"></i>
+        } else {
+			<i class="fa-solid fa-thumbs-down has-text-light"></i>
+        }
+		</span>
+	{ fmt.Sprint(vm.VoteCount) }
+	</button>
+}

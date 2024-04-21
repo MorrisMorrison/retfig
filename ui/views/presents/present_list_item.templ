@@ -2,10 +2,9 @@ package presents
 
 import "github.com/MorrisMorrison/retfig/ui/viewmodels"
 import "github.com/MorrisMorrison/retfig/ui/views/comments"
-import "github.com/MorrisMorrison/retfig/ui/views/payload"
+import "github.com/MorrisMorrison/retfig/ui/views/votes"
 
 import "fmt"
-
 
 templ PresentListItem(eventId string, vm *viewmodels.PresentListItemViewModel) {
 	<div class="mb-4" x-data="{showComments: false}">
@@ -16,39 +15,14 @@ templ PresentListItem(eventId string, vm *viewmodels.PresentListItemViewModel) {
 			</div>
 			<div class="is-flex is-justify-content-space-between mt-2">
 				<span>{ vm.Link }</span>
-				<div class="is-flex" >
-					<div class="is-flex">
-						<button
-							type="button"
-							class="button is-primary"
-							hx-post={ "/events/" + eventId + "/presents/" + vm.Id + "/vote" }
-							hx-trigger="click"
-							hx-target={ "#presentList" }
-							hx-swap="outerHTML"
-							hx-vals={ payload.GetCreateVoteJsonPayload(eventId, vm.Id, "UPVOTE", vm.CreatedBy) }
-							hx-ext="json-enc"
-						>
-							<span class="icon">
-								<i class="fa-solid fa-thumbs-up has-text-light"></i>
-							</span>
-						</button>
-						{ fmt.Sprint(vm.UpvoteCount) }
-						<button
-							type="button"
-							class="button is-primary"
-							hx-post={ "/events/" + eventId + "/presents/" + vm.Id + "/vote" }
-							hx-trigger="click"
-							hx-target={ "#presentList" }
-							hx-swap="outerHTML"
-							hx-vals={ payload.GetCreateVoteJsonPayload(eventId, vm.Id, "DOWNVOTE", vm.CreatedBy) }
-							hx-ext="json-enc"
-						>
-							<span class="icon">
-								<i class="fa-solid fa-thumbs-down has-text-light"></i>
-							</span>
-						</button>
-						{ fmt.Sprint(vm.DownvoteCount) }
-					</div>
+				<div class="is-flex">
+					@votes.VoteButtons(eventId, &viewmodels.VoteButtonsViewModel{
+						EventId: eventId,
+						PresentId: vm.Id,
+						UpvoteCount: vm.UpvoteCount,
+						DownvoteCount: vm.DownvoteCount,
+						CreatedBy: vm.CreatedBy, 
+					})
 					<button
 						@click="showComments = !showComments"
 						class="button is-primary"
@@ -61,17 +35,15 @@ templ PresentListItem(eventId string, vm *viewmodels.PresentListItemViewModel) {
 							<i class="fa-solid fa-comments has-text-light"></i>
 						</span>
 					</button>
-						{ fmt.Sprint(vm.CommentCount) }
+					{ fmt.Sprint(vm.CommentCount) }
 				</div>
 			</div>
 		</div>
 		<div x-show="showComments" style="display: none;">
-			<div id={ "comments_" + vm.Id } >
+			<div id={ "comments_" + vm.Id }>
 				@comments.CommentList(eventId, vm.Comments)
 			</div>
 		</div>
 	</div>
-
-
 	<div id="noPresentsMessage" hx-swap-oob="true"></div>
 }

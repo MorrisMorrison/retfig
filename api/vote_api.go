@@ -5,7 +5,7 @@ import (
 
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/services"
-	"github.com/MorrisMorrison/retfig/ui/views/presents"
+	"github.com/MorrisMorrison/retfig/ui/views/votes"
 	"github.com/gin-gonic/gin"
 )
 
@@ -38,12 +38,13 @@ func (voteAPI *VoteAPI) CreateVote(c *gin.Context) {
 		return
 	}
 
-	presentListViewModel, err := voteAPI.presentService.GetPresentListViewModel(eventId)
+	voteButtonsViewModel, err := voteAPI.voteService.GetVoteButtonsViewModel(eventId, createVoteRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
+		return
 	}
 
-	c.HTML(http.StatusOK, "", presents.PresentList(presentListViewModel))
+	c.HTML(http.StatusOK, "", votes.VoteButtons(eventId, voteButtonsViewModel))
 }

@@ -17,6 +17,7 @@ const (
 	QUERY_GET_VOTE_BY_PRESENT_ID_AND_USERNAME         string = "SELECT * FROM present_vote AS V WHERE presentId = ? and CreatedBy = ?"
 	QUERY_DELETE_VOTE_BY_PRESENT_ID_AND_USERNAME      string = "DELETE FROM present_vote AS V WHERE presentId = ? and CreatedBy = ?"
 	QUERY_GET_VOTE_COUNT_BY_PRESENT_IDS_AND_VOTE_TYPE string = "SELECT DISTINCT v.presentId, COUNT(v.presentId) AS voteCount FROM present_vote AS v WHERE v.presentId IN (%s) AND v.type = ? GROUP BY v.presentId"
+	QUERY_GET_VOTE_COUNT_BY_PRESENT_ID                string = "SELECT COUNT(*) as voteCount FROM present_vote AS v WHERE presentId = ? AND type = ?"
 )
 
 type VoteRepository struct {
@@ -121,4 +122,28 @@ func (repository *VoteRepository) GetVoteCountMapByPresentIdsAndVoteType(present
 	}
 
 	return presentIdsToVoteCount, tx.Commit()
+}
+
+func (repository *VoteRepository) GetVoteCountByPresentIdAndVoteType(presentId uuid.UUID, voteType models.VoteType) (int32, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	tx, txErr := repository.dbConn.Database.BeginTx(ctx, nil)
+	if txErr != nil {
+		return 0, txErr
+	}
+
+	defer tx.Rollback()
+
+	var voteCount int32
+	queryErr := tx.QueryRowContext(ctx, QUERY_GET_VOTE_COUNT_BY_PRESENT_ID, presentId, voteType).Scan(&voteCount)
+	if queryErr != nil {
+		if queryErr == sql.ErrNoRows {
+			return 0, nil
+		} else {
+			return 0, queryErr
+		}
+	}
+
+	return voteCount, tx.Commit()
 }
