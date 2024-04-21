@@ -9,3 +9,7 @@ func BuildInvitationLink(eventId string) string {
 func BuildGetEventLink(eventId string) string {
 	return fmt.Sprintf("/events/%s", eventId)
 }
+
+func BuildRootLink() string {
+	return "http://localhost:8080/"
+}
