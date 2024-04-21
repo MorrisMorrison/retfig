@@ -9,8 +9,13 @@ import "fmt"
 templ PresentListItem(eventId string, vm *viewmodels.PresentListItemViewModel) {
 	<div class="mb-4" x-data="{showComments: false}">
 		<div class="is-flex is-flex-direction-column has-background-primary has-text-light box mb-0">
-			<div class="is-flex is-justify-content-space-between">
-				<span class="has-text-weight-semibold">{ vm.Name }</span>
+			<div class="is-flex is-justify-content-space-between is-align-items-center">
+				<div class="is-flex is-align-items-center">
+				 <span class="icon">
+					<i class="fa-solid fa-gift"></i>
+					</span>
+					<span class="has-text-weight-semibold is-size-4">{ vm.Name }</span>
+				</div>
 				<span class="has-text-weight-semibold">{ vm.CreatedBy } - { vm.CreatedAt }</span>
 			</div>
 			<div class="is-flex is-justify-content-space-between mt-2">
@@ -24,19 +29,19 @@ templ PresentListItem(eventId string, vm *viewmodels.PresentListItemViewModel) {
 						CreatedBy: vm.CreatedBy, 
 					})
 					<div class="is-flex is-align-items-baseline">
-					<span class="has-text-light">{ fmt.Sprint(vm.CommentCount) }</span>
-					<button
-						@click="showComments = !showComments"
-						class="button is-primary"
-						hx-get={ "/events/" + eventId + "/presents/" + vm.Id + "/comments" }
-						hx-target={ "#comments_" + vm.Id }
-						hx-swap="outerHTML"
-						hx-ext="json-enc"
-					>
-						<span class="icon">
-							<i :class="{ 'fa-solid': showComments, 'fa-regular': !showComments}" class="fa-comments has-text-light"></i>
-						</span>
-					</button>
+						<span class="has-text-light">{ fmt.Sprint(vm.CommentCount) }</span>
+						<button
+							@click="showComments = !showComments"
+							class="button is-primary"
+							hx-get={ "/events/" + eventId + "/presents/" + vm.Id + "/comments" }
+							hx-target={ "#comments_" + vm.Id }
+							hx-swap="outerHTML"
+							hx-ext="json-enc"
+						>
+							<span class="icon">
+								<i :class="{ 'fa-solid': showComments, 'fa-regular': !showComments}" class="fa-comments has-text-light"></i>
+							</span>
+						</button>
 					</div>
 				</div>
 			</div>
