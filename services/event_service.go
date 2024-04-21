@@ -6,6 +6,7 @@ import (
 	"github.com/MorrisMorrison/retfig/persistence/models"
 	"github.com/MorrisMorrison/retfig/persistence/repositories"
 	"github.com/MorrisMorrison/retfig/ui/viewmodels"
+	"github.com/MorrisMorrison/retfig/utils/links"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -72,7 +73,7 @@ func (service *EventService) mapToGetEventViewModel(event *models.Event, partici
 		Name:           event.Name,
 		Recipient:      event.Recipient,
 		CreatedBy:      event.CreatedBy,
-		InvitationLink: service.getInvitationLink(event.Id),
+		InvitationLink: links.BuildInvitationLink(event.Id.String()),
 		Participants:   service.extractUsernames(participants),
 		Presents:       presents,
 	}

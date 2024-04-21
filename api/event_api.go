@@ -7,6 +7,7 @@ import (
 	"github.com/MorrisMorrison/retfig/services"
 	"github.com/MorrisMorrison/retfig/ui/views"
 	"github.com/MorrisMorrison/retfig/ui/views/events"
+	"github.com/MorrisMorrison/retfig/utils/links"
 
 	"github.com/gin-gonic/gin"
 )
@@ -45,6 +46,8 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 		return
 
 	}
+
+	c.Header("HX-Push-Url", links.BuildGetEventLink(eventId.String()))
 
 	c.HTML(http.StatusOK, "", events.GetEvent(viewModel))
 }
