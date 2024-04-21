@@ -6,7 +6,7 @@ import "github.com/MorrisMorrison/retfig/ui/views/votes"
 
 import "fmt"
 
-templ PresentListItem(eventId string, vm *viewmodels.PresentListItemViewModel) {
+templ PresentListItem(vm *viewmodels.PresentListItemViewModel) {
 	<div class="mb-4" x-data="{showComments: false}">
 		<div class="is-flex is-flex-direction-column has-background-primary has-text-light box mb-0">
 			<div class="is-flex is-justify-content-space-between is-align-items-center">
@@ -21,9 +21,9 @@ templ PresentListItem(eventId string, vm *viewmodels.PresentListItemViewModel) {
 			<div class="is-flex is-justify-content-space-between mt-2">
 				<span>{ vm.Link }</span>
 				<div class="is-flex">
-					@votes.VoteButtons(eventId, &viewmodels.VoteButtonsViewModel{
-						EventId: eventId,
-						PresentId: vm.Id,
+					@votes.VoteButtons(&viewmodels.VoteButtonsViewModel{
+						EventId: vm.EventId,
+						PresentId: vm.PresentId,
 						UpvoteCount: vm.UpvoteCount,
 						DownvoteCount: vm.DownvoteCount,
 						CreatedBy: vm.CreatedBy, 
@@ -33,8 +33,8 @@ templ PresentListItem(eventId string, vm *viewmodels.PresentListItemViewModel) {
 						<button
 							@click="showComments = !showComments"
 							class="button is-primary"
-							hx-get={ "/events/" + eventId + "/presents/" + vm.Id + "/comments" }
-							hx-target={ "#comments_" + vm.Id }
+							hx-get={ "/events/" + vm.EventId + "/presents/" + vm.PresentId + "/comments" }
+							hx-target={ "#comments_" + vm.PresentId }
 							hx-swap="outerHTML"
 							hx-ext="json-enc"
 						>
@@ -47,8 +47,8 @@ templ PresentListItem(eventId string, vm *viewmodels.PresentListItemViewModel) {
 			</div>
 		</div>
 		<div x-show="showComments" style="display: none;">
-			<div id={ "comments_" + vm.Id }>
-				@comments.CommentList(eventId, vm.Comments)
+			<div id={ "comments_" + vm.PresentId }>
+				@comments.CommentList(vm.Comments)
 			</div>
 		</div>
 	</div>

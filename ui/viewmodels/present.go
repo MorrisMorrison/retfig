@@ -1,7 +1,8 @@
 package viewmodels
 
 type PresentListItemViewModel struct {
-	Id            string
+	PresentId     string
+	EventId       string
 	Name          string
 	Link          string
 	UpvoteCount   int32

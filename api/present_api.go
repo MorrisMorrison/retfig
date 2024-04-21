@@ -55,5 +55,5 @@ func (presentAPI *PresentAPI) CreatePresent(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", presents.PresentListItem(eventId, presentListItemViewModel))
+	c.HTML(http.StatusOK, "", presents.PresentListItem(presentListItemViewModel))
 }

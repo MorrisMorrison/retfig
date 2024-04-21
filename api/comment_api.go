@@ -30,13 +30,10 @@ func (commentAPI *CommentAPI) GetComments(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", comments.CommentList(eventId, commentListViewModel))
+	c.HTML(http.StatusOK, "", comments.CommentList(commentListViewModel))
 }
 
 func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
-	eventId := c.Param("eventId")
-	presentId := c.Param("presentId")
-
 	var createCommentRequest request.CreateCommentRequest
 
 	if err := c.ShouldBindJSON(&createCommentRequest); err != nil {
@@ -54,12 +51,12 @@ func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
 		return
 	}
 
-	commentListItemViewModel, err := commentAPI.commentService.GetCommentListItemViewModel(createCommentRequest.Username, createCommentRequest.Content)
+	commentListItemViewModel, err := commentAPI.commentService.GetCommentListItemViewModel(createCommentRequest.PresentId, createCommentRequest.Username, createCommentRequest.Content)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 	}
 
-	c.HTML(http.StatusOK, "", comments.CommentListItem(eventId, presentId, commentListItemViewModel))
+	c.HTML(http.StatusOK, "", comments.CommentListItem(commentListItemViewModel))
 }

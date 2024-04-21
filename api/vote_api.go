@@ -46,5 +46,5 @@ func (voteAPI *VoteAPI) CreateVote(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "", votes.VoteButtons(eventId, voteButtonsViewModel))
+	c.HTML(http.StatusOK, "", votes.VoteButtons(voteButtonsViewModel))
 }

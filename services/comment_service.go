@@ -51,13 +51,15 @@ func (service *CommentService) GetCommentListViewModel(eventId string, presentId
 	}
 
 	return &viewmodels.CommentListViewModel{
+		EventId:   eventId,
 		PresentId: presentId,
 		Comments:  commentListItems,
 	}, nil
 }
 
-func (service *CommentService) GetCommentListItemViewModel(username string, content string) (*viewmodels.CommentListItemViewModel, error) {
+func (service *CommentService) GetCommentListItemViewModel(presentId string, username string, content string) (*viewmodels.CommentListItemViewModel, error) {
 	return &viewmodels.CommentListItemViewModel{
+		PresentId: presentId,
 		Username:  username,
 		Content:   content,
 		CreatedAt: "",
@@ -68,6 +70,7 @@ func (service *CommentService) mapCommentToCommentListItemViewModel(comment *mod
 	dateLayout := "January 02, 2006"
 
 	return &viewmodels.CommentListItemViewModel{
+		PresentId: comment.PresentId.String(),
 		Username:  comment.CreatedBy,
 		Content:   comment.Content,
 		CreatedAt: comment.CreatedAt.Format(dateLayout),

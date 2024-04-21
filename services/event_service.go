@@ -89,7 +89,3 @@ func (service *EventService) extractUsernames(participants []*models.Participant
 
 	return usernames
 }
-
-func (service *EventService) getInvitationLink(eventId uuid.UUID) string {
-	return "http://localhost:8080/events/" + eventId.String() + "/invitation"
-}

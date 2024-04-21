@@ -17,7 +17,7 @@ templ PresentList(vm *viewmodels.PresentListViewModel) {
 					<span id="noPresentsMessage" class="has-text-weight-light">No presents recommended yet!</span>
 				} else {
 					for _, present := range vm.Presents {
-						@PresentListItem(vm.EventId, present)
+						@PresentListItem(present)
 					}
 				}
 			</div>
