@@ -23,6 +23,8 @@ templ PresentListItem(eventId string, vm *viewmodels.PresentListItemViewModel) {
 						DownvoteCount: vm.DownvoteCount,
 						CreatedBy: vm.CreatedBy, 
 					})
+					<div class="is-flex is-align-items-baseline">
+					<span class="has-text-light">{ fmt.Sprint(vm.CommentCount) }</span>
 					<button
 						@click="showComments = !showComments"
 						class="button is-primary"
@@ -35,7 +37,7 @@ templ PresentListItem(eventId string, vm *viewmodels.PresentListItemViewModel) {
 							<i class="fa-solid fa-comments has-text-light"></i>
 						</span>
 					</button>
-					{ fmt.Sprint(vm.CommentCount) }
+					</div>
 				</div>
 			</div>
 		</div>
