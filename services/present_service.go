@@ -1,6 +1,8 @@
 package services
 
 import (
+	"sort"
+
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/infrastructure/logger"
 	"github.com/MorrisMorrison/retfig/persistence/models"
@@ -57,6 +59,10 @@ func (service *PresentService) mapPresentsToPresentListViewModel(eventId string,
 
 		presentListItems = append(presentListItems, presentListItem)
 	}
+
+	sort.Slice(presentListItems, func(i, j int) bool {
+		return presentListItems[i].UpvoteCount > presentListItems[j].UpvoteCount
+	})
 
 	return &viewmodels.PresentListViewModel{
 		EventId:  eventId,
