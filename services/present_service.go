@@ -130,3 +130,10 @@ func (service *PresentService) extractIds(presents []*models.Present) []string {
 	}
 	return ids
 }
+
+func (service *PresentService) ClaimPresent(eventId string, presentId string, claimPresentReqest request.ClaimPresentRequest) error {
+	return service.presentRepository.ClaimPresent(eventId, presentId, claimPresentReqest.Username)
+}
+func (service *PresentService) UnclaimPresent(eventId string, presentId string) error {
+	return service.presentRepository.UnclaimPresent(eventId, presentId)
+}

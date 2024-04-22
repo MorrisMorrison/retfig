@@ -57,3 +57,50 @@ func (presentAPI *PresentAPI) CreatePresent(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "", presents.PresentListItem(presentListItemViewModel))
 }
+
+func (presentAPI *PresentAPI) ClaimPresent(c *gin.Context) {
+	eventId := c.Param("eventId")
+	presentId := c.Param("eventId")
+
+	var claimPresentRequest request.ClaimPresentRequest
+	if err := c.ShouldBindJSON(&claimPresentRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if err := presentAPI.presentService.ClaimPresent(eventId, presentId, claimPresentRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+	presentListItemViewModel, err := presentAPI.presentService.GetPresentListItemViewModel(presentId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	c.HTML(http.StatusOK, "", presents.PresentListItem(presentListItemViewModel))
+}
+
+func (presentAPI *PresentAPI) UnclaimPresent(c *gin.Context) {
+	eventId := c.Param("eventId")
+	presentId := c.Param("eventId")
+
+	if err := presentAPI.presentService.UnclaimPresent(eventId, presentId); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	presentListItemViewModel, err := presentAPI.presentService.GetPresentListItemViewModel(presentId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	c.HTML(http.StatusOK, "", presents.PresentListItem(presentListItemViewModel))
+}

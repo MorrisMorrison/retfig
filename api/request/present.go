@@ -5,3 +5,7 @@ type CreatePresentRequest struct {
 	Link     string `json:"link"`
 	Username string `json:"username"`
 }
+
+type ClaimPresentRequest struct {
+	Username string `json:"name"`
+}
