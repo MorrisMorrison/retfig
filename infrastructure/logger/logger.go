@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-var Log *Logger = NewLogger()
+var LOG *Logger = NewLogger()
 
 type LogLevel int
 

@@ -24,7 +24,7 @@ func (service *EventService) CreateEvent(createEventRequest request.CreateEventR
 	event := service.mapCreateEventRequestToEvent(createEventRequest)
 	eventId, err := service.eventRepository.CreateEvent(event)
 	if err != nil {
-		logger.Log.Error(err, "Could not create event")
+		logger.LOG.Error(err, "Could not create event")
 		return uuid.Nil, err
 	}
 
@@ -34,19 +34,19 @@ func (service *EventService) CreateEvent(createEventRequest request.CreateEventR
 func (service *EventService) GetEventViewModel(id string) (*viewmodels.GetEventViewModel, error) {
 	event, err := service.eventRepository.GetEventById(uuid.FromStringOrNil(id))
 	if err != nil {
-		logger.Log.Error(err, "Could not get event")
+		logger.LOG.Error(err, "Could not get event")
 		return nil, err
 	}
 
 	participants, err := service.participantService.GetParticipantsByEventId(id)
 	if err != nil {
-		logger.Log.Error(err, "Could not get participants")
+		logger.LOG.Error(err, "Could not get participants")
 		return nil, err
 	}
 
 	presents, err := service.presentService.GetPresentListViewModel(id)
 	if err != nil {
-		logger.Log.Error(err, "Could not get presents")
+		logger.LOG.Error(err, "Could not get presents")
 		return nil, err
 	}
 

@@ -1,13 +1,14 @@
 package invitations
 
 import "fmt"
+import "github.com/MorrisMorrison/retfig/utils/links"
 
 templ GetInvitation(eventId string) {
 	<div class="is-flex is-flex-direction-column box">
 		<h1 class="title"><i class="fa-solid fa-gift"></i> Event Invitation</h1>
 		<h2 class="subtitle">Someone invited you to join an event to help find a present!</h2>
 		<div id="invitation" name="invitation" class="is-flex is-flex-direction-column">
-			<form hx-post={ string(templ.URL(fmt.Sprintf("/events/%s/participants", eventId))) } hx-target="#content" hx-replace-url={fmt.Sprintf("/events/%s", eventId)} hx-ext="json-enc">
+			<form hx-post={ links.BuildGetInvitationLink(eventId) } hx-target="#content" hx-replace-url={fmt.Sprintf("/events/%s", eventId)} hx-ext="json-enc">
 				<div class="field" x-data="{ username: $persist('') }">
 					<div class="control">
 						<input x-model="username" class="input is-primary" id="username" name="username" type="text" placeholder="What is your name?"/>

@@ -6,6 +6,8 @@ import "github.com/MorrisMorrison/retfig/ui/views/votes"
 
 import "fmt"
 
+import "github.com/MorrisMorrison/retfig/utils/links"
+
 templ PresentListItem(vm *viewmodels.PresentListItemViewModel) {
 	<div class="mb-4" x-data="{showComments: false}">
 		<div class="is-flex is-flex-direction-column has-background-primary has-text-light box mb-0">
@@ -33,7 +35,7 @@ templ PresentListItem(vm *viewmodels.PresentListItemViewModel) {
 						<button
 							@click="showComments = !showComments"
 							class="button is-primary"
-							hx-get={ "/events/" + vm.EventId + "/presents/" + vm.PresentId + "/comments" }
+							hx-get={ links.BuildGetCommentsLink(vm.EventId, vm.PresentId) }
 							hx-target={ "#comments_" + vm.PresentId }
 							hx-swap="outerHTML"
 							hx-ext="json-enc"

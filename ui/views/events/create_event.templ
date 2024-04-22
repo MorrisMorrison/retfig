@@ -1,11 +1,14 @@
 package events
 
+import "github.com/MorrisMorrison/retfig/utils/links"
+
+
 templ CreateEvent() {
 	<div class="is-flex is-flex-direction-column box">
 		<h1 class="title"><i class="fa-solid fa-gift"></i> Create Event</h1>
 		<h2 class="subtitle">Create an event and share your generated link with your friends and family to find the perfect present together!</h2>
 		<div id="create-event" name="create-event" class="is-flex is-flex-direction-column">
-			<form hx-post="/events" hx-target="#content" hx-ext="json-enc">
+			<form hx-post={links.BuildCreateEventLink()} hx-target="#content" hx-ext="json-enc">
 				<div class="field" x-data="{ username: $persist('') }">
 					<div class="control">
 						<input class="input is-primary" id="username" name="username" type="text" placeholder="What is your name?" x-model="username" required/>

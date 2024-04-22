@@ -22,7 +22,7 @@ func NewPresentService(presentRepository *repositories.PresentRepository, voteSe
 func (service *PresentService) GetPresentListViewModel(eventId string) (*viewmodels.PresentListViewModel, error) {
 	presents, err := service.presentRepository.GetPresentsByEventId(uuid.FromStringOrNil(eventId))
 	if err != nil {
-		logger.Log.Error(err, "Could not get presents")
+		logger.LOG.Error(err, "Could not get presents")
 		return nil, err
 	}
 
@@ -35,17 +35,17 @@ func (service *PresentService) mapPresentsToPresentListViewModel(eventId string,
 
 	presentIdToUpvoteCount, err := service.voteService.GetVoteCountMapByPresentIdsAndVoteType(presentIds, models.UPVOTE)
 	if err != nil {
-		logger.Log.Debug("Could not get upvote counts")
+		logger.LOG.Debug("Could not get upvote counts")
 	}
 
 	presentIdToDownvoteCount, err := service.voteService.GetVoteCountMapByPresentIdsAndVoteType(presentIds, models.DOWNVOTE)
 	if err != nil {
-		logger.Log.Debug("Could not get downvote counts")
+		logger.LOG.Debug("Could not get downvote counts")
 	}
 
 	presentIdToCommentCount, err := service.commentService.GetCommentCountMapByPresentIds(presentIds)
 	if err != nil {
-		logger.Log.Debug("Could not get comment counts")
+		logger.LOG.Debug("Could not get comment counts")
 	}
 
 	for _, present := range presents {
@@ -67,7 +67,7 @@ func (service *PresentService) mapPresentsToPresentListViewModel(eventId string,
 func (service *PresentService) GetPresentListItemViewModel(presentId string) (*viewmodels.PresentListItemViewModel, error) {
 	present, err := service.presentRepository.GetPresentById(uuid.FromStringOrNil(presentId))
 	if err != nil {
-		logger.Log.Error(err, "Could not get present")
+		logger.LOG.Error(err, "Could not get present")
 		return nil, err
 	}
 
@@ -96,7 +96,7 @@ func (service *PresentService) CreatePresent(eventId string, createPresentReques
 	present := service.mapCreatePresentRequestToPresent(eventId, createPresentRequest)
 	presentId, err := service.presentRepository.CreatePresent(present)
 	if err != nil {
-		logger.Log.Error(err, "Could not create present")
+		logger.LOG.Error(err, "Could not create present")
 		return uuid.Nil, err
 	}
 

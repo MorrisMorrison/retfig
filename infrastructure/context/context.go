@@ -1,6 +1,7 @@
 package context
 
 import (
+	"github.com/MorrisMorrison/retfig/infrastructure/config"
 	"github.com/MorrisMorrison/retfig/infrastructure/container"
 	"github.com/MorrisMorrison/retfig/persistence/database"
 )
@@ -10,6 +11,7 @@ type ApplicationContext struct {
 	Services     *container.ServiceContainer
 	Repositories *container.RepositoryContainer
 	DbConn       *database.Connection
+	Config       *config.Config
 }
 
 func NewApplicationContext() *ApplicationContext {
@@ -17,11 +19,13 @@ func NewApplicationContext() *ApplicationContext {
 	repositories := container.NewRepositoryContainer(dbConn)
 	services := container.NewServiceContainer(repositories)
 	apis := container.NewAPIContainer(services)
+	config := config.NewConfig()
 
 	return &ApplicationContext{
 		APIs:         apis,
 		Services:     services,
 		Repositories: repositories,
 		DbConn:       dbConn,
+		Config:       config,
 	}
 }

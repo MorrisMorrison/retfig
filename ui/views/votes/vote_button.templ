@@ -2,6 +2,7 @@ package votes
 
 import "github.com/MorrisMorrison/retfig/ui/payload"
 import "github.com/MorrisMorrison/retfig/ui/viewmodels"
+import "github.com/MorrisMorrison/retfig/utils/links"
 
 import "fmt"
 
@@ -13,7 +14,7 @@ templ VoteButton(vm *viewmodels.VoteButtonViewModel) {
 		<button
 			type="button"
 			class="button is-primary"
-			hx-post={ "/events/" + vm.EventId + "/presents/" + vm.PresentId + "/vote" }
+			hx-post={ links.BuildCreateVoteLink(vm.EventId, vm.PresentId) }
 			hx-trigger="click"
 			hx-target={ "#voteButtons_" + vm.PresentId }
 			hx-swap="outerHTML"

@@ -1,11 +1,11 @@
 package presents
 
-import "fmt"
+import "github.com/MorrisMorrison/retfig/utils/links"
 
 templ AddPresent(eventId string) {
 	<div id="add-present" name="add-present" class="is-flex is-flex-direction-column box" x-data="{ username: $persist(''), name: '', link: '' }">
 		<h2 class="subtitle">Add present recommendations to the list!</h2>
-		<form  hx-post={ fmt.Sprintf("/events/%s/presents", eventId) } @htmx:after-request="name=''; link = '';"  hx-target="#presentListItems" hx-swap="beforeend" hx-ext="json-enc">
+		<form  hx-post={ links.BuildCreatePresentLink(eventId) } @htmx:after-request="name=''; link = '';"  hx-target="#presentListItems" hx-swap="beforeend" hx-ext="json-enc">
 			<div>
 				<input type="hidden" id="username" name="username" x-model="username"/>
 				<input type="hidden" id="eventId" name="eventId" value={ eventId }/>

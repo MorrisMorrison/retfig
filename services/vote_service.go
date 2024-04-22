@@ -27,12 +27,12 @@ func (voteService *VoteService) GetVoteButtonsViewModel(eventId string, createVo
 
 	upvoteCount, err := voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(presentId, models.UPVOTE)
 	if err != nil {
-		logger.Log.Debug("Could not fetch vote count")
+		logger.LOG.Debug("Could not fetch vote count")
 	}
 
 	downvoteCount, err := voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(presentId, models.DOWNVOTE)
 	if err != nil {
-		logger.Log.Debug("Could not fetch vote count")
+		logger.LOG.Debug("Could not fetch vote count")
 	}
 
 	voteButtonsViewModel := viewmodels.NewVoteButtonsViewModel(eventId, vote.PresentId.String(), upvoteCount, downvoteCount, vote.CreatedBy, vote.Type == models.UPVOTE, vote.Type == models.DOWNVOTE)
@@ -49,7 +49,7 @@ func (voteService *VoteService) GetVoteButtonViewModel(eventId string, createVot
 
 	voteCount, err := voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(presentId, models.VoteType(createVoteRequest.VoteType))
 	if err != nil {
-		logger.Log.Debug("Could not fetch vote count")
+		logger.LOG.Debug("Could not fetch vote count")
 	}
 
 	createVoteButtonViewModel := viewmodels.NewVoteButtonViewModel(eventId, vote.PresentId.String(), vote.Type, voteCount, vote.CreatedBy, true)
@@ -69,7 +69,7 @@ func (voteService *VoteService) CreateVote(request request.CreateVoteRequest) er
 func (voteService *VoteService) deleteVoteIfExists(presentId string, username string, voteType string) error {
 	existingVote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(uuid.FromStringOrNil(presentId), username)
 	if err != nil {
-		logger.Log.Error(err, "Could not get existing vote")
+		logger.LOG.Error(err, "Could not get existing vote")
 		return err
 	}
 
@@ -77,7 +77,7 @@ func (voteService *VoteService) deleteVoteIfExists(presentId string, username st
 	if shouldDeleteExistingVote {
 		err := voteService.voteRepository.DeleteVoteByPresentIdAndUsername(uuid.FromStringOrNil(presentId), username)
 		if err != nil {
-			logger.Log.Error(err, "Could not delete existing vote")
+			logger.LOG.Error(err, "Could not delete existing vote")
 			return err
 		}
 	}

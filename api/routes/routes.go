@@ -7,19 +7,31 @@ import (
 )
 
 func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
-	r.POST("/events", apis.EventAPI.CreateEvent)
+	a := r.Group("/api")
+	{
+		htmx := a.Group("/htmx")
+		{
+			v1 := htmx.Group("/v1")
+			{
+				v1.POST("/events", apis.EventAPI.CreateEvent)
+				v1.GET("/events/:eventId", apis.EventAPI.GetEvent)
+				v1.DELETE("/events/:eventId", apis.EventAPI.DeleteEvent)
+				v1.PATCH("/events/:eventId", apis.EventAPI.UpdateEvent)
+
+				v1.POST("/events/:eventId/participants", apis.ParticipantAPI.CreateParticipant)
+				v1.GET("/events/:eventId/invitation", apis.ParticipantAPI.GetInvitationView)
+
+				v1.GET("/events/:eventId/presents", apis.PresentAPI.GetPresents)
+				v1.POST("/events/:eventId/presents", apis.PresentAPI.CreatePresent)
+				v1.POST("/events/:eventId/presents/:presentId/votes", apis.VoteAPI.CreateVote)
+				v1.POST("/events/:eventId/presents/:presentId/comments", apis.CommentAPI.CreateComment)
+				v1.GET("/events/:eventId/presents/:presentId/comments", apis.CommentAPI.GetComments)
+			}
+		}
+	}
+
 	r.GET("/events/:eventId", apis.EventAPI.GetEvent)
-	r.DELETE("/events/:eventId", apis.EventAPI.DeleteEvent)
-	r.PATCH("/events/:eventId", apis.EventAPI.UpdateEvent)
-
-	r.POST("/events/:eventId/participants", apis.ParticipantAPI.CreateParticipant)
-	r.GET("/events/:eventId/invitation", apis.ParticipantAPI.GetInvitationView)
-
-	r.GET("/events/:eventId/presents", apis.PresentAPI.GetPresents)
-	r.POST("/events/:eventId/presents", apis.PresentAPI.CreatePresent)
-	r.POST("/events/:eventId/presents/:presentId/vote", apis.VoteAPI.CreateVote)
-	r.POST("/events/:eventId/presents/:presentId/comments", apis.CommentAPI.CreateComment)
-	r.GET("/events/:eventId/presents/:presentId/comments", apis.CommentAPI.GetComments)
+	r.GET("/events/:eventId/invitations", apis.ParticipantAPI.GetInvitationView)
 
 	r.Static("/public", "./ui/public")
 	r.GET("/", api.Index)
