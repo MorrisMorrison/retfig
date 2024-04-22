@@ -17,20 +17,20 @@ func NewVoteService(voteRepository *repositories.VoteRepository) *VoteService {
 	return &VoteService{voteRepository: *voteRepository}
 }
 
-func (voteService *VoteService) GetVoteButtonsViewModel(eventId string, createVoteRequest request.CreateVoteRequest) (*viewmodels.VoteButtonsViewModel, error) {
-	presentId := uuid.FromStringOrNil(createVoteRequest.PresentId)
+func (voteService *VoteService) GetVoteButtonsViewModel(eventId string, presentId string, createVoteRequest request.CreateVoteRequest) (*viewmodels.VoteButtonsViewModel, error) {
+	presentUUID := uuid.FromStringOrNil(presentId)
 
-	vote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(presentId, createVoteRequest.Username)
+	vote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(presentUUID, createVoteRequest.Username)
 	if err != nil {
 		return nil, err
 	}
 
-	upvoteCount, err := voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(presentId, models.UPVOTE)
+	upvoteCount, err := voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(presentUUID, models.UPVOTE)
 	if err != nil {
 		logger.LOG.Debug("Could not fetch vote count")
 	}
 
-	downvoteCount, err := voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(presentId, models.DOWNVOTE)
+	downvoteCount, err := voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(presentUUID, models.DOWNVOTE)
 	if err != nil {
 		logger.LOG.Debug("Could not fetch vote count")
 	}
@@ -39,15 +39,15 @@ func (voteService *VoteService) GetVoteButtonsViewModel(eventId string, createVo
 	return voteButtonsViewModel, nil
 }
 
-func (voteService *VoteService) GetVoteButtonViewModel(eventId string, createVoteRequest request.CreateVoteRequest) (*viewmodels.VoteButtonViewModel, error) {
-	presentId := uuid.FromStringOrNil(createVoteRequest.PresentId)
+func (voteService *VoteService) GetVoteButtonViewModel(eventId string, presentId string, createVoteRequest request.CreateVoteRequest) (*viewmodels.VoteButtonViewModel, error) {
+	presentUUID := uuid.FromStringOrNil(presentId)
 
-	vote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(presentId, createVoteRequest.Username)
+	vote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(presentUUID, createVoteRequest.Username)
 	if err != nil {
 		return nil, err
 	}
 
-	voteCount, err := voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(presentId, models.VoteType(createVoteRequest.VoteType))
+	voteCount, err := voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(presentUUID, models.VoteType(createVoteRequest.VoteType))
 	if err != nil {
 		logger.LOG.Debug("Could not fetch vote count")
 	}
@@ -56,13 +56,13 @@ func (voteService *VoteService) GetVoteButtonViewModel(eventId string, createVot
 	return createVoteButtonViewModel, nil
 }
 
-func (voteService *VoteService) CreateVote(request request.CreateVoteRequest) error {
-	err := voteService.deleteVoteIfExists(request.PresentId, request.Username, request.VoteType)
+func (voteService *VoteService) CreateVote(presentId string, request request.CreateVoteRequest) error {
+	err := voteService.deleteVoteIfExists(presentId, request.Username, request.VoteType)
 	if err != nil {
 		return err
 	}
 
-	vote := voteService.mapCreateVoteRequestToVote(request)
+	vote := voteService.mapCreateVoteRequestToVote(presentId, request)
 	return voteService.voteRepository.CreateVote(vote)
 }
 
@@ -89,14 +89,14 @@ func (voteService *VoteService) GetVoteCountMapByPresentIdsAndVoteType(presentId
 	return voteService.voteRepository.GetVoteCountMapByPresentIdsAndVoteType(presentIds, voteType)
 }
 
-func (voteService *VoteService) mapCreateVoteRequestToVote(request request.CreateVoteRequest) models.Vote {
+func (voteService *VoteService) mapCreateVoteRequestToVote(presentId string, request request.CreateVoteRequest) models.Vote {
 	createdUpdated := models.CreatedUpdated{
 		CreatedBy: request.Username,
 		UpdatedBy: request.Username,
 	}
 
 	return models.Vote{
-		PresentId:      uuid.FromStringOrNil(request.PresentId),
+		PresentId:      uuid.FromStringOrNil(presentId),
 		Type:           models.VoteType(request.VoteType),
 		CreatedUpdated: createdUpdated,
 	}

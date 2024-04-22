@@ -20,19 +20,19 @@ func (service *CommentService) GetCommentCountMapByPresentIds(presentIds []strin
 	return service.commentRepository.GetCommentCountMapByPresentIds(presentIds)
 }
 
-func (service *CommentService) CreateComment(request request.CreateCommentRequest) error {
-	comment := service.mapCreateCommentRequestToComment(request)
+func (service *CommentService) CreateComment(presentId string, request request.CreateCommentRequest) error {
+	comment := service.mapCreateCommentRequestToComment(presentId, request)
 	return service.commentRepository.CreateComment(comment)
 }
 
-func (service *CommentService) mapCreateCommentRequestToComment(request request.CreateCommentRequest) models.Comment {
+func (service *CommentService) mapCreateCommentRequestToComment(presentId string, request request.CreateCommentRequest) models.Comment {
 	createdUpdated := models.CreatedUpdated{
 		CreatedBy: request.Username,
 		UpdatedBy: request.Username,
 	}
 
 	return models.Comment{
-		PresentId:      uuid.FromStringOrNil(request.PresentId),
+		PresentId:      uuid.FromStringOrNil(presentId),
 		Content:        request.Content,
 		CreatedUpdated: createdUpdated,
 	}

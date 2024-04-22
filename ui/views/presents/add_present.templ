@@ -8,7 +8,6 @@ templ AddPresent(eventId string) {
 		<form  hx-post={ links.BuildCreatePresentLink(eventId) } @htmx:after-request="name=''; link = '';"  hx-target="#presentListItems" hx-swap="beforeend" hx-ext="json-enc">
 			<div>
 				<input type="hidden" id="username" name="username" x-model="username"/>
-				<input type="hidden" id="eventId" name="eventId" value={ eventId }/>
 			</div>
 			<div class="field">
 				<div class="control">

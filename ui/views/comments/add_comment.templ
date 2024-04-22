@@ -7,8 +7,6 @@ templ AddComment(eventId string, presentId string) {
 		<form hx-post={ links.BuildCreateCommentLink(eventId, presentId) } @htmx:after-request="content='';"  hx-target={ "#commentListItems_" + presentId } hx-swap="beforeend" hx-ext="json-enc">
 			<div x-data="{ username: $persist('') }">
 				<input type="hidden" id="username" name="username" x-model="username"/>
-				<input type="hidden" id="eventId" name="eventId" value={ eventId }/>
-				<input type="hidden" id="presentId" name="presentId" value={ presentId }/>
 			</div>
 			<div class="field">
 				<div class="control is-flex">

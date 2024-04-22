@@ -34,8 +34,9 @@ func (commentAPI *CommentAPI) GetComments(c *gin.Context) {
 }
 
 func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
-	var createCommentRequest request.CreateCommentRequest
+	presentId := c.Param("presentId")
 
+	var createCommentRequest request.CreateCommentRequest
 	if err := c.ShouldBindJSON(&createCommentRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -43,7 +44,7 @@ func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
 		return
 	}
 
-	err := commentAPI.commentService.CreateComment(createCommentRequest)
+	err := commentAPI.commentService.CreateComment(presentId, createCommentRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -51,7 +52,7 @@ func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
 		return
 	}
 
-	commentListItemViewModel, err := commentAPI.commentService.GetCommentListItemViewModel(createCommentRequest.PresentId, createCommentRequest.Username, createCommentRequest.Content)
+	commentListItemViewModel, err := commentAPI.commentService.GetCommentListItemViewModel(presentId, createCommentRequest.Username, createCommentRequest.Content)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
