@@ -16,6 +16,7 @@ const (
 	QUERY_CREATE_COMMENT                   string = "INSERT INTO present_comment (presentId, content, createdBy, updatedBy, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)"
 	QUERY_GET_COMMENTS_BY_PRESENT_ID       string = "SELECT * FROM present_comment as c WHERE c.presentId = ?"
 	QUERY_GET_COMMENT_COUNT_BY_PRESENT_IDS string = "SELECT DISTINCT v.presentId, COUNT(v.presentId) AS commentCount FROM present_comment AS v WHERE v.presentId IN (%s) GROUP BY v.presentId"
+	QUERY_GET_COMMENT_COUNT_BY_PRESENT_ID  string = "SELECT COUNT(*) as commentCount FROM present_comment AS c WHERE c.presentId = ?"
 )
 
 type CommentRepository struct {
@@ -73,7 +74,7 @@ func (repository *CommentRepository) GetCommentsByPresentId(presentId uuid.UUID)
 	return comments, tx.Commit()
 }
 
-func (repository *CommentRepository) GetCommentCountMapByPresentIds(presentIds []string) (map[string]int32, error) {
+func (repository *CommentRepository) GetCommentCountByPresentIds(presentIds []string) (map[string]int32, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -113,4 +114,28 @@ func (repository *CommentRepository) GetCommentCountMapByPresentIds(presentIds [
 
 	return presentIdsToCommentCount, tx.Commit()
 
+}
+
+func (repository *CommentRepository) GetCommentCountByPresentId(presentId uuid.UUID) (int32, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	tx, txErr := repository.dbConn.Database.BeginTx(ctx, nil)
+	if txErr != nil {
+		return 0, txErr
+	}
+
+	defer tx.Rollback()
+
+	var commentCount int32
+	queryErr := tx.QueryRowContext(ctx, QUERY_GET_COMMENT_COUNT_BY_PRESENT_ID, presentId).Scan(&commentCount)
+	if queryErr != nil {
+		if queryErr == sql.ErrNoRows {
+			return 0, nil
+		} else {
+			return 0, queryErr
+		}
+	}
+
+	return commentCount, tx.Commit()
 }

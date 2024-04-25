@@ -17,7 +17,7 @@ const (
 	QUERY_GET_VOTE_BY_PRESENT_ID_AND_USERNAME         string = "SELECT * FROM present_vote AS V WHERE presentId = ? and createdBy = ?"
 	QUERY_DELETE_VOTE_BY_PRESENT_ID_AND_USERNAME      string = "DELETE FROM present_vote AS V WHERE presentId = ? and createdBy = ?"
 	QUERY_GET_VOTE_COUNT_BY_PRESENT_IDS_AND_VOTE_TYPE string = "SELECT DISTINCT v.presentId, COUNT(v.presentId) AS voteCount FROM present_vote AS v WHERE v.presentId IN (%s) AND v.type = ? GROUP BY v.presentId"
-	QUERY_GET_VOTE_COUNT_BY_PRESENT_ID                string = "SELECT COUNT(*) as voteCount FROM present_vote AS v WHERE presentId = ? AND type = ?"
+	QUERY_GET_VOTE_COUNT_BY_PRESENT_ID_AND_VOTE_TYPE  string = "SELECT COUNT(*) as voteCount FROM present_vote AS v WHERE presentId = ? AND type = ?"
 )
 
 type VoteRepository struct {
@@ -82,7 +82,7 @@ func (repository *VoteRepository) DeleteVoteByPresentIdAndUsername(presentId uui
 	})
 }
 
-func (repository *VoteRepository) GetVoteCountMapByPresentIdsAndVoteType(presentIds []string, voteType models.VoteType) (map[string]int32, error) {
+func (repository *VoteRepository) GetVoteCountByPresentIdsAndVoteType(presentIds []string, voteType models.VoteType) (map[string]int32, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -136,7 +136,7 @@ func (repository *VoteRepository) GetVoteCountByPresentIdAndVoteType(presentId u
 	defer tx.Rollback()
 
 	var voteCount int32
-	queryErr := tx.QueryRowContext(ctx, QUERY_GET_VOTE_COUNT_BY_PRESENT_ID, presentId, voteType).Scan(&voteCount)
+	queryErr := tx.QueryRowContext(ctx, QUERY_GET_VOTE_COUNT_BY_PRESENT_ID_AND_VOTE_TYPE, presentId, voteType).Scan(&voteCount)
 	if queryErr != nil {
 		if queryErr == sql.ErrNoRows {
 			return 0, nil

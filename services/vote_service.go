@@ -85,8 +85,12 @@ func (voteService *VoteService) deleteVoteIfExists(presentId string, username st
 	return nil
 }
 
-func (voteService *VoteService) GetVoteCountMapByPresentIdsAndVoteType(presentIds []string, voteType models.VoteType) (map[string]int32, error) {
-	return voteService.voteRepository.GetVoteCountMapByPresentIdsAndVoteType(presentIds, voteType)
+func (voteService *VoteService) GetVoteCountByPresentIdsAndVoteType(presentIds []string, voteType models.VoteType) (map[string]int32, error) {
+	return voteService.voteRepository.GetVoteCountByPresentIdsAndVoteType(presentIds, voteType)
+}
+
+func (voteService *VoteService) GetVoteCountByPresentIdAndVoteType(presentId string, voteType models.VoteType) (int32, error) {
+	return voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(uuid.FromStringOrNil(presentId), voteType)
 }
 
 func (voteService *VoteService) mapCreateVoteRequestToVote(presentId string, request request.CreateVoteRequest) models.Vote {

@@ -42,3 +42,11 @@ func (claimService *ClaimService) DeleteClaim(presentId string) error {
 
 	return nil
 }
+
+func (claimService *ClaimService) GetClaimsByPresentIds(presentIds []string) (map[string]*models.Claim, error) {
+	return claimService.claimRepository.GetClaimsByPresentIds(presentIds)
+}
+
+func (claimService *ClaimService) GetClaimByPresentId(presentId string) (*models.Claim, error) {
+	return claimService.claimRepository.GetClaimByPresentId(uuid.FromStringOrNil(presentId))
+}

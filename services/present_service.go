@@ -15,10 +15,11 @@ type PresentService struct {
 	presentRepository repositories.PresentRepository
 	voteService       VoteService
 	commentService    CommentService
+	claimService      ClaimService
 }
 
-func NewPresentService(presentRepository *repositories.PresentRepository, voteService *VoteService, commentService *CommentService) *PresentService {
-	return &PresentService{presentRepository: *presentRepository, voteService: *voteService, commentService: *commentService}
+func NewPresentService(presentRepository *repositories.PresentRepository, voteService *VoteService, commentService *CommentService, claimService *ClaimService) *PresentService {
+	return &PresentService{presentRepository: *presentRepository, voteService: *voteService, commentService: *commentService, claimService: *claimService}
 }
 
 func (service *PresentService) GetPresentListViewModel(eventId string) (*viewmodels.PresentListViewModel, error) {
@@ -35,24 +36,30 @@ func (service *PresentService) mapPresentsToPresentListViewModel(eventId string,
 	var presentListItems []*viewmodels.PresentListItemViewModel
 	presentIds := service.extractIds(presents)
 
-	presentIdToUpvoteCount, err := service.voteService.GetVoteCountMapByPresentIdsAndVoteType(presentIds, models.UPVOTE)
+	presentIdToUpvoteCount, err := service.voteService.GetVoteCountByPresentIdsAndVoteType(presentIds, models.UPVOTE)
 	if err != nil {
 		logger.LOG.Debug("Could not get upvote counts")
 	}
 
-	presentIdToDownvoteCount, err := service.voteService.GetVoteCountMapByPresentIdsAndVoteType(presentIds, models.DOWNVOTE)
+	presentIdToDownvoteCount, err := service.voteService.GetVoteCountByPresentIdsAndVoteType(presentIds, models.DOWNVOTE)
 	if err != nil {
 		logger.LOG.Debug("Could not get downvote counts")
 	}
 
-	presentIdToCommentCount, err := service.commentService.GetCommentCountMapByPresentIds(presentIds)
+	presentIdToCommentCount, err := service.commentService.GetCommentCountByPresentIds(presentIds)
 	if err != nil {
 		logger.LOG.Debug("Could not get comment counts")
+	}
+
+	presentIdToClaim, err := service.claimService.GetClaimsByPresentIds(presentIds)
+	if err != nil {
+		logger.LOG.Debug("Could not get claims")
 	}
 
 	for _, present := range presents {
 		presentListItem := service.mapPresentToPresentListItemViewModel(
 			present,
+			presentIdToClaim[present.Id.String()],
 			presentIdToUpvoteCount[present.Id.String()],
 			presentIdToDownvoteCount[present.Id.String()],
 			presentIdToCommentCount[present.Id.String()])
@@ -70,6 +77,16 @@ func (service *PresentService) mapPresentsToPresentListViewModel(eventId string,
 	}
 }
 
+func (service *PresentService) GetSimplePresentListItemViewModel(presentId string) (*viewmodels.PresentListItemViewModel, error) {
+	present, err := service.presentRepository.GetPresentById(uuid.FromStringOrNil(presentId))
+	if err != nil {
+		logger.LOG.Error(err, "Could not get present")
+		return nil, err
+	}
+
+	return service.mapPresentToPresentListItemViewModel(present, nil, 0, 0, 0), nil
+}
+
 func (service *PresentService) GetPresentListItemViewModel(presentId string) (*viewmodels.PresentListItemViewModel, error) {
 	present, err := service.presentRepository.GetPresentById(uuid.FromStringOrNil(presentId))
 	if err != nil {
@@ -77,12 +94,43 @@ func (service *PresentService) GetPresentListItemViewModel(presentId string) (*v
 		return nil, err
 	}
 
-	return service.mapPresentToPresentListItemViewModel(present, 0, 0, 0), nil
+	claim, err := service.claimService.GetClaimByPresentId(presentId)
+	if err != nil {
+		logger.LOG.Error(err, "Could not get claim")
+		return nil, err
+	}
+
+	upvoteCount, err := service.voteService.GetVoteCountByPresentIdAndVoteType(presentId, models.UPVOTE)
+	if err != nil {
+		logger.LOG.Error(err, "Could not get upvoteCount")
+	}
+
+	downvoteCount, err := service.voteService.GetVoteCountByPresentIdAndVoteType(presentId, models.DOWNVOTE)
+	if err != nil {
+		logger.LOG.Error(err, "Could not get downvoteCount")
+	}
+
+	commentCount, err := service.commentService.GetCommentCountByPresentId(presentId)
+	if err != nil {
+		logger.LOG.Error(err, "Could not get downvoteCount")
+	}
+
+	return service.mapPresentToPresentListItemViewModel(present, claim, upvoteCount, downvoteCount, commentCount), nil
 }
 
-func (service *PresentService) mapPresentToPresentListItemViewModel(present *models.Present, upvoteCount int32, downvoteCount int32, commentCount int32) *viewmodels.PresentListItemViewModel {
+func (service *PresentService) mapPresentToPresentListItemViewModel(
+	present *models.Present,
+	claim *models.Claim,
+	upvoteCount int32,
+	downvoteCount int32,
+	commentCount int32) *viewmodels.PresentListItemViewModel {
+
 	dateLayout := "January 02, 2006"
 	comments := &viewmodels.CommentListViewModel{}
+	claimedBy := ""
+	if claim != nil {
+		claimedBy = claim.CreatedBy
+	}
 
 	return &viewmodels.PresentListItemViewModel{
 		EventId:       present.EventId.String(),
@@ -95,6 +143,8 @@ func (service *PresentService) mapPresentToPresentListItemViewModel(present *mod
 		CreatedBy:     present.CreatedBy,
 		CreatedAt:     present.CreatedAt.Format(dateLayout),
 		Comments:      comments,
+		IsClaimed:     claim != nil,
+		ClaimedBy:     claimedBy,
 	}
 }
 
@@ -129,11 +179,4 @@ func (service *PresentService) extractIds(presents []*models.Present) []string {
 		ids = append(ids, present.Id.String())
 	}
 	return ids
-}
-
-func (service *PresentService) ClaimPresent(eventId string, presentId string, claimPresentReqest request.ClaimPresentRequest) error {
-	return service.presentRepository.ClaimPresent(eventId, presentId, claimPresentReqest.Username)
-}
-func (service *PresentService) UnclaimPresent(eventId string, presentId string) error {
-	return service.presentRepository.UnclaimPresent(eventId, presentId)
 }

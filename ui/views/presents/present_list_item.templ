@@ -22,7 +22,11 @@ templ PresentListItem(vm *viewmodels.PresentListItemViewModel) {
 				<span>{ vm.Link }</span>
 				<div class="is-flex">
 					<form
-						hx-post={ links.BuildClaimPresentLink(vm.EventId, vm.PresentId) }
+						if (vm.IsClaimed) {
+							hx-delete={ links.BuildClaimPresentLink(vm.EventId, vm.PresentId) }
+						} else {
+							hx-post={ links.BuildClaimPresentLink(vm.EventId, vm.PresentId) }
+						}
 						hx-target={ "#present_" + vm.PresentId }
 						hx-swap="outerHTML"
 						hx-ext="json-enc"

@@ -5,6 +5,8 @@ import (
 
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/services"
+	"github.com/MorrisMorrison/retfig/ui/views/presents"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -38,7 +40,14 @@ func (claimAPI *ClaimAPI) CreateClaim(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "", nil)
+	presentListItemViewModel, err := claimAPI.presentService.GetSimplePresentListItemViewModel(presentId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	c.HTML(http.StatusOK, "", presents.PresentListItem(presentListItemViewModel))
 }
 
 func (claimAPI *ClaimAPI) DeleteClaim(c *gin.Context) {
@@ -53,5 +62,12 @@ func (claimAPI *ClaimAPI) DeleteClaim(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "", nil)
+	presentListItemViewModel, err := claimAPI.presentService.GetSimplePresentListItemViewModel(presentId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	c.HTML(http.StatusOK, "", presents.PresentListItem(presentListItemViewModel))
 }

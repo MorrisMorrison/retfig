@@ -55,10 +55,10 @@ func NewRepositoryContainer(dbConn *database.Connection) *RepositoryContainer {
 func NewServiceContainer(repositoryContainer *RepositoryContainer) *ServiceContainer {
 	voteService := services.NewVoteService(repositoryContainer.VoteRepository)
 	commentService := services.NewCommentService(repositoryContainer.CommentRepository)
-	presentService := services.NewPresentService(repositoryContainer.PresentRepository, voteService, commentService)
+	claimService := services.NewClaimService(repositoryContainer.ClaimRepository)
+	presentService := services.NewPresentService(repositoryContainer.PresentRepository, voteService, commentService, claimService)
 	participantService := services.NewParticipantService(repositoryContainer.ParticipantRrepository)
 	eventService := services.NewEventService(repositoryContainer.EventRepository, presentService, participantService)
-	claimService := services.NewClaimService(repositoryContainer.ClaimRepository)
 
 	return &ServiceContainer{
 		VoteService:        voteService,

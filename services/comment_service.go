@@ -16,8 +16,11 @@ func NewCommentService(commentRepository *repositories.CommentRepository) *Comme
 	return &CommentService{commentRepository: *commentRepository}
 }
 
-func (service *CommentService) GetCommentCountMapByPresentIds(presentIds []string) (map[string]int32, error) {
-	return service.commentRepository.GetCommentCountMapByPresentIds(presentIds)
+func (service *CommentService) GetCommentCountByPresentIds(presentIds []string) (map[string]int32, error) {
+	return service.commentRepository.GetCommentCountByPresentIds(presentIds)
+}
+func (service *CommentService) GetCommentCountByPresentId(presentId string) (int32, error) {
+	return service.commentRepository.GetCommentCountByPresentId(uuid.FromStringOrNil(presentId))
 }
 
 func (service *CommentService) CreateComment(presentId string, request request.CreateCommentRequest) error {

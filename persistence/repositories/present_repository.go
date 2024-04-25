@@ -14,8 +14,6 @@ const (
 	QUERY_CREATE_PRESENT           string = "INSERT INTO present (id, eventId, name, link, createdBy, updatedBy, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 	QUERY_GET_PRESENTS_BY_EVENT_ID string = "SELECT * FROM present AS p WHERE p.eventId = ?"
 	QUERY_GET_PRESENT_BY_ID        string = "SELECT * FROM present AS p WHERE p.id = ?"
-	QUERY_CLAIM_PRESENT            string = "UPDATE present AS p SET p.claimedBy = ?, p.claimedAt = ? WHERE p.id = ? "
-	QUERY_UNCLAIM_PRESENT          string = "UPDATE present AS p SET p.claimedBy = NULL, p.claimedAt = NULL WHERE p.id = ? "
 )
 
 type PresentRepository struct {
@@ -103,44 +101,4 @@ func (repository *PresentRepository) GetPresentById(id uuid.UUID) (*models.Prese
 	}
 
 	return &p, tx.Commit()
-}
-
-func (repository *PresentRepository) ClaimPresent(eventId string, presentId string, username string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	err := repository.dbConn.ExecuteInTransaction(ctx, func(ctx context.Context, tx *sql.Tx) error {
-		_, execError := tx.ExecContext(ctx, QUERY_CLAIM_PRESENT, username, time.Now(), presentId)
-		if execError != nil {
-			return execError
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (repository *PresentRepository) UnclaimPresent(eventId string, presentId string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	err := repository.dbConn.ExecuteInTransaction(ctx, func(ctx context.Context, tx *sql.Tx) error {
-		_, execError := tx.ExecContext(ctx, QUERY_UNCLAIM_PRESENT, presentId)
-		if execError != nil {
-			return execError
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
