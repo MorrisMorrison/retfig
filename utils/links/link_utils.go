@@ -16,6 +16,7 @@ const (
 	COMMENTS_API     = "comments"
 	PARTICIPANTS_API = "participants"
 	VOTES_API        = "votes"
+	CLAIMS_API        = "claims"
 )
 
 func BuildBaseUrl() string {
@@ -52,6 +53,10 @@ func BuildCreateCommentLink(eventId string, presentId string) string {
 
 func BuildCreateVoteLink(eventId string, presentId string) string {
 	return fmt.Sprintf("/%s/%s/%s/%s/%s/%s", BuildBaseUrl(), EVENTS_API, eventId, PRESENTS_API, presentId, VOTES_API)
+}
+
+func BuildClaimPresentLink(eventId string, presentId string) string {
+	return fmt.Sprintf("/%s/%s/%s/%s/%s/%s", BuildBaseUrl(), EVENTS_API, eventId, PRESENTS_API, presentId, CLAIMS_API)
 }
 
 func BuildRootLink() string {

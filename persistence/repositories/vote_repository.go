@@ -14,8 +14,8 @@ import (
 
 const (
 	QUERY_CREATE_VOTE                                 string = "INSERT INTO present_vote (presentId, type, createdBy, updatedBy, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)"
-	QUERY_GET_VOTE_BY_PRESENT_ID_AND_USERNAME         string = "SELECT * FROM present_vote AS V WHERE presentId = ? and CreatedBy = ?"
-	QUERY_DELETE_VOTE_BY_PRESENT_ID_AND_USERNAME      string = "DELETE FROM present_vote AS V WHERE presentId = ? and CreatedBy = ?"
+	QUERY_GET_VOTE_BY_PRESENT_ID_AND_USERNAME         string = "SELECT * FROM present_vote AS V WHERE presentId = ? and createdBy = ?"
+	QUERY_DELETE_VOTE_BY_PRESENT_ID_AND_USERNAME      string = "DELETE FROM present_vote AS V WHERE presentId = ? and createdBy = ?"
 	QUERY_GET_VOTE_COUNT_BY_PRESENT_IDS_AND_VOTE_TYPE string = "SELECT DISTINCT v.presentId, COUNT(v.presentId) AS voteCount FROM present_vote AS v WHERE v.presentId IN (%s) AND v.type = ? GROUP BY v.presentId"
 	QUERY_GET_VOTE_COUNT_BY_PRESENT_ID                string = "SELECT COUNT(*) as voteCount FROM present_vote AS v WHERE presentId = ? AND type = ?"
 )

@@ -13,6 +13,7 @@ type RepositoryContainer struct {
 	VoteRepository         *repositories.VoteRepository
 	CommentRepository      *repositories.CommentRepository
 	ParticipantRrepository *repositories.ParticipantRepository
+	ClaimRepository        *repositories.ClaimRepository
 }
 
 type ServiceContainer struct {
@@ -21,6 +22,7 @@ type ServiceContainer struct {
 	VoteService        *services.VoteService
 	CommentService     *services.CommentService
 	ParticipantService *services.ParticipantService
+	ClaimService       *services.ClaimService
 }
 
 type APIContainer struct {
@@ -29,6 +31,7 @@ type APIContainer struct {
 	VoteAPI        *api.VoteAPI
 	CommentAPI     *api.CommentAPI
 	ParticipantAPI *api.ParticipantAPI
+	ClaimAPI       *api.ClaimAPI
 }
 
 func NewRepositoryContainer(dbConn *database.Connection) *RepositoryContainer {
@@ -37,6 +40,7 @@ func NewRepositoryContainer(dbConn *database.Connection) *RepositoryContainer {
 	voteRepo := repositories.NewVoteRepository(dbConn)
 	commentRepo := repositories.NewCommentRepository(dbConn)
 	participantRepo := repositories.NewParticipantRepository(dbConn)
+	claimRepository := repositories.NewClaimRepository(dbConn)
 
 	return &RepositoryContainer{
 		EventRepository:        eventRepo,
@@ -44,6 +48,7 @@ func NewRepositoryContainer(dbConn *database.Connection) *RepositoryContainer {
 		VoteRepository:         voteRepo,
 		CommentRepository:      commentRepo,
 		ParticipantRrepository: participantRepo,
+		ClaimRepository:        claimRepository,
 	}
 }
 
@@ -53,6 +58,7 @@ func NewServiceContainer(repositoryContainer *RepositoryContainer) *ServiceConta
 	presentService := services.NewPresentService(repositoryContainer.PresentRepository, voteService, commentService)
 	participantService := services.NewParticipantService(repositoryContainer.ParticipantRrepository)
 	eventService := services.NewEventService(repositoryContainer.EventRepository, presentService, participantService)
+	claimService := services.NewClaimService(repositoryContainer.ClaimRepository)
 
 	return &ServiceContainer{
 		VoteService:        voteService,
@@ -60,6 +66,7 @@ func NewServiceContainer(repositoryContainer *RepositoryContainer) *ServiceConta
 		PresentService:     presentService,
 		EventService:       eventService,
 		ParticipantService: participantService,
+		ClaimService:       claimService,
 	}
 }
 
@@ -70,5 +77,6 @@ func NewAPIContainer(services *ServiceContainer) *APIContainer {
 		EventAPI:       api.NewEventAPI(services.EventService),
 		VoteAPI:        api.NewVoteAPI(services.VoteService, services.PresentService),
 		ParticipantAPI: api.NewParticipantAPI(services.ParticipantService, services.EventService),
+		ClaimAPI:       api.NewClaimAPI(services.ClaimService, services.PresentService),
 	}
 }

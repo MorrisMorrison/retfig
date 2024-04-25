@@ -11,6 +11,8 @@ type PresentListItemViewModel struct {
 	CreatedBy     string
 	CreatedAt     string
 	Comments      *CommentListViewModel
+	IsClaimed     bool
+	ClaimedBy     string
 }
 
 type PresentListViewModel struct {

@@ -28,8 +28,8 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 				v1.POST("/events/:eventId/presents/:presentId/comments", apis.CommentAPI.CreateComment)
 				v1.GET("/events/:eventId/presents/:presentId/comments", apis.CommentAPI.GetComments)
 
-				v1.POST("/events/:eventId/presents/:presentId/claim", apis.PresentAPI.ClaimPresent)
-				v1.DELETE("/events/:eventId/presents/:presentId/claim", apis.PresentAPI.UnclaimPresent)
+				v1.POST("/events/:eventId/presents/:presentId/claims", apis.ClaimAPI.CreateClaim)
+				v1.DELETE("/events/:eventId/presents/:presentId/claims", apis.ClaimAPI.DeleteClaim)
 
 			}
 		}
