@@ -40,7 +40,7 @@ func (claimAPI *ClaimAPI) CreateClaim(c *gin.Context) {
 		return
 	}
 
-	presentListItemViewModel, err := claimAPI.presentService.GetSimplePresentListItemViewModel(presentId)
+	presentListItemViewModel, err := claimAPI.presentService.GetPresentListItemViewModel(presentId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -62,7 +62,7 @@ func (claimAPI *ClaimAPI) DeleteClaim(c *gin.Context) {
 		return
 	}
 
-	presentListItemViewModel, err := claimAPI.presentService.GetSimplePresentListItemViewModel(presentId)
+	presentListItemViewModel, err := claimAPI.presentService.GetPresentListItemViewModel(presentId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
