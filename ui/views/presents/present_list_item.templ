@@ -7,10 +7,9 @@ import "github.com/MorrisMorrison/retfig/ui/views/comments"
 import "github.com/MorrisMorrison/retfig/ui/views/votes"
 
 import "fmt"
-import "strconv"
 
 templ PresentListItem(vm *viewmodels.PresentListItemViewModel) {
-	<div id={ "present_" + vm.PresentId } class="mb-4" x-data={ fmt.Sprintf("{showComments: false, isClaimed: %s, username: $persist('')}", strconv.FormatBool(vm.IsClaimed)) }>
+	<div id={ "present_" + vm.PresentId } class="mb-4" x-data={ "{showComments: false, username: $persist('')}" }>
 		<div class="is-flex is-flex-direction-column has-background-primary has-text-light box mb-0">
 			<div class="is-flex is-justify-content-space-between is-align-items-center">
 				<div class="is-flex is-align-items-center">
@@ -34,11 +33,14 @@ templ PresentListItem(vm *viewmodels.PresentListItemViewModel) {
 						<div class="is-flex is-align-items-baseline">
 							<input type="hidden" id="username" name="username" x-model="username"/>
 							<button
-								@click="isClaimed = !isClaimed"
 								class="button is-primary"
 							>
 								<span class="icon">
-									<i :class="{ 'fa-solid': isClaimed, 'fa-regular': !isClaimed, 'has-text-warning': isClaimed, 'has-text-light': !isClaimed}" class="fa-hand"></i>
+									if (vm.IsClaimed) {
+										<i class="fa-solid has-text-warning fa-hand"></i>
+									} else {
+										<i class="fa-regular has-text-light fa-hand"></i>
+									}
 								</span>
 							</button>
 						</div>
