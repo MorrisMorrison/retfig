@@ -5,6 +5,7 @@ import (
 
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/services"
+	"github.com/MorrisMorrison/retfig/utils/links"
 
 	"github.com/MorrisMorrison/retfig/ui/viewcontext"
 	"github.com/MorrisMorrison/retfig/ui/views"
@@ -23,7 +24,7 @@ func NewParticipantAPI(participantService *services.ParticipantService, eventSer
 	return &ParticipantAPI{participantService: *participantService, eventService: *eventService}
 }
 
-func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context, vc *viewcontext.ViewContext) {
+func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context) {
 	var createParticipantRequest request.CreateParticipantRequest
 
 	currentUser := c.GetString("currentUser")
@@ -52,6 +53,12 @@ func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context, vc *view
 		return
 
 	}
+
+	c.Header("HX-Push-Url", links.BuildGetEventLink(eventId))
+
+	SetTokenCookie(c, createParticipantRequest.Username)
+
+	vc := viewcontext.NewViewContext(createParticipantRequest.Username, true)
 
 	c.HTML(http.StatusOK, "", events.GetEvent(vc, viewModel))
 }

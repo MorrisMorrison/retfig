@@ -35,8 +35,8 @@ func BuildGetCommentsLink(eventId string, presentId string) string {
 	return fmt.Sprintf("/%s/%s/%s/%s/%s/%s", BuildBaseUrl(), EVENTS_API, eventId, PRESENTS_API, presentId, COMMENTS_API)
 }
 
-func BuildGetInvitationLink(eventId string) string {
-	return fmt.Sprintf("/%s/%s/%s/%s", BuildBaseUrl(), EVENTS_API, eventId, PARTICIPANTS_API)
+func BuildCreateParticipantLink(eventId string) string {
+	return fmt.Sprintf("/%s/%s/%s", EVENTS_API, eventId, PARTICIPANTS_API)
 }
 
 func BuildCreateEventLink() string {

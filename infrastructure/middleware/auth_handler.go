@@ -16,6 +16,7 @@ func AuthHandler() gin.HandlerFunc {
 			return
 		}
 
+		// TODO verify issuer
 		claims, err := jwt.ParseToken(cookie)
 		if err != nil || claims.Valid() != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})

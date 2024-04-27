@@ -21,10 +21,6 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 					api.HandleWithViewContext(c, apis.EventAPI.GetEvent)
 				})
 
-				v1.POST("/events/:eventId/participants", func(c *gin.Context) {
-					api.HandleWithViewContext(c, apis.ParticipantAPI.CreateParticipant)
-				})
-
 				v1.GET("/events/:eventId/invitation", apis.ParticipantAPI.GetInvitationView)
 
 				v1.GET("/events/:eventId/presents", func(c *gin.Context) {
@@ -48,8 +44,12 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 		}
 	}
 
+	r.GET("/events/:eventId", middleware.AuthHandler(), middleware.ViewContextHandler(), func(c *gin.Context) {
+		api.HandleWithViewContext(c, apis.EventAPI.GetEvent)
+	})
 	r.GET("/events/:eventId/invitations", apis.ParticipantAPI.GetInvitationView)
 	r.POST("/events", apis.EventAPI.CreateEvent)
+	r.POST("/events/:eventId/participants", apis.ParticipantAPI.CreateParticipant)
 
 	r.Static("/public", "./ui/public")
 	r.GET("/", api.Index)
