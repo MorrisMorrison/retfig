@@ -48,6 +48,7 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 	}
 
 	c.Header("HX-Push-Url", links.BuildGetEventLink(eventId.String()))
+	setTokenCookie(c, createEventRequest.Username)
 
 	c.HTML(http.StatusOK, "", events.GetEvent(viewModel))
 }

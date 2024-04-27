@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/MorrisMorrison/retfig/api"
 	"github.com/MorrisMorrison/retfig/infrastructure/container"
+	"github.com/MorrisMorrison/retfig/infrastructure/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,8 +14,9 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 		{
 			v1 := htmx.Group("/v1")
 			{
+
 				v1.POST("/events", apis.EventAPI.CreateEvent)
-				v1.GET("/events/:eventId", apis.EventAPI.GetEvent)
+				v1.GET("/events/:eventId", middleware.AuthHandler(), apis.EventAPI.GetEvent)
 				v1.DELETE("/events/:eventId", apis.EventAPI.DeleteEvent)
 				v1.PATCH("/events/:eventId", apis.EventAPI.UpdateEvent)
 
@@ -22,7 +24,7 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 				v1.GET("/events/:eventId/invitation", apis.ParticipantAPI.GetInvitationView)
 
 				v1.GET("/events/:eventId/presents", apis.PresentAPI.GetPresents)
-				v1.POST("/events/:eventId/presents", apis.PresentAPI.CreatePresent)
+				v1.POST("/events/:eventId/presents", middleware.AuthHandler(), apis.PresentAPI.CreatePresent)
 
 				v1.POST("/events/:eventId/presents/:presentId/votes", apis.VoteAPI.CreateVote)
 				v1.POST("/events/:eventId/presents/:presentId/comments", apis.CommentAPI.CreateComment)

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/MorrisMorrison/retfig/api/request"
@@ -31,6 +32,8 @@ func (presentAPI *PresentAPI) GetPresents(c *gin.Context) {
 
 func (presentAPI *PresentAPI) CreatePresent(c *gin.Context) {
 	eventId := c.Param("eventId")
+	fmt.Println("Create present")
+	fmt.Println(c.GetString("currentUser"))
 	var createPresentRequest request.CreatePresentRequest
 
 	if err := c.ShouldBindJSON(&createPresentRequest); err != nil {
