@@ -5,9 +5,6 @@ import "github.com/MorrisMorrison/retfig/utils/links"
 templ AddComment(eventId string, presentId string) {
 	<div id="add-comment" name="add-comment" class="is-flex is-flex-direction-column" x-data="{ content: ''}">
 		<form hx-post={ links.BuildCreateCommentLink(eventId, presentId) } @htmx:after-request="content='';"  hx-target={ "#commentListItems_" + presentId } hx-swap="beforeend" hx-ext="json-enc">
-			<div x-data="{ username: $persist('') }">
-				<input type="hidden" id="username" name="username" x-model="username"/>
-			</div>
 			<div class="field">
 				<div class="control is-flex">
 					<input x-model="content" class="input is-primary" id="content" name="content" type="text" placeholder="What is on your mind?" required/>

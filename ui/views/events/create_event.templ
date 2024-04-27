@@ -9,9 +9,9 @@ templ CreateEvent() {
 		<h2 class="subtitle">Create an event and share your generated link with your friends and family to find the perfect present together!</h2>
 		<div id="create-event" name="create-event" class="is-flex is-flex-direction-column">
 			<form hx-post={links.BuildCreateEventLink()} hx-target="#content" hx-ext="json-enc">
-				<div class="field" x-data="{ username: $persist('') }">
+				<div class="field">
 					<div class="control">
-						<input class="input is-primary" id="username" name="username" type="text" placeholder="What is your name?" x-model="username" required/>
+						<input class="input is-primary" id="username" name="username" type="text" placeholder="What is your name?" required/>
 					</div>
 				</div>
 				<div class="field">
