@@ -5,8 +5,3 @@ type CreateEventRequest struct {
 	Username  string `json:"username"`
 	Recipient string `json:"recipient"`
 }
-
-type UpdateEventRequest struct {
-	Name      string `json:"eventName"`
-	Recipient string `json:"recipient"`
-}

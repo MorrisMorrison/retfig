@@ -3,7 +3,6 @@ package api
 import (
 	"net/http"
 
-	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/services"
 	"github.com/MorrisMorrison/retfig/ui/viewcontext"
 	"github.com/MorrisMorrison/retfig/ui/views/presents"
@@ -21,19 +20,10 @@ func NewClaimAPI(claimService *services.ClaimService, presentService *services.P
 }
 
 func (claimAPI *ClaimAPI) CreateClaim(c *gin.Context, vc *viewcontext.ViewContext) {
-	// eventId := c.Param("eventId")
+	currentUser := c.GetString("currentUser")
 	presentId := c.Param("presentId")
 
-	var createClaimRequest request.CreateClaimRequest
-
-	if err := c.ShouldBindJSON(&createClaimRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-	err := claimAPI.claimService.CreateClaim(presentId, createClaimRequest)
+	err := claimAPI.claimService.CreateClaim(presentId, currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

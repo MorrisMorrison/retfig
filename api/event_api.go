@@ -68,19 +68,3 @@ func (eventAPI *EventAPI) GetEvent(c *gin.Context, vc *viewcontext.ViewContext) 
 
 	c.HTML(http.StatusOK, "", views.Index(events.GetEvent(vc, viewModel)))
 }
-
-func (eventAPI *EventAPI) DeleteEvent(c *gin.Context) {
-
-}
-
-func (eventAPI *EventAPI) UpdateEvent(c *gin.Context) {
-	var updateEventRequest request.UpdateEventRequest
-
-	if err := c.ShouldBindJSON(&updateEventRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-}

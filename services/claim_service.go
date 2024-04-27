@@ -1,7 +1,6 @@
 package services
 
 import (
-	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/infrastructure/logger"
 	"github.com/MorrisMorrison/retfig/persistence/models"
 	"github.com/MorrisMorrison/retfig/persistence/repositories"
@@ -16,21 +15,9 @@ func NewClaimService(claimRepository *repositories.ClaimRepository) *ClaimServic
 	return &ClaimService{claimRepository: *claimRepository}
 }
 
-func (claimService *ClaimService) CreateClaim(presentId string, request request.CreateClaimRequest) error {
-	claim := claimService.mapCreateClaimRequestToClaim(presentId, request)
-	return claimService.claimRepository.CreateClaim(claim)
-}
-
-func (claimService *ClaimService) mapCreateClaimRequestToClaim(presentId string, request request.CreateClaimRequest) models.Claim {
-	createdUpdated := models.CreatedUpdated{
-		CreatedBy: request.Username,
-		UpdatedBy: request.Username,
-	}
-
-	return models.Claim{
-		PresentId:      uuid.FromStringOrNil(presentId),
-		CreatedUpdated: createdUpdated,
-	}
+func (claimService *ClaimService) CreateClaim(presentId string, user string) error {
+	claim := models.NewClaim(presentId, user)
+	return claimService.claimRepository.CreateClaim(*claim)
 }
 
 func (claimService *ClaimService) DeleteClaim(presentId string) error {
