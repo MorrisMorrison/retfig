@@ -16,7 +16,7 @@ func Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "", views.Index(events.CreateEvent()))
 }
 
-func setTokenCookie(c *gin.Context, username string) {
+func SetTokenCookie(c *gin.Context, username string) {
 	token, err := jwt.GenerateToken(username, TOKEN_EXPIRES_IN)
 	if err != nil {
 		c.Error(err)

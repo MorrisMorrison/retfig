@@ -1,8 +1,9 @@
 package events
 
 import "github.com/MorrisMorrison/retfig/ui/viewmodels"
+import "github.com/MorrisMorrison/retfig/ui/viewcontext"
 
-templ EventDetails(vm *viewmodels.GetEventViewModel) {
+templ EventDetails(viewContext *viewcontext.ViewContext, vm *viewmodels.GetEventViewModel) {
 	<div class="is-flex is-flex-direction-column box">
 		<div class="is-flex is-justify-content-space-between">
 			<h1 class="title"><i class="fa-solid fa-calendar"></i> { vm.Name }</h1>

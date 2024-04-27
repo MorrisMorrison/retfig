@@ -17,10 +17,10 @@ func NewVoteService(voteRepository *repositories.VoteRepository) *VoteService {
 	return &VoteService{voteRepository: *voteRepository}
 }
 
-func (voteService *VoteService) GetVoteButtonsViewModel(eventId string, presentId string, createVoteRequest request.CreateVoteRequest) (*viewmodels.VoteButtonsViewModel, error) {
+func (voteService *VoteService) GetVoteButtonsViewModel(eventId string, presentId string, user string, createVoteRequest request.CreateVoteRequest) (*viewmodels.VoteButtonsViewModel, error) {
 	presentUUID := uuid.FromStringOrNil(presentId)
 
-	vote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(presentUUID, createVoteRequest.Username)
+	vote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(presentUUID, user)
 	if err != nil {
 		return nil, err
 	}
@@ -39,10 +39,10 @@ func (voteService *VoteService) GetVoteButtonsViewModel(eventId string, presentI
 	return voteButtonsViewModel, nil
 }
 
-func (voteService *VoteService) GetVoteButtonViewModel(eventId string, presentId string, createVoteRequest request.CreateVoteRequest) (*viewmodels.VoteButtonViewModel, error) {
+func (voteService *VoteService) GetVoteButtonViewModel(eventId string, presentId string, user string, createVoteRequest request.CreateVoteRequest) (*viewmodels.VoteButtonViewModel, error) {
 	presentUUID := uuid.FromStringOrNil(presentId)
 
-	vote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(presentUUID, createVoteRequest.Username)
+	vote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(presentUUID, user)
 	if err != nil {
 		return nil, err
 	}
@@ -56,13 +56,13 @@ func (voteService *VoteService) GetVoteButtonViewModel(eventId string, presentId
 	return createVoteButtonViewModel, nil
 }
 
-func (voteService *VoteService) CreateVote(presentId string, request request.CreateVoteRequest) error {
-	err := voteService.deleteVoteIfExists(presentId, request.Username, request.VoteType)
+func (voteService *VoteService) CreateVote(presentId string, user string, request request.CreateVoteRequest) error {
+	err := voteService.deleteVoteIfExists(presentId, user, request.VoteType)
 	if err != nil {
 		return err
 	}
 
-	vote := voteService.mapCreateVoteRequestToVote(presentId, request)
+	vote := voteService.mapCreateVoteRequestToVote(presentId, user, request)
 	return voteService.voteRepository.CreateVote(vote)
 }
 
@@ -93,10 +93,10 @@ func (voteService *VoteService) GetVoteCountByPresentIdAndVoteType(presentId str
 	return voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(uuid.FromStringOrNil(presentId), voteType)
 }
 
-func (voteService *VoteService) mapCreateVoteRequestToVote(presentId string, request request.CreateVoteRequest) models.Vote {
+func (voteService *VoteService) mapCreateVoteRequestToVote(presentId string, user string, request request.CreateVoteRequest) models.Vote {
 	createdUpdated := models.CreatedUpdated{
-		CreatedBy: request.Username,
-		UpdatedBy: request.Username,
+		CreatedBy: user,
+		UpdatedBy: user,
 	}
 
 	return models.Vote{

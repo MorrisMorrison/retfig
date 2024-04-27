@@ -1,8 +1,9 @@
 package presents
 
 import "github.com/MorrisMorrison/retfig/ui/viewmodels"
+import "github.com/MorrisMorrison/retfig/ui/viewcontext"
 
-templ PresentList(vm *viewmodels.PresentListViewModel) {
+templ PresentList(viewContext *viewcontext.ViewContext, vm *viewmodels.PresentListViewModel) {
 	<div id="presentList" class="is-flex is-flex-direction-column mb-5">
 		<div class="is-flex is-flex-direction-column box">
 			<h1 class="title">
@@ -17,11 +18,11 @@ templ PresentList(vm *viewmodels.PresentListViewModel) {
 					<span id="noPresentsMessage" class="has-text-weight-light">No presents recommended yet!</span>
 				} else {
 					for _, present := range vm.Presents {
-						@PresentListItem(present)
+						@PresentListItem(viewContext, present)
 					}
 				}
 			</div>
 		</div>
-		@AddPresent(vm.EventId)
+		@AddPresent(viewContext, vm.EventId)
 	</div>
 }

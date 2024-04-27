@@ -1,8 +1,9 @@
 package invitations
 
 import "fmt"
+import "github.com/MorrisMorrison/retfig/ui/viewcontext"
 
-templ InvitationLink(invitationLink string) {
+templ InvitationLink(ctx *viewcontext.ViewContext, invitationLink string) {
 	<div class="is-flex is-flex-direction-column box">
 		<h1 class="title"><i class="fa-solid fa-link"></i> Invitation Link</h1>
 		<div class="field">

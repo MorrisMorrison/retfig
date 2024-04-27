@@ -5,6 +5,7 @@ import (
 
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/services"
+	"github.com/MorrisMorrison/retfig/ui/viewcontext"
 	"github.com/MorrisMorrison/retfig/ui/views/presents"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +20,7 @@ func NewClaimAPI(claimService *services.ClaimService, presentService *services.P
 	return &ClaimAPI{claimService: *claimService, presentService: *presentService}
 }
 
-func (claimAPI *ClaimAPI) CreateClaim(c *gin.Context) {
+func (claimAPI *ClaimAPI) CreateClaim(c *gin.Context, vc *viewcontext.ViewContext) {
 	// eventId := c.Param("eventId")
 	presentId := c.Param("presentId")
 
@@ -47,10 +48,10 @@ func (claimAPI *ClaimAPI) CreateClaim(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", presents.PresentListItem(presentListItemViewModel))
+	c.HTML(http.StatusOK, "", presents.PresentListItem(vc, presentListItemViewModel))
 }
 
-func (claimAPI *ClaimAPI) DeleteClaim(c *gin.Context) {
+func (claimAPI *ClaimAPI) DeleteClaim(c *gin.Context, vc *viewcontext.ViewContext) {
 	// eventId := c.Param("eventId")
 	presentId := c.Param("presentId")
 
@@ -69,5 +70,5 @@ func (claimAPI *ClaimAPI) DeleteClaim(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "", presents.PresentListItem(presentListItemViewModel))
+	c.HTML(http.StatusOK, "", presents.PresentListItem(vc, presentListItemViewModel))
 }

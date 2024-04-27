@@ -6,6 +6,7 @@ import (
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/services"
 
+	"github.com/MorrisMorrison/retfig/ui/viewcontext"
 	"github.com/MorrisMorrison/retfig/ui/views"
 	"github.com/MorrisMorrison/retfig/ui/views/events"
 	"github.com/MorrisMorrison/retfig/ui/views/invitations"
@@ -22,7 +23,7 @@ func NewParticipantAPI(participantService *services.ParticipantService, eventSer
 	return &ParticipantAPI{participantService: *participantService, eventService: *eventService}
 }
 
-func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context) {
+func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context, vc *viewcontext.ViewContext) {
 	eventId := c.Param("eventId")
 	var createParticipantRequest request.CreateParticipantRequest
 
@@ -50,7 +51,7 @@ func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context) {
 
 	}
 
-	c.HTML(http.StatusOK, "", events.GetEvent(viewModel))
+	c.HTML(http.StatusOK, "", events.GetEvent(vc, viewModel))
 }
 
 func (eventAPI *ParticipantAPI) GetInvitationView(c *gin.Context) {

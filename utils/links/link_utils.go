@@ -16,7 +16,7 @@ const (
 	COMMENTS_API     = "comments"
 	PARTICIPANTS_API = "participants"
 	VOTES_API        = "votes"
-	CLAIMS_API        = "claims"
+	CLAIMS_API       = "claims"
 )
 
 func BuildBaseUrl() string {
@@ -40,7 +40,7 @@ func BuildGetInvitationLink(eventId string) string {
 }
 
 func BuildCreateEventLink() string {
-	return fmt.Sprintf("/%s/%s", BuildBaseUrl(), EVENTS_API)
+	return fmt.Sprintf("/%s", EVENTS_API)
 }
 
 func BuildCreatePresentLink(eventId string) string {

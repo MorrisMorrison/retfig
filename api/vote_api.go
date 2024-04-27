@@ -19,6 +19,7 @@ func NewVoteAPI(voteService *services.VoteService, presentService *services.Pres
 }
 
 func (voteAPI *VoteAPI) CreateVote(c *gin.Context) {
+	currentUser := c.GetString("currentUser")
 	eventId := c.Param("eventId")
 	presentId := c.Param("presentId")
 
@@ -31,7 +32,7 @@ func (voteAPI *VoteAPI) CreateVote(c *gin.Context) {
 		return
 	}
 
-	err := voteAPI.voteService.CreateVote(presentId, createVoteRequest)
+	err := voteAPI.voteService.CreateVote(presentId, currentUser, createVoteRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -39,7 +40,7 @@ func (voteAPI *VoteAPI) CreateVote(c *gin.Context) {
 		return
 	}
 
-	voteButtonsViewModel, err := voteAPI.voteService.GetVoteButtonsViewModel(eventId, presentId, createVoteRequest)
+	voteButtonsViewModel, err := voteAPI.voteService.GetVoteButtonsViewModel(eventId, presentId, currentUser, createVoteRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

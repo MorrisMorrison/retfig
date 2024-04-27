@@ -1,16 +1,17 @@
 package events
 
 import "github.com/MorrisMorrison/retfig/ui/viewmodels"
+import "github.com/MorrisMorrison/retfig/ui/viewcontext"
 import "github.com/MorrisMorrison/retfig/ui/views/presents"
 import "github.com/MorrisMorrison/retfig/ui/views/invitations"
 
 
-templ GetEvent(vm *viewmodels.GetEventViewModel) {
+templ GetEvent(viewContext *viewcontext.ViewContext, vm *viewmodels.GetEventViewModel) {
 	<section class="section">
 		<div class="is-flex is-flex-direction-column">
-			@EventDetails(vm)
-			@presents.PresentList(vm.Presents)
-			@invitations.InvitationLink(vm.InvitationLink)
+			@EventDetails(viewContext, vm)
+			@presents.PresentList(viewContext, vm.Presents)
+			@invitations.InvitationLink(viewContext, vm.InvitationLink)
 		</div>
 	</section>
 }

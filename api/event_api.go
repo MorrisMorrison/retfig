@@ -5,6 +5,7 @@ import (
 
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/services"
+	"github.com/MorrisMorrison/retfig/ui/viewcontext"
 	"github.com/MorrisMorrison/retfig/ui/views"
 	"github.com/MorrisMorrison/retfig/ui/views/events"
 	"github.com/MorrisMorrison/retfig/utils/links"
@@ -20,7 +21,7 @@ func NewEventAPI(eventService *services.EventService) *EventAPI {
 	return &EventAPI{eventService: *eventService}
 }
 
-func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
+func (eventAPI *EventAPI) CreateEvent(c *gin.Context, vc *viewcontext.ViewContext) {
 	var createEventRequest request.CreateEventRequest
 
 	if err := c.ShouldBindJSON(&createEventRequest); err != nil {
@@ -47,13 +48,15 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 
 	}
 
+	// used to include id of created event in url so users can hit reload
 	c.Header("HX-Push-Url", links.BuildGetEventLink(eventId.String()))
-	setTokenCookie(c, createEventRequest.Username)
 
-	c.HTML(http.StatusOK, "", events.GetEvent(viewModel))
+	SetTokenCookie(c, createEventRequest.Username)
+
+	c.HTML(http.StatusOK, "", events.GetEvent(vc, viewModel))
 }
 
-func (eventAPI *EventAPI) GetEvent(c *gin.Context) {
+func (eventAPI *EventAPI) GetEvent(c *gin.Context, vc *viewcontext.ViewContext) {
 	eventId := c.Param("eventId")
 	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId)
 	if err != nil {
@@ -63,7 +66,7 @@ func (eventAPI *EventAPI) GetEvent(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "", views.Index(events.GetEvent(viewModel)))
+	c.HTML(http.StatusOK, "", views.Index(events.GetEvent(vc, viewModel)))
 }
 
 func (eventAPI *EventAPI) DeleteEvent(c *gin.Context) {

@@ -1,8 +1,9 @@
 package presents
 
 import "github.com/MorrisMorrison/retfig/utils/links"
+import "github.com/MorrisMorrison/retfig/ui/viewcontext"
 
-templ AddPresent(eventId string) {
+templ AddPresent(ctx *viewcontext.ViewContext, eventId string) {
 	<div id="add-present" name="add-present" class="is-flex is-flex-direction-column box" x-data="{ name: '', link: '' }">
 		<h2 class="subtitle">Add present recommendations to the list!</h2>
 		<form  hx-post={ links.BuildCreatePresentLink(eventId) } @htmx:after-request="name=''; link = '';"  hx-target="#presentListItems" hx-swap="beforeend" hx-ext="json-enc">

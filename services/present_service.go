@@ -148,8 +148,8 @@ func (service *PresentService) mapPresentToPresentListItemViewModel(
 	}
 }
 
-func (service *PresentService) CreatePresent(eventId string, createPresentRequest request.CreatePresentRequest) (uuid.UUID, error) {
-	present := service.mapCreatePresentRequestToPresent(eventId, createPresentRequest)
+func (service *PresentService) CreatePresent(eventId string, user string, createPresentRequest request.CreatePresentRequest) (uuid.UUID, error) {
+	present := service.mapCreatePresentRequestToPresent(eventId, user, createPresentRequest)
 	presentId, err := service.presentRepository.CreatePresent(present)
 	if err != nil {
 		logger.LOG.Error(err, "Could not create present")
@@ -159,10 +159,10 @@ func (service *PresentService) CreatePresent(eventId string, createPresentReques
 	return presentId, err
 }
 
-func (service *PresentService) mapCreatePresentRequestToPresent(eventId string, createPresentRequest request.CreatePresentRequest) models.Present {
+func (service *PresentService) mapCreatePresentRequestToPresent(eventId string, user string, createPresentRequest request.CreatePresentRequest) models.Present {
 	createdUpdated := models.CreatedUpdated{
-		CreatedBy: createPresentRequest.Username,
-		UpdatedBy: createPresentRequest.Username,
+		CreatedBy: user,
+		UpdatedBy: user,
 	}
 
 	return models.Present{

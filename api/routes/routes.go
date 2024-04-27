@@ -15,30 +15,45 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 			v1 := htmx.Group("/v1")
 			{
 
-				v1.POST("/events", apis.EventAPI.CreateEvent)
-				v1.GET("/events/:eventId", middleware.AuthHandler(), apis.EventAPI.GetEvent)
+				v1.GET("/events/:eventId", func(c *gin.Context) {
+					api.HandleWithViewContext(c, apis.EventAPI.GetEvent)
+				})
 				v1.DELETE("/events/:eventId", apis.EventAPI.DeleteEvent)
 				v1.PATCH("/events/:eventId", apis.EventAPI.UpdateEvent)
 
-				v1.POST("/events/:eventId/participants", apis.ParticipantAPI.CreateParticipant)
+				v1.POST("/events/:eventId/participants", func(c *gin.Context) {
+					api.HandleWithViewContext(c, apis.ParticipantAPI.CreateParticipant)
+				})
+
 				v1.GET("/events/:eventId/invitation", apis.ParticipantAPI.GetInvitationView)
 
-				v1.GET("/events/:eventId/presents", apis.PresentAPI.GetPresents)
-				v1.POST("/events/:eventId/presents", middleware.AuthHandler(), apis.PresentAPI.CreatePresent)
+				v1.GET("/events/:eventId/presents", func(c *gin.Context) {
+					api.HandleWithViewContext(c, apis.PresentAPI.GetPresents)
+				})
+				v1.POST("/events/:eventId/presents", func(c *gin.Context) {
+					api.HandleWithViewContext(c, apis.PresentAPI.CreatePresent)
+				})
 
 				v1.POST("/events/:eventId/presents/:presentId/votes", apis.VoteAPI.CreateVote)
 				v1.POST("/events/:eventId/presents/:presentId/comments", apis.CommentAPI.CreateComment)
 				v1.GET("/events/:eventId/presents/:presentId/comments", apis.CommentAPI.GetComments)
 
-				v1.POST("/events/:eventId/presents/:presentId/claims", apis.ClaimAPI.CreateClaim)
-				v1.DELETE("/events/:eventId/presents/:presentId/claims", apis.ClaimAPI.DeleteClaim)
-
+				v1.POST("/events/:eventId/presents/:presentId/claims", func(c *gin.Context) {
+					api.HandleWithViewContext(c, apis.ClaimAPI.CreateClaim)
+				})
+				v1.DELETE("/events/:eventId/presents/:presentId/claims", func(c *gin.Context) {
+					api.HandleWithViewContext(c, apis.ClaimAPI.DeleteClaim)
+				})
 			}
 		}
 	}
 
-	r.GET("/events/:eventId", apis.EventAPI.GetEvent)
+	a.Use(middleware.AuthHandler())
+
 	r.GET("/events/:eventId/invitations", apis.ParticipantAPI.GetInvitationView)
+	r.POST("/events", func(c *gin.Context) {
+		api.HandleWithViewContext(c, apis.EventAPI.CreateEvent)
+	})
 
 	r.Static("/public", "./ui/public")
 	r.GET("/", api.Index)
