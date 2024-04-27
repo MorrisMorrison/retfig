@@ -15,6 +15,7 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 			v1 := htmx.Group("/v1")
 			{
 				v1.Use(middleware.AuthHandler())
+				v1.Use(middleware.ViewContextHandler())
 
 				v1.GET("/events/:eventId", func(c *gin.Context) {
 					api.HandleWithViewContext(c, apis.EventAPI.GetEvent)
@@ -48,9 +49,7 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 	}
 
 	r.GET("/events/:eventId/invitations", apis.ParticipantAPI.GetInvitationView)
-	r.POST("/events", func(c *gin.Context) {
-		api.HandleWithViewContext(c, apis.EventAPI.CreateEvent)
-	})
+	r.POST("/events", apis.EventAPI.CreateEvent)
 
 	r.Static("/public", "./ui/public")
 	r.GET("/", api.Index)

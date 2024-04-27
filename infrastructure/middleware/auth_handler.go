@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/MorrisMorrison/retfig/infrastructure/jwt"
@@ -24,7 +23,6 @@ func AuthHandler() gin.HandlerFunc {
 			return
 		}
 
-		fmt.Println(claims.Subject)
 		c.Set("currentUser", claims.Subject)
 
 		c.Next()

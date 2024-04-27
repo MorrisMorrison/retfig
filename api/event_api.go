@@ -21,7 +21,7 @@ func NewEventAPI(eventService *services.EventService) *EventAPI {
 	return &EventAPI{eventService: *eventService}
 }
 
-func (eventAPI *EventAPI) CreateEvent(c *gin.Context, vc *viewcontext.ViewContext) {
+func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 	var createEventRequest request.CreateEventRequest
 
 	if err := c.ShouldBindJSON(&createEventRequest); err != nil {
@@ -53,6 +53,7 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context, vc *viewcontext.ViewContex
 
 	SetTokenCookie(c, createEventRequest.Username)
 
+	vc := viewcontext.NewViewContext(createEventRequest.Username, true)
 	c.HTML(http.StatusOK, "", events.GetEvent(vc, viewModel))
 }
 

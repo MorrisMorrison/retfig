@@ -7,7 +7,7 @@ import (
 
 func ViewContextHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		currentUser := c.GetString("username")
+		currentUser := c.GetString("currentUser")
 		viewContext := viewcontext.NewViewContext(currentUser, currentUser != "")
 
 		c.Set("viewContext", viewContext)

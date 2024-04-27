@@ -10,7 +10,7 @@ import "github.com/MorrisMorrison/retfig/ui/viewcontext"
 
 import "fmt"
 
-templ PresentListItem(ctx *viewcontext.ViewContext, vm *viewmodels.PresentListItemViewModel) {
+templ PresentListItem(vc *viewcontext.ViewContext, vm *viewmodels.PresentListItemViewModel) {
 	<div id={ "present_" + vm.PresentId } class="mb-4" x-data={ "{showComments: false" }>
 		<div class="is-flex is-flex-direction-column has-background-primary has-text-light box mb-0">
 			<div class="is-flex is-justify-content-space-between is-align-items-center">
@@ -23,7 +23,7 @@ templ PresentListItem(ctx *viewcontext.ViewContext, vm *viewmodels.PresentListIt
 				<span>{ vm.Link }</span>
 				<div class="is-flex">
 					<form
-						if (vm.IsClaimed) {
+						if (vm.IsClaimed && vm.ClaimedBy == vc.CurrentUser) {
 							hx-delete={ links.BuildClaimPresentLink(vm.EventId, vm.PresentId) }
 						} else {
 							hx-post={ links.BuildClaimPresentLink(vm.EventId, vm.PresentId) }
@@ -37,8 +37,10 @@ templ PresentListItem(ctx *viewcontext.ViewContext, vm *viewmodels.PresentListIt
 								class="button is-primary"
 							>
 								<span class="icon">
-									if (vm.IsClaimed) {
+									if (vm.IsClaimed && vm.ClaimedBy == vc.CurrentUser) {
 										<i class="fa-solid has-text-warning fa-hand"></i>
+									} else if (vm.IsClaimed && vm.ClaimedBy != vc.CurrentUser) {
+										<i class="fa-solid has-text-danger fa-hand"></i>
 									} else {
 										<i class="fa-regular has-text-light fa-hand"></i>
 									}

@@ -10,7 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const TOKEN_EXPIRES_IN = time.Hour * 24
+const (
+	TOKEN_EXPIRES_IN = time.Hour * 24
+	PARAM_EVENT_ID   = "eventId"
+	PARAM_PRESENT_ID = "presentId"
+	PARAM_USERNAMAE  = "username"
+)
 
 func Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "", views.Index(events.CreateEvent()))
