@@ -23,6 +23,7 @@ func NewEventAPI(eventService *services.EventService) *EventAPI {
 
 func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 	var createEventRequest request.CreateEventRequest
+	currentUser := c.GetString("currentUser")
 
 	if err := c.ShouldBindJSON(&createEventRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -39,7 +40,7 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 		return
 	}
 
-	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId.String())
+	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId.String(), currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -58,8 +59,10 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 }
 
 func (eventAPI *EventAPI) GetEvent(c *gin.Context, vc *viewcontext.ViewContext) {
+	currentUser := c.GetString("currentUser")
 	eventId := c.Param("eventId")
-	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId)
+
+	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId, currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

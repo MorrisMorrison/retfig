@@ -18,6 +18,7 @@ const (
 	QUERY_DELETE_VOTE_BY_PRESENT_ID_AND_USERNAME      string = "DELETE FROM present_vote AS V WHERE presentId = ? and createdBy = ?"
 	QUERY_GET_VOTE_COUNT_BY_PRESENT_IDS_AND_VOTE_TYPE string = "SELECT DISTINCT v.presentId, COUNT(v.presentId) AS voteCount FROM present_vote AS v WHERE v.presentId IN (%s) AND v.type = ? GROUP BY v.presentId"
 	QUERY_GET_VOTE_COUNT_BY_PRESENT_ID_AND_VOTE_TYPE  string = "SELECT COUNT(*) as voteCount FROM present_vote AS v WHERE presentId = ? AND type = ?"
+	QUERY_GET_VOTES_BY_PRESENT_IDS_AND_USER           string = "SELECT * FROM present_vote AS v WHERE v.presentId IN (%s) AND v.createdBy = ?"
 )
 
 type VoteRepository struct {
@@ -146,4 +147,44 @@ func (repository *VoteRepository) GetVoteCountByPresentIdAndVoteType(presentId u
 	}
 
 	return voteCount, tx.Commit()
+}
+
+func (repository *VoteRepository) GetVotesByPresentIdsAndUser(presentIds []string, user string) (map[string]*models.Vote, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	tx, txErr := repository.dbConn.Database.BeginTx(ctx, nil)
+	if txErr != nil {
+		return nil, txErr
+	}
+
+	defer tx.Rollback()
+
+	placeholders := strings.Join(strings.Split(strings.Repeat("?", len(presentIds)), ""), ",")
+	query := fmt.Sprintf(QUERY_GET_VOTES_BY_PRESENT_IDS_AND_USER, placeholders)
+
+	args := make([]interface{}, len(presentIds)+1)
+	for i, id := range presentIds {
+		args[i] = id
+	}
+	args[len(presentIds)] = user
+
+	rows, queryErr := tx.QueryContext(ctx, query, args...)
+	if queryErr != nil {
+		return nil, queryErr
+	}
+	defer rows.Close()
+
+	presentIdsToVote := make(map[string]*models.Vote)
+	for rows.Next() {
+		var v models.Vote
+		err := rows.Scan(&v.PresentId, &v.Type, &v.CreatedBy, &v.UpdatedBy, &v.CreatedAt, &v.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		presentIdsToVote[v.PresentId.String()] = &v
+	}
+
+	return presentIdsToVote, tx.Commit()
 }

@@ -20,7 +20,7 @@ func NewVoteService(voteRepository *repositories.VoteRepository) *VoteService {
 func (voteService *VoteService) GetVoteButtonsViewModel(eventId string, presentId string, user string, createVoteRequest request.CreateVoteRequest) (*viewmodels.VoteButtonsViewModel, error) {
 	presentUUID := uuid.FromStringOrNil(presentId)
 
-	vote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(presentUUID, user)
+	userVote, err := voteService.voteRepository.GetVoteByPresentIdAndUser(presentUUID, user)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,10 @@ func (voteService *VoteService) GetVoteButtonsViewModel(eventId string, presentI
 		logger.LOG.Debug("Could not fetch vote count")
 	}
 
-	voteButtonsViewModel := viewmodels.NewVoteButtonsViewModel(eventId, vote.PresentId.String(), upvoteCount, downvoteCount, vote.CreatedBy, vote.Type == models.UPVOTE, vote.Type == models.DOWNVOTE)
+	isUpvotedByUser := userVote != nil && userVote.Type == models.UPVOTE
+	isDownvotedByUser := userVote != nil && userVote.Type == models.DOWNVOTE
+
+	voteButtonsViewModel := viewmodels.NewVoteButtonsViewModel(eventId, userVote.PresentId.String(), upvoteCount, downvoteCount, userVote.CreatedBy, isUpvotedByUser, isDownvotedByUser)
 	return voteButtonsViewModel, nil
 }
 
@@ -91,6 +94,14 @@ func (voteService *VoteService) GetVoteCountByPresentIdsAndVoteType(presentIds [
 
 func (voteService *VoteService) GetVoteCountByPresentIdAndVoteType(presentId string, voteType models.VoteType) (int32, error) {
 	return voteService.voteRepository.GetVoteCountByPresentIdAndVoteType(uuid.FromStringOrNil(presentId), voteType)
+}
+
+func (voteService *VoteService) GetVoteByPresentIdAndUser(presentId string, user string) (*models.Vote, error) {
+	return voteService.voteRepository.GetVoteByPresentIdAndUser(uuid.FromStringOrNil(presentId), user)
+}
+
+func (voteService *VoteService) GetVotesByPresentIdsAndUser(presentIds []string, user string) (map[string]*models.Vote, error) {
+	return voteService.voteRepository.GetVotesByPresentIdsAndUser(presentIds, user)
 }
 
 func (voteService *VoteService) mapCreateVoteRequestToVote(presentId string, user string, request request.CreateVoteRequest) models.Vote {

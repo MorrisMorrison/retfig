@@ -31,7 +31,7 @@ func (claimAPI *ClaimAPI) CreateClaim(c *gin.Context, vc *viewcontext.ViewContex
 		return
 	}
 
-	presentListItemViewModel, err := claimAPI.presentService.GetPresentListItemViewModel(presentId)
+	presentListItemViewModel, err := claimAPI.presentService.GetPresentListItemViewModel(presentId, currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -42,7 +42,7 @@ func (claimAPI *ClaimAPI) CreateClaim(c *gin.Context, vc *viewcontext.ViewContex
 }
 
 func (claimAPI *ClaimAPI) DeleteClaim(c *gin.Context, vc *viewcontext.ViewContext) {
-	// eventId := c.Param("eventId")
+	currentUser := c.GetString("currentUser")
 	presentId := c.Param("presentId")
 
 	err := claimAPI.claimService.DeleteClaim(presentId)
@@ -53,7 +53,7 @@ func (claimAPI *ClaimAPI) DeleteClaim(c *gin.Context, vc *viewcontext.ViewContex
 		return
 	}
 
-	presentListItemViewModel, err := claimAPI.presentService.GetPresentListItemViewModel(presentId)
+	presentListItemViewModel, err := claimAPI.presentService.GetPresentListItemViewModel(presentId, currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

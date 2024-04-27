@@ -35,8 +35,8 @@ templ PresentListItem(vc *viewcontext.ViewContext, vm *viewmodels.PresentListIte
 						UpvoteCount: vm.UpvoteCount,
 						DownvoteCount: vm.DownvoteCount,
 						CreatedBy: vm.CreatedBy, 
-						IsUpvotedByUser: true,
-						IsDownvotedByUser: false,
+						IsUpvotedByUser: vm.IsUpvotedByUser,
+						IsDownvotedByUser: vm.IsDownvotedByUser,
 					})
 					<div class="is-flex is-align-items-baseline">
 						<span class="has-text-light">{ fmt.Sprint(vm.CommentCount) }</span>

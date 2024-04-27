@@ -31,20 +31,20 @@ func (service *EventService) CreateEvent(createEventRequest request.CreateEventR
 	return eventId, err
 }
 
-func (service *EventService) GetEventViewModel(id string) (*viewmodels.GetEventViewModel, error) {
-	event, err := service.eventRepository.GetEventById(uuid.FromStringOrNil(id))
+func (service *EventService) GetEventViewModel(eventId string, user string) (*viewmodels.GetEventViewModel, error) {
+	event, err := service.eventRepository.GetEventById(uuid.FromStringOrNil(eventId))
 	if err != nil {
 		logger.LOG.Error(err, "Could not get event")
 		return nil, err
 	}
 
-	participants, err := service.participantService.GetParticipantsByEventId(id)
+	participants, err := service.participantService.GetParticipantsByEventId(eventId)
 	if err != nil {
 		logger.LOG.Error(err, "Could not get participants")
 		return nil, err
 	}
 
-	presents, err := service.presentService.GetPresentListViewModel(id)
+	presents, err := service.presentService.GetPresentListViewModel(eventId, user)
 	if err != nil {
 		logger.LOG.Error(err, "Could not get presents")
 		return nil, err

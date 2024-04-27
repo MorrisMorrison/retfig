@@ -24,8 +24,10 @@ func NewParticipantAPI(participantService *services.ParticipantService, eventSer
 }
 
 func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context, vc *viewcontext.ViewContext) {
-	eventId := c.Param("eventId")
 	var createParticipantRequest request.CreateParticipantRequest
+
+	currentUser := c.GetString("currentUser")
+	eventId := c.Param("eventId")
 
 	if err := c.ShouldBindJSON(&createParticipantRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -42,7 +44,7 @@ func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context, vc *view
 		return
 	}
 
-	viewModel, err := participantAPI.eventService.GetEventViewModel(eventId)
+	viewModel, err := participantAPI.eventService.GetEventViewModel(eventId, currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

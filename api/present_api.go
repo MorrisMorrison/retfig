@@ -19,8 +19,10 @@ func NewPresentAPI(presentService *services.PresentService) *PresentAPI {
 }
 
 func (presentAPI *PresentAPI) GetPresents(c *gin.Context, vc *viewcontext.ViewContext) {
+	currentUser := c.GetString("currentUser")
 	eventId := c.Param("eventId")
-	presentListViewModel, err := presentAPI.presentService.GetPresentListViewModel(eventId)
+
+	presentListViewModel, err := presentAPI.presentService.GetPresentListViewModel(eventId, currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
