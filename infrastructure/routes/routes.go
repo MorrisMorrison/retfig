@@ -11,16 +11,16 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 	secureEventsAPI := r.Group("/api/htmx/v1/events", middleware.AuthHandler(), middleware.ViewContextHandler())
 	{
 		secureEventsAPI.GET("/:eventId", func(c *gin.Context) {
-			api.HandleWithViewContext(c, apis.EventAPI.GetEvent)
+			HandleWithViewContext(c, apis.EventAPI.GetEvent)
 		})
 
 		secureEventsAPI.GET("/:eventId/invitation", apis.ParticipantAPI.GetInvitationView)
 
 		secureEventsAPI.GET("/:eventId/presents", func(c *gin.Context) {
-			api.HandleWithViewContext(c, apis.PresentAPI.GetPresents)
+			HandleWithViewContext(c, apis.PresentAPI.GetPresents)
 		})
 		secureEventsAPI.POST("/:eventId/presents", func(c *gin.Context) {
-			api.HandleWithViewContext(c, apis.PresentAPI.CreatePresent)
+			HandleWithViewContext(c, apis.PresentAPI.CreatePresent)
 		})
 
 		secureEventsAPI.POST("/:eventId/presents/:presentId/votes", apis.VoteAPI.CreateVote)
@@ -28,10 +28,10 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 		secureEventsAPI.GET("/:eventId/presents/:presentId/comments", apis.CommentAPI.GetComments)
 
 		secureEventsAPI.POST("/:eventId/presents/:presentId/claims", func(c *gin.Context) {
-			api.HandleWithViewContext(c, apis.ClaimAPI.CreateClaim)
+			HandleWithViewContext(c, apis.ClaimAPI.CreateClaim)
 		})
 		secureEventsAPI.DELETE("/:eventId/presents/:presentId/claims", func(c *gin.Context) {
-			api.HandleWithViewContext(c, apis.ClaimAPI.DeleteClaim)
+			HandleWithViewContext(c, apis.ClaimAPI.DeleteClaim)
 		})
 	}
 
@@ -39,7 +39,7 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 	{
 		// allows user to reload clear url
 		publicEventsAPI.GET("/:eventId", middleware.AuthHandler(), middleware.ViewContextHandler(), func(c *gin.Context) {
-			api.HandleWithViewContext(c, apis.EventAPI.GetEvent)
+			HandleWithViewContext(c, apis.EventAPI.GetEvent)
 		})
 
 		publicEventsAPI.GET("/:eventId/invitations", apis.ParticipantAPI.GetInvitationView)
