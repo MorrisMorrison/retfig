@@ -25,10 +25,10 @@ templ ClaimedByCurrentUserButton(vm *viewmodels.ClaimButtonViewModel) {
 	>
 		<div class="is-flex is-align-items-baseline">
 			<button
-				class="button is-warning"
+				class="button is-warning is-inverted"
 			>
 				<span class="icon">
-					<i class="fa-solid has-text-white fa-hand"></i>
+					<i class="fa-solid fa-hand"></i>
 				</span>
 				<span class="has-text-light">Unclaim</span>
 			</button>
@@ -37,17 +37,16 @@ templ ClaimedByCurrentUserButton(vm *viewmodels.ClaimButtonViewModel) {
 }
 
 templ ClaimedByDifferentUserButton(vm *viewmodels.ClaimButtonViewModel) {
-	<div class="is-flex is-align-items-baseline">
-		<button
-			disabled
-			class="button is-primary"
-		>
-			<span class="icon">
-				<i class="fa-solid has-text-danger fa-hand"></i>
-				<span class="has-text-light">Claimed by - {vm.ClaimedBy}</span>
-			</span>
-		</button>
-	</div>
+		<div class="is-flex is-align-items-baseline">
+			<button
+				class="button is-danger is-inverted"
+			>
+				<span class="icon">
+					<i class="fa-solid fa-hand"></i>
+				</span>
+				<span class="has-text-light">Claimed</span>
+			</button>
+		</div>
 }
 
 templ UnclaimedButton(vm *viewmodels.ClaimButtonViewModel) {
