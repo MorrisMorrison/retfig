@@ -9,10 +9,10 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-func GenerateToken(username string, duration time.Duration) (string, error) {
+func GenerateToken(username string, issuer string, duration time.Duration) (string, error) {
 	claims := &jwt.RegisteredClaims{
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
-		Issuer:    "retfig.com",
+		Issuer:    issuer,
 		Subject:   username,
 	}
 

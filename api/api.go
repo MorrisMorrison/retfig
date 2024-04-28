@@ -4,17 +4,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/MorrisMorrison/retfig/infrastructure/config"
 	"github.com/MorrisMorrison/retfig/infrastructure/jwt"
 	"github.com/MorrisMorrison/retfig/ui/views"
 	"github.com/MorrisMorrison/retfig/ui/views/events"
 	"github.com/gin-gonic/gin"
-)
-
-const (
-	TOKEN_EXPIRES_IN = time.Hour * 24
-	PARAM_EVENT_ID   = "eventId"
-	PARAM_PRESENT_ID = "presentId"
-	PARAM_USERNAMAE  = "username"
 )
 
 func Index(c *gin.Context) {
@@ -22,7 +16,20 @@ func Index(c *gin.Context) {
 }
 
 func SetTokenCookie(c *gin.Context, username string) {
-	token, err := jwt.GenerateToken(username, TOKEN_EXPIRES_IN)
+	tokenExpiresIn := config.GetEnv(config.CONFIG_KEY_JWT_EXPIRES_IN_DURATION, "24h")
+	tokenExpiresInDuration, err := time.ParseDuration(tokenExpiresIn)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	issuer := config.GetEnv(config.CONFIG_KEY_JWT_ISSUER, "retfig.com")
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	token, err := jwt.GenerateToken(username, issuer, tokenExpiresInDuration)
 	if err != nil {
 		c.Error(err)
 		return
@@ -31,7 +38,7 @@ func SetTokenCookie(c *gin.Context, username string) {
 	c.SetCookie(
 		"token",
 		token,
-		int(TOKEN_EXPIRES_IN/time.Second),
+		int(tokenExpiresInDuration/time.Second),
 		"/",
 		"127.0.0.1",
 		false,
