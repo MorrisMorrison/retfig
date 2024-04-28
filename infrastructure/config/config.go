@@ -18,10 +18,26 @@ type Config struct {
 	Host       string
 	Port       string
 	ApiVersion string
+	JWTConfig  JWTConfig
+}
+
+type JWTConfig struct {
+	ExpiresInDuration string
+	Issuer            string
+}
+
+func NewJWTConfig() *JWTConfig {
+	expiresInDuration := GetEnv(CONFIG_KEY_JWT_EXPIRES_IN_DURATION, "24h")
+	issuer := GetEnv(CONFIG_KEY_JWT_ISSUER, "retfig.com")
+
+	return &JWTConfig{
+		ExpiresInDuration: expiresInDuration,
+		Issuer:            issuer,
+	}
 }
 
 func NewConfig() *Config {
-	host := GetEnv(CONFIG_KEY_HOST_NAME, "localhost")
+	host := GetEnv(CONFIG_KEY_HOST_NAME, "127.0.0.1")
 	port := GetEnv(CONFIG_KEY_PORT, "8080")
 	apiVersion := GetEnv(CONFIG_KEY_API_VERSION, "v1")
 
@@ -29,6 +45,7 @@ func NewConfig() *Config {
 		Host:       host,
 		Port:       port,
 		ApiVersion: apiVersion,
+		JWTConfig:  *NewJWTConfig(),
 	}
 }
 

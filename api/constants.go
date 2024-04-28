@@ -8,5 +8,8 @@ const (
 
 	ERROR = "error"
 
+	COOKIE_NAME = "token"
+	COOKIE_PATH = "/"
+
 	HEADER_HX_PUSH_URL = "HX-Push-Url"
 )

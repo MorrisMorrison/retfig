@@ -3,6 +3,7 @@ package middleware
 import (
 	"net/http"
 
+	"github.com/MorrisMorrison/retfig/infrastructure/config"
 	"github.com/MorrisMorrison/retfig/infrastructure/jwt"
 	"github.com/gin-gonic/gin"
 )
@@ -16,9 +17,15 @@ func AuthHandler() gin.HandlerFunc {
 			return
 		}
 
-		// TODO verify issuer
 		claims, err := jwt.ParseToken(cookie)
 		if err != nil || claims.Valid() != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			c.Abort()
+			return
+		}
+
+		isIssuerValid := claims.VerifyIssuer(config.CONFIG.JWTConfig.Issuer, true)
+		if !isIssuerValid {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return
