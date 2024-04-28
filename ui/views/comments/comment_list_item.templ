@@ -4,7 +4,7 @@ import "github.com/MorrisMorrison/retfig/ui/viewmodels"
 
 templ CommentListItem(vm *viewmodels.CommentListItemViewModel) {
 	<div class="is-flex is-flex-direction-row">
-	<span class="has-text-weight-bold">{vm.Username}</span>: {vm.Content}
+	<span class="has-text-primary has-text-weight-bold">{vm.Username}</span>: {vm.Content}
 	</div>
 	<div id={"noCommentsMessage_" + vm.PresentId} hx-swap-oob="true"></div>
 

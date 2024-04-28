@@ -5,7 +5,7 @@ import "github.com/MorrisMorrison/retfig/ui/viewcontext"
 import "github.com/MorrisMorrison/retfig/ui/viewmodels"
 
 templ ClaimButton(vc *viewcontext.ViewContext, vm *viewmodels.ClaimButtonViewModel) {
-	<div id={"claimButton_" + vm.PresentId}>
+	<div id={ "claimButton_" + vm.PresentId }>
 		if (vm.IsClaimed && vm.ClaimedBy == vc.CurrentUser) {
 			@ClaimedByCurrentUserButton(vm)
 		} else if (vm.IsClaimed && vm.ClaimedBy != vc.CurrentUser) {
@@ -37,20 +37,20 @@ templ ClaimedByCurrentUserButton(vm *viewmodels.ClaimButtonViewModel) {
 }
 
 templ ClaimedByDifferentUserButton(vm *viewmodels.ClaimButtonViewModel) {
-		<div class="is-flex is-align-items-baseline">
-			<button
-				class="button is-danger is-inverted"
-			>
-				<span class="icon">
-					<i class="fa-solid fa-hand"></i>
-				</span>
-				<span class="has-text-light">Claimed</span>
-			</button>
-		</div>
+	<div class="is-flex is-align-items-baseline">
+		<button
+			class="button is-danger is-inverted"
+		>
+			<span class="icon">
+				<i class="fa-solid fa-lock"></i>
+			</span>
+			<span class="has-text-light">{ vm.ClaimedBy }</span>
+		</button>
+	</div>
 }
 
 templ UnclaimedButton(vm *viewmodels.ClaimButtonViewModel) {
-		<form
+	<form
 		hx-post={ links.BuildClaimPresentLink(vm.EventId, vm.PresentId) }
 		hx-target={ "#present_" + vm.PresentId }
 		hx-swap="outerHTML"
