@@ -37,6 +37,7 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 
 	publicEventsAPI := r.Group("/events")
 	{
+		// allows user to reload clear url
 		publicEventsAPI.GET("/:eventId", middleware.AuthHandler(), middleware.ViewContextHandler(), func(c *gin.Context) {
 			api.HandleWithViewContext(c, apis.EventAPI.GetEvent)
 		})
