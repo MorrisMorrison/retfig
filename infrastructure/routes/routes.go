@@ -8,7 +8,7 @@ import (
 )
 
 func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer, services *container.ServiceContainer) {
-	secureEventsAPI := r.Group("/api/htmx/v1/events", middleware.AuthHandler(), middleware.ViewContextHandler())
+	secureEventsAPI := r.Group("/api/htmx/v1/events", middleware.AuthHandler(), middleware.ResourceAccessHandler(services.ResourceAcessService), middleware.ViewContextHandler())
 	{
 		secureEventsAPI.GET("/:eventId", func(c *gin.Context) {
 			HandleWithViewContext(c, apis.EventAPI.GetEvent)

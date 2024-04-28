@@ -38,6 +38,10 @@ func checkPresentAccess(c *gin.Context, resourceAccessService *services.Resource
 		return true
 	}
 
+	if presentId == "" {
+		return true
+	}
+
 	allowed, err := resourceAccessService.CanAccessPresent(presentId, currentUser)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to verify resource access"})
@@ -57,6 +61,10 @@ func checkEventAccess(c *gin.Context, resourceAccessService *services.ResourceAc
 		return true
 	}
 
+	if eventId == "" {
+		return true
+	}
+
 	allowed, err := resourceAccessService.CanAccessEvent(eventId, currentUser)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to verify resource access"})
@@ -69,22 +77,6 @@ func checkEventAccess(c *gin.Context, resourceAccessService *services.ResourceAc
 	}
 
 	return true
-}
-
-func canAccessEvent(currentUser, eventId string) (bool, error) {
-	// true if owner of event of participant of event
-	if currentUser == "user123" && eventId == "resource456" {
-		return true, nil
-	}
-	return false, nil
-}
-
-func canAccessPresent(currentUser, presentId string) (bool, error) {
-	// true if owner of present, owner of event or participant or event
-	if currentUser == "user123" && presentId == "resource456" {
-		return true, nil
-	}
-	return false, nil
 }
 
 func pathSegmentExists(c *gin.Context, pathSegment string) bool {
