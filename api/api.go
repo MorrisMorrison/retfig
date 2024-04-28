@@ -11,7 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// TODO validata path params
+// TODO validate path params (e.g. eventId unused most of the times)
+// TODO access checks, is currentUser allowed to access resource
 
 func Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "", views.Index(events.CreateEvent()))
