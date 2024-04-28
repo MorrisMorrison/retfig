@@ -17,12 +17,13 @@ type RepositoryContainer struct {
 }
 
 type ServiceContainer struct {
-	EventService       *services.EventService
-	PresentService     *services.PresentService
-	VoteService        *services.VoteService
-	CommentService     *services.CommentService
-	ParticipantService *services.ParticipantService
-	ClaimService       *services.ClaimService
+	EventService         *services.EventService
+	PresentService       *services.PresentService
+	VoteService          *services.VoteService
+	CommentService       *services.CommentService
+	ParticipantService   *services.ParticipantService
+	ClaimService         *services.ClaimService
+	ResourceAcessService *services.ResourceAcessService
 }
 
 type APIContainer struct {
@@ -59,14 +60,16 @@ func NewServiceContainer(repositoryContainer *RepositoryContainer) *ServiceConta
 	presentService := services.NewPresentService(repositoryContainer.PresentRepository, voteService, commentService, claimService)
 	participantService := services.NewParticipantService(repositoryContainer.ParticipantRrepository)
 	eventService := services.NewEventService(repositoryContainer.EventRepository, presentService, participantService)
+	resourceAcessService := services.NewResourceAccessService(eventService, presentService, participantService)
 
 	return &ServiceContainer{
-		VoteService:        voteService,
-		CommentService:     commentService,
-		PresentService:     presentService,
-		EventService:       eventService,
-		ParticipantService: participantService,
-		ClaimService:       claimService,
+		VoteService:          voteService,
+		CommentService:       commentService,
+		PresentService:       presentService,
+		EventService:         eventService,
+		ParticipantService:   participantService,
+		ClaimService:         claimService,
+		ResourceAcessService: resourceAcessService,
 	}
 }
 

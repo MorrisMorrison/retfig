@@ -190,3 +190,7 @@ func (service *PresentService) extractIds(presents []*models.Present) []string {
 	}
 	return ids
 }
+
+func (service *PresentService) GetPresentById(presentId string) (*models.Present, error) {
+	return service.presentRepository.GetPresentById(uuid.FromStringOrNil(presentId))
+}

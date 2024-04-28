@@ -15,7 +15,7 @@ templ VoteButton(vm *viewmodels.VoteButtonViewModel) {
 			hx-trigger="click"
 			hx-target={ "#voteButtons_" + vm.PresentId }
 			hx-swap="outerHTML"
-			hx-vals={ payload.GetCreateVoteJsonPayload(string(vm.VoteType), vm.CreatedBy) }
+			hx-vals={ payload.GetCreateVoteJsonPayload(string(vm.VoteType)) }
 			hx-ext="json-enc"
 		>
 			<span class="icon">

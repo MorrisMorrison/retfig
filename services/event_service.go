@@ -69,3 +69,7 @@ func (service *EventService) extractUsernames(participants []*models.Participant
 
 	return usernames
 }
+
+func (service *EventService) GetEventById(eventId string) (*models.Event, error) {
+	return service.eventRepository.GetEventById(uuid.FromStringOrNil(eventId))
+}

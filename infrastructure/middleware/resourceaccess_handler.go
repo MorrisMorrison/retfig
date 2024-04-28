@@ -4,10 +4,11 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/MorrisMorrison/retfig/services"
 	"github.com/gin-gonic/gin"
 )
 
-func ResourceAccessHandler() gin.HandlerFunc {
+func ResourceAccessHandler(resourceAccessService *services.ResourceAcessService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		currentUser := c.GetString("currentUser")
 		if currentUser == "" {
@@ -18,12 +19,12 @@ func ResourceAccessHandler() gin.HandlerFunc {
 		eventId := c.Param("eventId")
 		presentId := c.Param("presentId")
 
-		canAcessEvents := checkEventAccess(c, eventId, currentUser)
+		canAcessEvents := checkEventAccess(c, resourceAccessService, eventId, currentUser)
 		if !canAcessEvents {
 			return
 		}
 
-		canAccessPresent := checkPresentAccess(c, presentId, currentUser)
+		canAccessPresent := checkPresentAccess(c, resourceAccessService, presentId, currentUser)
 		if !canAccessPresent {
 			return
 		}
@@ -32,12 +33,12 @@ func ResourceAccessHandler() gin.HandlerFunc {
 	}
 }
 
-func checkPresentAccess(c *gin.Context, presentId string, currentUser string) bool {
+func checkPresentAccess(c *gin.Context, resourceAccessService *services.ResourceAcessService, presentId string, currentUser string) bool {
 	if !pathSegmentExists(c, "presents") {
 		return true
 	}
 
-	allowed, err := canAccessPresent(currentUser, presentId)
+	allowed, err := resourceAccessService.CanAccessPresent(presentId, currentUser)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to verify resource access"})
 		return false
@@ -51,12 +52,12 @@ func checkPresentAccess(c *gin.Context, presentId string, currentUser string) bo
 	return true
 }
 
-func checkEventAccess(c *gin.Context, eventId string, currentUser string) bool {
+func checkEventAccess(c *gin.Context, resourceAccessService *services.ResourceAcessService, eventId string, currentUser string) bool {
 	if !pathSegmentExists(c, "events") {
 		return true
 	}
 
-	allowed, err := canAccessEvent(currentUser, eventId)
+	allowed, err := resourceAccessService.CanAccessEvent(eventId, currentUser)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to verify resource access"})
 		return false
@@ -71,6 +72,7 @@ func checkEventAccess(c *gin.Context, eventId string, currentUser string) bool {
 }
 
 func canAccessEvent(currentUser, eventId string) (bool, error) {
+	// true if owner of event of participant of event
 	if currentUser == "user123" && eventId == "resource456" {
 		return true, nil
 	}
@@ -78,6 +80,7 @@ func canAccessEvent(currentUser, eventId string) (bool, error) {
 }
 
 func canAccessPresent(currentUser, presentId string) (bool, error) {
+	// true if owner of present, owner of event or participant or event
 	if currentUser == "user123" && presentId == "resource456" {
 		return true, nil
 	}

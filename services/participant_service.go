@@ -19,8 +19,12 @@ func (service *ParticipantService) GetParticipantsByEventId(eventId string) ([]*
 	return service.participantRepository.GetParticipantsByEventId(uuid.FromStringOrNil(eventId))
 }
 
+func (service *ParticipantService) GetParticipantByNameAndEventId(eventId string, user string) (*models.Participant, error) {
+	return service.participantRepository.GetParticipantByNameAndEventId(uuid.FromStringOrNil(eventId), user)
+}
+
 func (service *ParticipantService) CreateParticipant(eventId string, createParticipantRequest request.CreateParticipantRequest) error {
-	participant, err := service.participantRepository.GetParticipantByNameAndEventId(createParticipantRequest.Username, uuid.FromStringOrNil(eventId))
+	participant, err := service.participantRepository.GetParticipantByNameAndEventId(uuid.FromStringOrNil(eventId), createParticipantRequest.Username)
 	if err != nil {
 		return err
 	}

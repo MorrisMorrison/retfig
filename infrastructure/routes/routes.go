@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
+func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer, services *container.ServiceContainer) {
 	secureEventsAPI := r.Group("/api/htmx/v1/events", middleware.AuthHandler(), middleware.ViewContextHandler())
 	{
 		secureEventsAPI.GET("/:eventId", func(c *gin.Context) {
@@ -38,7 +38,7 @@ func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer) {
 	publicEventsAPI := r.Group("/events")
 	{
 		// allows user to reload clear url
-		publicEventsAPI.GET("/:eventId", middleware.AuthHandler(), middleware.ViewContextHandler(), func(c *gin.Context) {
+		publicEventsAPI.GET("/:eventId", middleware.AuthHandler(), middleware.ResourceAccessHandler(services.ResourceAcessService), middleware.ViewContextHandler(), func(c *gin.Context) {
 			HandleWithViewContext(c, apis.EventAPI.GetEvent)
 		})
 

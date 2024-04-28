@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/infrastructure/logger"
 	"github.com/MorrisMorrison/retfig/persistence/models"
@@ -60,12 +62,19 @@ func (voteService *VoteService) GetVoteButtonViewModel(eventId string, presentId
 }
 
 func (voteService *VoteService) CreateVote(presentId string, user string, request request.CreateVoteRequest) error {
+	fmt.Println("CREATE VOTE")
+
 	err := voteService.deleteVoteIfExists(presentId, user, request.VoteType)
 	if err != nil {
+		fmt.Println("DELETE")
 		return err
 	}
 
+	fmt.Println("MAP VOTE")
 	vote := voteService.mapCreateVoteRequestToVote(presentId, user, request)
+	fmt.Println(vote.PresentId.String())
+	fmt.Println("SAVE VOTE")
+
 	return voteService.voteRepository.CreateVote(vote)
 }
 
