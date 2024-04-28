@@ -10,7 +10,7 @@ templ VoteButton(vm *viewmodels.VoteButtonViewModel) {
 	<div class="is-flex is-align-items-baseline">
 		<button
 			type="button"
-			class="button is-link pr-3 pl-3"
+			class="button is-primary pr-3 pl-3"
 			hx-post={ links.BuildCreateVoteLink(vm.EventId, vm.PresentId) }
 			hx-trigger="click"
 			hx-target={ "#voteButtons_" + vm.PresentId }

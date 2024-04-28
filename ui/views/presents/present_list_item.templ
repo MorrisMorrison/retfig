@@ -22,7 +22,7 @@ templ PresentListItem(vc *viewcontext.ViewContext, vm *viewmodels.PresentListIte
 			<div class="is-flex is-justify-content-space-between mt-2">
 				<span>{ vm.Link }</span>
 				<div class="is-flex" style="gap: 4px">
-					<div class="is-flex has-background-link p-0 box is-shadowless">
+					<div class="is-flex has-background-primary p-0 box is-shadowless">
 						@votes.VoteButtons(&viewmodels.VoteButtonsViewModel{
 						EventId: vm.EventId,
 						PresentId: vm.PresentId,
@@ -35,7 +35,7 @@ templ PresentListItem(vc *viewcontext.ViewContext, vm *viewmodels.PresentListIte
 						<div class="is-flex is-align-items-baseline">
 							<button
 								@click="showComments = !showComments"
-								class="button is-link pr-3 pl-3"
+								class="button is-primary pr-3 pl-3"
 								hx-get={ links.BuildGetCommentsLink(vm.EventId, vm.PresentId) }
 								hx-target={ "#comments_" + vm.PresentId }
 								hx-swap="outerHTML"
