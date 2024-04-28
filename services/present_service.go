@@ -82,10 +82,7 @@ func (service *PresentService) mapPresentsToPresentListViewModel(eventId string,
 		return presentListItems[i].UpvoteCount > presentListItems[j].UpvoteCount
 	})
 
-	return &viewmodels.PresentListViewModel{
-		EventId:  eventId,
-		Presents: presentListItems,
-	}
+	return viewmodels.NewPresentListViewModel(eventId, presentListItems)
 }
 
 func (service *PresentService) GetSimplePresentListItemViewModel(presentId string) (*viewmodels.PresentListItemViewModel, error) {
@@ -153,22 +150,22 @@ func (service *PresentService) mapPresentToPresentListItemViewModel(
 		claimedBy = claim.CreatedBy
 	}
 
-	return &viewmodels.PresentListItemViewModel{
-		EventId:           present.EventId.String(),
-		PresentId:         present.Id.String(),
-		Name:              present.Name,
-		Link:              present.Link,
-		UpvoteCount:       upvoteCount,
-		DownvoteCount:     downvoteCount,
-		CommentCount:      commentCount,
-		CreatedBy:         present.CreatedBy,
-		CreatedAt:         present.CreatedAt.Format(dateLayout),
-		Comments:          comments,
-		IsClaimed:         claim != nil,
-		ClaimedBy:         claimedBy,
-		IsUpvotedByUser:   isUpvotedByUser,
-		IsDownvotedByUser: isDownvotedByUser,
-	}
+	return viewmodels.NewPresentListItemViewModel(
+		present.EventId.String(),
+		present.Id.String(),
+		present.Name,
+		present.Link,
+		upvoteCount,
+		downvoteCount,
+		commentCount,
+		present.CreatedBy,
+		present.CreatedAt.Format(dateLayout),
+		comments,
+		claim != nil,
+		claimedBy,
+		isUpvotedByUser,
+		isDownvotedByUser,
+	)
 }
 
 func (service *PresentService) CreatePresent(eventId string, user string, createPresentRequest request.CreatePresentRequest) (uuid.UUID, error) {

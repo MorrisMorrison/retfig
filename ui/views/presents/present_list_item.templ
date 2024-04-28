@@ -50,12 +50,7 @@ templ PresentListItem(vc *viewcontext.ViewContext, vm *viewmodels.PresentListIte
 							</button>
 						</div>
 					</div>
-					@claims.ClaimButton(vc, &viewmodels.ClaimButtonViewModel{
-						EventId: vm.EventId,
-						PresentId: vm.PresentId,
-						ClaimedBy: vm.ClaimedBy,
-						IsClaimed: vm.IsClaimed,
-					})
+					@claims.ClaimButton(vc, viewmodels.NewClaimButtonViewModel(vm.EventId, vm.PresentId, vm.IsClaimed, vm.ClaimedBy))
 				</div>
 			</div>
 		</div>

@@ -29,16 +29,7 @@ func (service *CommentService) CreateComment(presentId string, user string, requ
 }
 
 func (service *CommentService) mapCreateCommentRequestToComment(presentId string, user string, request request.CreateCommentRequest) models.Comment {
-	createdUpdated := models.CreatedUpdated{
-		CreatedBy: user,
-		UpdatedBy: user,
-	}
-
-	return models.Comment{
-		PresentId:      uuid.FromStringOrNil(presentId),
-		Content:        request.Content,
-		CreatedUpdated: createdUpdated,
-	}
+	return *models.NewComment(uuid.FromStringOrNil(presentId), request.Content, user)
 }
 
 func (service *CommentService) GetCommentListViewModel(eventId string, presentId string) (*viewmodels.CommentListViewModel, error) {
@@ -53,29 +44,14 @@ func (service *CommentService) GetCommentListViewModel(eventId string, presentId
 		commentListItems = append(commentListItems, commentListItem)
 	}
 
-	return &viewmodels.CommentListViewModel{
-		EventId:   eventId,
-		PresentId: presentId,
-		Comments:  commentListItems,
-	}, nil
+	return viewmodels.NewCommentListViewModel(eventId, presentId, commentListItems), nil
 }
 
 func (service *CommentService) GetCommentListItemViewModel(presentId string, username string, content string) (*viewmodels.CommentListItemViewModel, error) {
-	return &viewmodels.CommentListItemViewModel{
-		PresentId: presentId,
-		Username:  username,
-		Content:   content,
-		CreatedAt: "",
-	}, nil
+	return viewmodels.NewCommentListItemViewModel(presentId, username, content, ""), nil
 }
 
 func (service *CommentService) mapCommentToCommentListItemViewModel(comment *models.Comment) *viewmodels.CommentListItemViewModel {
 	dateLayout := "January 02, 2006"
-
-	return &viewmodels.CommentListItemViewModel{
-		PresentId: comment.PresentId.String(),
-		Username:  comment.CreatedBy,
-		Content:   comment.Content,
-		CreatedAt: comment.CreatedAt.Format(dateLayout),
-	}
+	return viewmodels.NewCommentListItemViewModel(comment.PresentId.String(), comment.CreatedBy, comment.Content, comment.CreatedAt.Format(dateLayout))
 }
