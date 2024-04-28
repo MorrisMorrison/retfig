@@ -2,18 +2,17 @@ package presents
 
 import "github.com/MorrisMorrison/retfig/utils/links"
 
-import "github.com/MorrisMorrison/retfig/ui/viewmodels"	
+import "github.com/MorrisMorrison/retfig/ui/viewmodels"
 import "github.com/MorrisMorrison/retfig/ui/views/comments"
 import "github.com/MorrisMorrison/retfig/ui/views/votes"
 import "github.com/MorrisMorrison/retfig/ui/viewcontext"
-
 
 import "fmt"
 import "github.com/MorrisMorrison/retfig/ui/views/claims"
 
 templ PresentListItem(vc *viewcontext.ViewContext, vm *viewmodels.PresentListItemViewModel) {
 	<div id={ "present_" + vm.PresentId } class="mb-4" x-data="{showComments: false}">
-		<div class="is-flex is-flex-direction-column has-background-primary has-text-light box mb-0">
+		<div class="is-flex is-flex-direction-column has-background-primary has-text-light box mb-0 pb-0">
 			<div class="is-flex is-justify-content-space-between is-align-items-center">
 				<div class="is-flex is-align-items-center">
 					<span class="has-text-weight-semibold is-size-4">{ vm.Name }</span>
@@ -22,14 +21,9 @@ templ PresentListItem(vc *viewcontext.ViewContext, vm *viewmodels.PresentListIte
 			</div>
 			<div class="is-flex is-justify-content-space-between mt-2">
 				<span>{ vm.Link }</span>
-				<div class="is-flex">
-					@claims.ClaimButton(vc, &viewmodels.ClaimButtonViewModel{
-						EventId: vm.EventId,
-						PresentId: vm.PresentId,
-						ClaimedBy: vm.ClaimedBy,
-						IsClaimed: vm.IsClaimed,
-					})
-					@votes.VoteButtons(&viewmodels.VoteButtonsViewModel{
+				<div class="is-flex" style="gap: 4px">
+					<div class="is-flex has-background-link p-0 box is-shadowless">
+						@votes.VoteButtons(&viewmodels.VoteButtonsViewModel{
 						EventId: vm.EventId,
 						PresentId: vm.PresentId,
 						UpvoteCount: vm.UpvoteCount,
@@ -38,21 +32,30 @@ templ PresentListItem(vc *viewcontext.ViewContext, vm *viewmodels.PresentListIte
 						IsUpvotedByUser: vm.IsUpvotedByUser,
 						IsDownvotedByUser: vm.IsDownvotedByUser,
 					})
-					<div class="is-flex is-align-items-baseline">
-						<span class="has-text-light">{ fmt.Sprint(vm.CommentCount) }</span>
-						<button
-							@click="showComments = !showComments"
-							class="button is-primary"
-							hx-get={ links.BuildGetCommentsLink(vm.EventId, vm.PresentId) }
-							hx-target={ "#comments_" + vm.PresentId }
-							hx-swap="outerHTML"
-							hx-ext="json-enc"
-						>
-							<span class="icon">
-								<i :class="{ 'fa-solid': showComments, 'fa-regular': !showComments}" class="fa-comments has-text-light"></i>
-							</span>
-						</button>
+						<div class="is-flex is-align-items-baseline">
+							<button
+								@click="showComments = !showComments"
+								class="button is-link pr-3 pl-3"
+								hx-get={ links.BuildGetCommentsLink(vm.EventId, vm.PresentId) }
+								hx-target={ "#comments_" + vm.PresentId }
+								hx-swap="outerHTML"
+								hx-ext="json-enc"
+							>
+								<span class="icon">
+									<i :class="{ 'fa-solid': showComments, 'fa-regular': !showComments}" class="fa-comments has-text-light"></i>
+								</span>
+								<span class="has-text-light">
+									{ fmt.Sprint(vm.CommentCount) }
+								</span>
+							</button>
+						</div>
 					</div>
+					@claims.ClaimButton(vc, &viewmodels.ClaimButtonViewModel{
+						EventId: vm.EventId,
+						PresentId: vm.PresentId,
+						ClaimedBy: vm.ClaimedBy,
+						IsClaimed: vm.IsClaimed,
+					})
 				</div>
 			</div>
 		</div>

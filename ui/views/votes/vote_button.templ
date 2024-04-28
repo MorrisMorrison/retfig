@@ -8,12 +8,9 @@ import "fmt"
 
 templ VoteButton(vm *viewmodels.VoteButtonViewModel) {
 	<div class="is-flex is-align-items-baseline">
-		<span class="has-text-light">
-			{ fmt.Sprint(vm.VoteCount) }
-		</span>
 		<button
 			type="button"
-			class="button is-primary"
+			class="button is-link pr-3 pl-3"
 			hx-post={ links.BuildCreateVoteLink(vm.EventId, vm.PresentId) }
 			hx-trigger="click"
 			hx-target={ "#voteButtons_" + vm.PresentId }
@@ -25,17 +22,19 @@ templ VoteButton(vm *viewmodels.VoteButtonViewModel) {
 				if vm.VoteType == "UPVOTE" {
 					if vm.IsVotedByUser {
 						<i class="fa-solid fa-thumbs-up has-text-light"></i>
-					}else{
+					} else {
 						<i class="fa-regular fa-thumbs-up has-text-light"></i>
 					}
 				} else {
 					if vm.IsVotedByUser {
-					<i class="fa-solid fa-thumbs-down has-text-light"></i>
-					}else{
-					<i class="fa-regular fa-thumbs-down has-text-light"></i>
-						
+						<i class="fa-solid fa-thumbs-down has-text-light"></i>
+					} else {
+						<i class="fa-regular fa-thumbs-down has-text-light"></i>
 					}
 				}
+			</span>
+			<span class="has-text-light">
+				{ fmt.Sprint(vm.VoteCount) }
 			</span>
 		</button>
 	</div>
