@@ -151,8 +151,8 @@ func (service *PresentService) mapPresentToPresentListItemViewModel(
 	}
 
 	return viewmodels.NewPresentListItemViewModel(
-		present.EventId.String(),
 		present.Id.String(),
+		present.EventId.String(),
 		present.Name,
 		present.Link,
 		upvoteCount,

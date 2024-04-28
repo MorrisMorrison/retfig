@@ -1,8 +1,6 @@
 package services
 
 import (
-	"fmt"
-
 	"github.com/MorrisMorrison/retfig/api/request"
 	"github.com/MorrisMorrison/retfig/infrastructure/logger"
 	"github.com/MorrisMorrison/retfig/persistence/models"
@@ -40,7 +38,7 @@ func (voteService *VoteService) GetVoteButtonsViewModel(eventId string, presentI
 	isUpvotedByUser := userVote != nil && userVote.Type == models.UPVOTE
 	isDownvotedByUser := userVote != nil && userVote.Type == models.DOWNVOTE
 
-	voteButtonsViewModel := viewmodels.NewVoteButtonsViewModel(eventId, userVote.PresentId.String(), upvoteCount, downvoteCount, userVote.CreatedBy, isUpvotedByUser, isDownvotedByUser)
+	voteButtonsViewModel := viewmodels.NewVoteButtonsViewModel(eventId, presentId, upvoteCount, downvoteCount, userVote.CreatedBy, isUpvotedByUser, isDownvotedByUser)
 	return voteButtonsViewModel, nil
 }
 
@@ -57,23 +55,17 @@ func (voteService *VoteService) GetVoteButtonViewModel(eventId string, presentId
 		logger.LOG.Debug("Could not fetch vote count")
 	}
 
-	createVoteButtonViewModel := viewmodels.NewVoteButtonViewModel(eventId, vote.PresentId.String(), vote.Type, voteCount, vote.CreatedBy, true)
+	createVoteButtonViewModel := viewmodels.NewVoteButtonViewModel(eventId, presentId, vote.Type, voteCount, vote.CreatedBy, true)
 	return createVoteButtonViewModel, nil
 }
 
 func (voteService *VoteService) CreateVote(presentId string, user string, request request.CreateVoteRequest) error {
-	fmt.Println("CREATE VOTE")
-
 	err := voteService.deleteVoteIfExists(presentId, user, request.VoteType)
 	if err != nil {
-		fmt.Println("DELETE")
 		return err
 	}
 
-	fmt.Println("MAP VOTE")
 	vote := voteService.mapCreateVoteRequestToVote(presentId, user, request)
-	fmt.Println(vote.PresentId.String())
-	fmt.Println("SAVE VOTE")
 
 	return voteService.voteRepository.CreateVote(vote)
 }
