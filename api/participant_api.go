@@ -27,12 +27,12 @@ func NewParticipantAPI(participantService *services.ParticipantService, eventSer
 func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context) {
 	var createParticipantRequest request.CreateParticipantRequest
 
-	currentUser := c.GetString("currentUser")
-	eventId := c.Param("eventId")
+	currentUser := c.GetString(PARAM_CURRENT_USER)
+	eventId := c.Param(PARAM_EVENT_ID)
 
 	if err := c.ShouldBindJSON(&createParticipantRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}
@@ -40,7 +40,7 @@ func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context) {
 	err := participantAPI.participantService.CreateParticipant(eventId, createParticipantRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}
@@ -48,13 +48,13 @@ func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context) {
 	viewModel, err := participantAPI.eventService.GetEventViewModel(eventId, currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 
 	}
 
-	c.Header("HX-Push-Url", links.BuildGetEventLink(eventId))
+	c.Header(HEADER_HX_PUSH_URL, links.BuildGetEventLink(eventId))
 
 	SetTokenCookie(c, createParticipantRequest.Username)
 
@@ -64,7 +64,7 @@ func (participantAPI *ParticipantAPI) CreateParticipant(c *gin.Context) {
 }
 
 func (eventAPI *ParticipantAPI) GetInvitationView(c *gin.Context) {
-	eventId := c.Param("eventId")
+	eventId := c.Param(PARAM_EVENT_ID)
 
 	c.HTML(http.StatusOK, "", views.Index(invitations.GetInvitation(eventId)))
 }

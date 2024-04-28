@@ -19,15 +19,15 @@ func NewVoteAPI(voteService *services.VoteService, presentService *services.Pres
 }
 
 func (voteAPI *VoteAPI) CreateVote(c *gin.Context) {
-	currentUser := c.GetString("currentUser")
-	eventId := c.Param("eventId")
-	presentId := c.Param("presentId")
+	currentUser := c.GetString(PARAM_CURRENT_USER)
+	eventId := c.Param(PARAM_EVENT_ID)
+	presentId := c.Param(PARAM_PRESENT_ID)
 
 	var createVoteRequest request.CreateVoteRequest
 
 	if err := c.ShouldBindJSON(&createVoteRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}
@@ -35,7 +35,7 @@ func (voteAPI *VoteAPI) CreateVote(c *gin.Context) {
 	err := voteAPI.voteService.CreateVote(presentId, currentUser, createVoteRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}
@@ -43,7 +43,7 @@ func (voteAPI *VoteAPI) CreateVote(c *gin.Context) {
 	voteButtonsViewModel, err := voteAPI.voteService.GetVoteButtonsViewModel(eventId, presentId, currentUser, createVoteRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}

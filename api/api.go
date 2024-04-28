@@ -11,6 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// TODO validata path params
+
 func Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "", views.Index(events.CreateEvent()))
 }
@@ -24,11 +26,6 @@ func SetTokenCookie(c *gin.Context, username string) {
 	}
 
 	issuer := config.GetEnv(config.CONFIG_KEY_JWT_ISSUER, "retfig.com")
-	if err != nil {
-		c.Error(err)
-		return
-	}
-
 	token, err := jwt.GenerateToken(username, issuer, tokenExpiresInDuration)
 	if err != nil {
 		c.Error(err)

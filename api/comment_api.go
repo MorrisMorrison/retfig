@@ -20,13 +20,13 @@ func NewCommentAPI(commentService *services.CommentService, presentService *serv
 }
 
 func (commentAPI *CommentAPI) GetComments(c *gin.Context) {
-	eventId := c.Param("eventId")
-	presentId := c.Param("presentId")
+	eventId := c.Param(PARAM_EVENT_ID)
+	presentId := c.Param(PARAM_PRESENT_ID)
 
 	commentListViewModel, err := commentAPI.commentService.GetCommentListViewModel(eventId, presentId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 	}
 
@@ -34,13 +34,13 @@ func (commentAPI *CommentAPI) GetComments(c *gin.Context) {
 }
 
 func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
-	currentUser := c.GetString("currentUser")
-	presentId := c.Param("presentId")
+	currentUser := c.GetString(PARAM_CURRENT_USER)
+	presentId := c.Param(PARAM_PRESENT_ID)
 
 	var createCommentRequest request.CreateCommentRequest
 	if err := c.ShouldBindJSON(&createCommentRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}
@@ -48,7 +48,7 @@ func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
 	err := commentAPI.commentService.CreateComment(presentId, currentUser, createCommentRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}
@@ -56,7 +56,7 @@ func (commentAPI *CommentAPI) CreateComment(c *gin.Context) {
 	commentListItemViewModel, err := commentAPI.commentService.GetCommentListItemViewModel(presentId, currentUser, createCommentRequest.Content)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 	}
 

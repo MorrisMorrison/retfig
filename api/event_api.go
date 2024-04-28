@@ -23,11 +23,11 @@ func NewEventAPI(eventService *services.EventService) *EventAPI {
 
 func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 	var createEventRequest request.CreateEventRequest
-	currentUser := c.GetString("currentUser")
+	currentUser := c.GetString(PARAM_CURRENT_USER)
 
 	if err := c.ShouldBindJSON(&createEventRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}
@@ -35,7 +35,7 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 	eventId, err := eventAPI.eventService.CreateEvent(createEventRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}
@@ -43,14 +43,14 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId.String(), currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 
 	}
 
 	// used to include id of created event in url so users can hit reload
-	c.Header("HX-Push-Url", links.BuildGetEventLink(eventId.String()))
+	c.Header(HEADER_HX_PUSH_URL, links.BuildGetEventLink(eventId.String()))
 
 	SetTokenCookie(c, createEventRequest.Username)
 
@@ -59,13 +59,13 @@ func (eventAPI *EventAPI) CreateEvent(c *gin.Context) {
 }
 
 func (eventAPI *EventAPI) GetEvent(c *gin.Context, vc *viewcontext.ViewContext) {
-	currentUser := c.GetString("currentUser")
-	eventId := c.Param("eventId")
+	currentUser := c.GetString(PARAM_CURRENT_USER)
+	eventId := c.Param(PARAM_EVENT_ID)
 
 	viewModel, err := eventAPI.eventService.GetEventViewModel(eventId, currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}

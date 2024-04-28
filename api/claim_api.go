@@ -20,13 +20,13 @@ func NewClaimAPI(claimService *services.ClaimService, presentService *services.P
 }
 
 func (claimAPI *ClaimAPI) CreateClaim(c *gin.Context, vc *viewcontext.ViewContext) {
-	currentUser := c.GetString("currentUser")
-	presentId := c.Param("presentId")
+	currentUser := c.GetString(PARAM_CURRENT_USER)
+	presentId := c.Param(PARAM_PRESENT_ID)
 
 	err := claimAPI.claimService.CreateClaim(presentId, currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}
@@ -34,7 +34,7 @@ func (claimAPI *ClaimAPI) CreateClaim(c *gin.Context, vc *viewcontext.ViewContex
 	presentListItemViewModel, err := claimAPI.presentService.GetPresentListItemViewModel(presentId, currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 	}
 
@@ -42,13 +42,13 @@ func (claimAPI *ClaimAPI) CreateClaim(c *gin.Context, vc *viewcontext.ViewContex
 }
 
 func (claimAPI *ClaimAPI) DeleteClaim(c *gin.Context, vc *viewcontext.ViewContext) {
-	currentUser := c.GetString("currentUser")
-	presentId := c.Param("presentId")
+	currentUser := c.GetString(PARAM_CURRENT_USER)
+	presentId := c.Param(PARAM_PRESENT_ID)
 
 	err := claimAPI.claimService.DeleteClaim(presentId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}
@@ -56,7 +56,7 @@ func (claimAPI *ClaimAPI) DeleteClaim(c *gin.Context, vc *viewcontext.ViewContex
 	presentListItemViewModel, err := claimAPI.presentService.GetPresentListItemViewModel(presentId, currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 	}
 

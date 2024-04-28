@@ -19,13 +19,13 @@ func NewPresentAPI(presentService *services.PresentService) *PresentAPI {
 }
 
 func (presentAPI *PresentAPI) GetPresents(c *gin.Context, vc *viewcontext.ViewContext) {
-	currentUser := c.GetString("currentUser")
-	eventId := c.Param("eventId")
+	currentUser := c.GetString(PARAM_CURRENT_USER)
+	eventId := c.Param(PARAM_EVENT_ID)
 
 	presentListViewModel, err := presentAPI.presentService.GetPresentListViewModel(eventId, currentUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 	}
 	c.HTML(http.StatusOK, "", presents.PresentList(vc, presentListViewModel))
@@ -34,12 +34,12 @@ func (presentAPI *PresentAPI) GetPresents(c *gin.Context, vc *viewcontext.ViewCo
 func (presentAPI *PresentAPI) CreatePresent(c *gin.Context, vc *viewcontext.ViewContext) {
 	var createPresentRequest request.CreatePresentRequest
 
-	currentUser := c.GetString("currentUser")
-	eventId := c.Param("eventId")
+	currentUser := c.GetString(PARAM_CURRENT_USER)
+	eventId := c.Param(PARAM_EVENT_ID)
 
 	if err := c.ShouldBindJSON(&createPresentRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}
@@ -47,7 +47,7 @@ func (presentAPI *PresentAPI) CreatePresent(c *gin.Context, vc *viewcontext.View
 	presentId, err := presentAPI.presentService.CreatePresent(eventId, currentUser, createPresentRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 		return
 	}
@@ -55,7 +55,7 @@ func (presentAPI *PresentAPI) CreatePresent(c *gin.Context, vc *viewcontext.View
 	presentListItemViewModel, err := presentAPI.presentService.GetSimplePresentListItemViewModel(presentId.String())
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			ERROR: err.Error(),
 		})
 	}
 
