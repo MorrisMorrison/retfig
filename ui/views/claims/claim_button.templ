@@ -4,8 +4,8 @@ import "github.com/MorrisMorrison/retfig/utils/links"
 import "github.com/MorrisMorrison/retfig/ui/viewcontext"
 import "github.com/MorrisMorrison/retfig/ui/viewmodels"
 
-templ ClaimsButton(vc *viewcontext.ViewContext, vm *viewmodels.ClaimButtonViewModel) {
-	<div>
+templ ClaimButton(vc *viewcontext.ViewContext, vm *viewmodels.ClaimButtonViewModel) {
+	<div id={"claimButton_" + vm.PresentId}>
 		if (vm.IsClaimed && vm.ClaimedBy == vc.CurrentUser) {
 			@ClaimedByCurrentUserButton(vm)
 		} else if (vm.IsClaimed && vm.ClaimedBy != vc.CurrentUser) {

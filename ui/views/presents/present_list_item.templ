@@ -23,7 +23,7 @@ templ PresentListItem(vc *viewcontext.ViewContext, vm *viewmodels.PresentListIte
 			<div class="is-flex is-justify-content-space-between mt-2">
 				<span>{ vm.Link }</span>
 				<div class="is-flex">
-					@claims.ClaimsButton(vc, &viewmodels.ClaimButtonViewModel{
+					@claims.ClaimButton(vc, &viewmodels.ClaimButtonViewModel{
 						EventId: vm.EventId,
 						PresentId: vm.PresentId,
 						ClaimedBy: vm.ClaimedBy,
