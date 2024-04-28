@@ -54,18 +54,7 @@ func (service *EventService) GetEventViewModel(eventId string, user string) (*vi
 }
 
 func (service *EventService) mapCreateEventRequestToEvent(createEventRequest request.CreateEventRequest) models.Event {
-	createdUpdated := models.CreatedUpdated{
-		CreatedBy: createEventRequest.Username,
-		UpdatedBy: createEventRequest.Username,
-	}
-
-	event := models.Event{
-		Name:           createEventRequest.Name,
-		Recipient:      createEventRequest.Recipient,
-		CreatedUpdated: createdUpdated,
-	}
-
-	return event
+	return *models.NewEvent(createEventRequest.Name, createEventRequest.Recipient, createEventRequest.Username)
 }
 
 func (service *EventService) mapToGetEventViewModel(event *models.Event, participants []*models.Participant, presents *viewmodels.PresentListViewModel) *viewmodels.GetEventViewModel {

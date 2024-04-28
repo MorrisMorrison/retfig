@@ -105,14 +105,5 @@ func (voteService *VoteService) GetVotesByPresentIdsAndUser(presentIds []string,
 }
 
 func (voteService *VoteService) mapCreateVoteRequestToVote(presentId string, user string, request request.CreateVoteRequest) models.Vote {
-	createdUpdated := models.CreatedUpdated{
-		CreatedBy: user,
-		UpdatedBy: user,
-	}
-
-	return models.Vote{
-		PresentId:      uuid.FromStringOrNil(presentId),
-		Type:           models.VoteType(request.VoteType),
-		CreatedUpdated: createdUpdated,
-	}
+	return *models.NewVote(uuid.FromStringOrNil(presentId), models.VoteType(request.VoteType), user)
 }

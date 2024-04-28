@@ -7,3 +7,13 @@ type Comment struct {
 	Content   string
 	CreatedUpdated
 }
+
+func NewComment(presentId uuid.UUID, content string, user string) *Comment {
+	createdUpdated := NewCreatedUpdated(user)
+
+	return &Comment{
+		PresentId:      presentId,
+		Content:        content,
+		CreatedUpdated: *createdUpdated,
+	}
+}

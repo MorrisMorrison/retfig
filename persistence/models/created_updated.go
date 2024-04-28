@@ -8,3 +8,12 @@ type CreatedUpdated struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+func NewCreatedUpdated(user string) *CreatedUpdated {
+	return &CreatedUpdated{
+		CreatedBy: user,
+		UpdatedBy: user,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+}

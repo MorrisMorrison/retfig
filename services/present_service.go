@@ -183,17 +183,7 @@ func (service *PresentService) CreatePresent(eventId string, user string, create
 }
 
 func (service *PresentService) mapCreatePresentRequestToPresent(eventId string, user string, createPresentRequest request.CreatePresentRequest) models.Present {
-	createdUpdated := models.CreatedUpdated{
-		CreatedBy: user,
-		UpdatedBy: user,
-	}
-
-	return models.Present{
-		EventId:        uuid.FromStringOrNil(eventId),
-		Name:           createPresentRequest.Name,
-		Link:           createPresentRequest.Link,
-		CreatedUpdated: createdUpdated,
-	}
+	return *models.NewPresent(uuid.FromStringOrNil(eventId), createPresentRequest.Name, createPresentRequest.Link, user)
 }
 
 func (service *PresentService) extractIds(presents []*models.Present) []string {

@@ -14,3 +14,13 @@ type Vote struct {
 	Type      VoteType
 	CreatedUpdated
 }
+
+func NewVote(presentId uuid.UUID, voteType VoteType, user string) *Vote {
+	createdUpdated := NewCreatedUpdated(user)
+
+	return &Vote{
+		PresentId:      presentId,
+		Type:           voteType,
+		CreatedUpdated: *createdUpdated,
+	}
+}

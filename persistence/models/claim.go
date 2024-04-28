@@ -10,13 +10,10 @@ type Claim struct {
 }
 
 func NewClaim(presentId string, user string) *Claim {
-	createdUpdated := CreatedUpdated{
-		CreatedBy: user,
-		UpdatedBy: user,
-	}
+	createdUpdated := NewCreatedUpdated(user)
 
 	return &Claim{
 		PresentId:      uuid.FromStringOrNil(presentId),
-		CreatedUpdated: createdUpdated,
+		CreatedUpdated: *createdUpdated,
 	}
 }

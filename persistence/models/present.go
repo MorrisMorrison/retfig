@@ -11,3 +11,14 @@ type Present struct {
 	Link    string
 	CreatedUpdated
 }
+
+func NewPresent(eventId uuid.UUID, name string, link string, user string) *Present {
+	createdUpdated := NewCreatedUpdated(user)
+
+	return &Present{
+		EventId:        eventId,
+		Name:           name,
+		Link:           link,
+		CreatedUpdated: *createdUpdated,
+	}
+}
