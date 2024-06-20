@@ -58,7 +58,7 @@ func (service *EventService) mapCreateEventRequestToEvent(createEventRequest req
 }
 
 func (service *EventService) mapToGetEventViewModel(event *models.Event, participants []*models.Participant, presents *viewmodels.PresentListViewModel) *viewmodels.GetEventViewModel {
-	return viewmodels.NewGetEventViewModel(event.Name, event.Recipient, event.CreatedBy, links.BuildInvitationLink(event.Id.String()), service.extractUsernames(participants), presents)
+	return viewmodels.NewGetEventViewModel(event.Name, event.CreatedBy, event.Recipient, links.BuildInvitationLink(event.Id.String()), service.extractUsernames(participants), presents)
 }
 
 func (service *EventService) extractUsernames(participants []*models.Participant) []string {
