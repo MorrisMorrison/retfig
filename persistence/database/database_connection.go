@@ -22,8 +22,8 @@ func NewConnection() *Connection {
 	fmt.Println("Initialize database connection...")
 
 	cfg := mysql.Config{
-		User:      config.GetEnv("RETFIG_MYSQL_USER", "user"),
-		Passwd:    config.GetEnv("RETFIG_MYSQL_PASSWORD", "password"),
+		User:      config.GetEnv("RETFIG_MYSQL_USER", "retfig"),
+		Passwd:    config.GetEnv("RETFIG_MYSQL_PASSWORD", "mypassword"),
 		Net:       "tcp",
 		Addr:      config.GetEnv("RETFIG_MYSQL_HOST", "127.0.0.1:3306"),
 		DBName:    config.GetEnv("RETFIG_MYSQL_DATABASE_NAME", "retfig"),
