@@ -43,6 +43,9 @@ What you need to install the software:
 
 2. **Run the application on your local machine**
     ```bash
+    go install github.com/a-h/templ/cmd/templ@latest
+    export PATH=$PATH:$(go env GOPATH)/bin
+    templ generate
     go run main.go
     ```
 
