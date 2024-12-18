@@ -7,6 +7,8 @@ WORKDIR /app
 # Copy the local package files to the container's workspace
 COPY . .
 
+RUN go get -u github.com/a-h/templ
+RUN templ generate
 # Build the Go application
 RUN go build -o main .
 
