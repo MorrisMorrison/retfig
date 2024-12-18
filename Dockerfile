@@ -7,8 +7,15 @@ WORKDIR /app
 # Copy the local package files to the container's workspace
 COPY . .
 
-RUN go get -u github.com/a-h/templ
+# Install the `templ` binary
+RUN go install github.com/a-h/templ/cmd/templ@latest
+
+# Ensure the installed binary is in the PATH
+ENV PATH="/go/bin:${PATH}"
+
+# Run the `templ generate` command
 RUN templ generate
+
 # Build the Go application
 RUN go build -o main .
 
@@ -17,4 +24,3 @@ EXPOSE 8080
 
 # Command to run the executable
 CMD ["./main"]
-
