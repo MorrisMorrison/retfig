@@ -60,16 +60,16 @@ What you need to install the software:
    The application should be up and running.
 
 ### Configuration
-RETFIG_HOST_NAME=127.0.0.1
-RETFIG_API_VERSION=v1
-RETFIG_PORT=8080
-RETFIG_JWT_EXPIRES_IN_DURATION=24h
-RETFIG_JWT_ISSUER=retfig.com
+- RETFIG_HOST_NAME=127.0.0.1
+- RETFIG_API_VERSION=v1
+- RETFIG_PORT=8080
+- RETFIG_JWT_EXPIRES_IN_DURATION=24h
+- RETFIG_JWT_ISSUER=retfig.com
 
-RETFIG_MYSQL_USER=retfig
-RETFIG_MYSQL_PASSWORD=mypassword
-RETFIG_MYSQL_HOST=retfig-db
-RETFIG_MYSQL_DATABASE_NAME=retfig
+- RETFIG_MYSQL_USER=retfig
+- RETFIG_MYSQL_PASSWORD=mypassword
+- RETFIG_MYSQL_HOST=retfig-db
+- RETFIG_MYSQL_DATABASE_NAME=retfig
    
 # Contributing
 We welcome contributions from the community and are pleased to have you join us. If you would like to contribute to RetFig, please follow these guidelines:
