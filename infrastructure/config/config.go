@@ -6,6 +6,7 @@ import (
 
 const (
 	CONFIG_KEY_HOST_NAME               = "RETFIG_HOST_NAME"
+	CONFIG_KEY_PROTOCOL                = "RETFIG_PROTOCOL"	
 	CONFIG_KEY_API_VERSION             = "RETFIG_API_VERSION"
 	CONFIG_KEY_PORT                    = "RETFIG_PORT"
 	CONFIG_KEY_JWT_EXPIRES_IN_DURATION = "RETFIG_JWT_EXPIRES_IN_DURATION"
@@ -16,6 +17,7 @@ var CONFIG *Config = NewConfig()
 
 type Config struct {
 	Host       string
+	Protocol string
 	Port       string
 	ApiVersion string
 	JWTConfig  JWTConfig
@@ -39,10 +41,12 @@ func NewJWTConfig() *JWTConfig {
 func NewConfig() *Config {
 	host := GetEnv(CONFIG_KEY_HOST_NAME, "127.0.0.1")
 	port := GetEnv(CONFIG_KEY_PORT, "8080")
+	protocol := GetEnv(CONFIG_KEY_PROTOCOL, "http")
 	apiVersion := GetEnv(CONFIG_KEY_API_VERSION, "v1")
 
 	return &Config{
 		Host:       host,
+		Protocol: protocol,
 		Port:       port,
 		ApiVersion: apiVersion,
 		JWTConfig:  *NewJWTConfig(),

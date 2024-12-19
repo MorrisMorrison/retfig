@@ -2,49 +2,49 @@ package routes
 
 import (
 	"github.com/MorrisMorrison/retfig/api"
-	"github.com/MorrisMorrison/retfig/infrastructure/container"
+	"github.com/MorrisMorrison/retfig/infrastructure/context"
 	"github.com/MorrisMorrison/retfig/infrastructure/middleware"
 	"github.com/gin-gonic/gin"
 )
 
-func ConfigureRoutes(r *gin.Engine, apis *container.APIContainer, services *container.ServiceContainer) {
-	secureEventsAPI := r.Group("/api/htmx/v1/events", middleware.AuthHandler(), middleware.ResourceAccessHandler(services.ResourceAcessService), middleware.ViewContextHandler())
+func ConfigureRoutes(r *gin.Engine, ctx *context.ApplicationContext) {
+	secureEventsAPI := r.Group("/api/htmx/v1/events", middleware.AuthHandler(), middleware.ResourceAccessHandler(ctx.Services.ResourceAcessService), middleware.ViewContextHandler(), middleware.CORSHandler(ctx.Config))
 	{
 		secureEventsAPI.GET("/:eventId", func(c *gin.Context) {
-			HandleWithViewContext(c, apis.EventAPI.GetEvent)
+			HandleWithViewContext(c, ctx.APIs.EventAPI.GetEvent)
 		})
 
-		secureEventsAPI.GET("/:eventId/invitation", apis.ParticipantAPI.GetInvitationView)
+		secureEventsAPI.GET("/:eventId/invitation", ctx.APIs.ParticipantAPI.GetInvitationView)
 
 		secureEventsAPI.GET("/:eventId/presents", func(c *gin.Context) {
-			HandleWithViewContext(c, apis.PresentAPI.GetPresents)
+			HandleWithViewContext(c, ctx.APIs.PresentAPI.GetPresents)
 		})
 		secureEventsAPI.POST("/:eventId/presents", func(c *gin.Context) {
-			HandleWithViewContext(c, apis.PresentAPI.CreatePresent)
+			HandleWithViewContext(c, ctx.APIs.PresentAPI.CreatePresent)
 		})
 
-		secureEventsAPI.POST("/:eventId/presents/:presentId/votes", apis.VoteAPI.CreateVote)
-		secureEventsAPI.POST("/:eventId/presents/:presentId/comments", apis.CommentAPI.CreateComment)
-		secureEventsAPI.GET("/:eventId/presents/:presentId/comments", apis.CommentAPI.GetComments)
+		secureEventsAPI.POST("/:eventId/presents/:presentId/votes", ctx.APIs.VoteAPI.CreateVote)
+		secureEventsAPI.POST("/:eventId/presents/:presentId/comments", ctx.APIs.CommentAPI.CreateComment)
+		secureEventsAPI.GET("/:eventId/presents/:presentId/comments", ctx.APIs.CommentAPI.GetComments)
 
 		secureEventsAPI.POST("/:eventId/presents/:presentId/claims", func(c *gin.Context) {
-			HandleWithViewContext(c, apis.ClaimAPI.CreateClaim)
+			HandleWithViewContext(c, ctx.APIs.ClaimAPI.CreateClaim)
 		})
 		secureEventsAPI.DELETE("/:eventId/presents/:presentId/claims", func(c *gin.Context) {
-			HandleWithViewContext(c, apis.ClaimAPI.DeleteClaim)
+			HandleWithViewContext(c, ctx.APIs.ClaimAPI.DeleteClaim)
 		})
 	}
 
 	publicEventsAPI := r.Group("/events")
 	{
 		// allows user to reload clear url
-		publicEventsAPI.GET("/:eventId", middleware.AuthHandler(), middleware.ResourceAccessHandler(services.ResourceAcessService), middleware.ViewContextHandler(), func(c *gin.Context) {
-			HandleWithViewContext(c, apis.EventAPI.GetEvent)
+		publicEventsAPI.GET("/:eventId", middleware.AuthHandler(), middleware.ResourceAccessHandler(ctx.Services.ResourceAcessService), middleware.ViewContextHandler(), func(c *gin.Context) {
+			HandleWithViewContext(c, ctx.APIs.EventAPI.GetEvent)
 		})
 
-		publicEventsAPI.GET("/:eventId/invitations", apis.ParticipantAPI.GetInvitationView)
-		publicEventsAPI.POST("/", apis.EventAPI.CreateEvent)
-		publicEventsAPI.POST("/:eventId/participants", apis.ParticipantAPI.CreateParticipant)
+		publicEventsAPI.GET("/:eventId/invitations", ctx.APIs.ParticipantAPI.GetInvitationView)
+		publicEventsAPI.POST("/", ctx.APIs.EventAPI.CreateEvent)
+		publicEventsAPI.POST("/:eventId/participants", ctx.APIs.ParticipantAPI.CreateParticipant)
 	}
 
 	r.Static("/public", "./ui/public")

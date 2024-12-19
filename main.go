@@ -17,7 +17,7 @@ func main() {
 
 	r := gin.Default()
 	r.HTMLRender = &templrender.TemplRender{}
-	routes.ConfigureRoutes(r, applicationContext.APIs, applicationContext.Services)
+	routes.ConfigureRoutes(r, applicationContext)
 
 	r.Run()
 }
