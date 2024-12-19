@@ -30,6 +30,8 @@ func SetTokenCookie(c *gin.Context, username string) {
 		return
 	}
 
+	c.SetSameSite(http.SameSiteLaxMode)
+
 	c.SetCookie(
 		COOKIE_NAME,
 		token,
