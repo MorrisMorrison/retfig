@@ -36,7 +36,7 @@ func SetTokenCookie(c *gin.Context, username string) {
 		int(tokenExpiresInDuration/time.Second),
 		COOKIE_PATH,
 		config.CONFIG.Host,
-		false,
+		true,
 		true,
 	)
 }
