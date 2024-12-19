@@ -61,6 +61,7 @@ What you need to install the software:
 
 ### Configuration
 - RETFIG_HOST_NAME=127.0.0.1
+- RETFIG_PROTOCOL=http
 - RETFIG_API_VERSION=v1
 - RETFIG_PORT=8080
 - RETFIG_JWT_EXPIRES_IN_DURATION=24h
